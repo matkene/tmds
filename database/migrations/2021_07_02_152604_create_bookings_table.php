@@ -14,7 +14,7 @@ class CreateBookingsTable extends Migration
     public function up()
     {
         Schema::create('bookings', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->integer('no_adults')->nullable();
             $table->integer('no_children')->nullable();
             $table->integer('no_infants')->nullable();
@@ -22,10 +22,11 @@ class CreateBookingsTable extends Migration
             $table->boolean('is_attended')->default(true);
             $table->string('payment_status')->nullable();
             $table->string('date_visited')->nullable();
-            $table->unsignedInteger('user_id')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')
             ->onDelete('cascade')
             ->onUpdate('cascade');
+           // $table->unsignedBigInteger('tour_id')->nullable();
             $table->unsignedInteger('tour_id')->nullable();
             $table->foreign('tour_id')->references('id')->on('tours')
             ->onDelete('cascade')

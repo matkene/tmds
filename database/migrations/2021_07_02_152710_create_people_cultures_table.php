@@ -14,7 +14,7 @@ class CreatePeopleCulturesTable extends Migration
     public function up()
     {
         Schema::create('people_cultures', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->string('image')->nullable();
             $table->string('created_by')->nullable();
             $table->boolean('is_active')->default(true);

@@ -14,7 +14,7 @@ class CreateToursTable extends Migration
     public function up()
     {
         Schema::create('tours', function (Blueprint $table) {
-            $table->increments('id')->unsigned();;
+            $table->increments('id');
             $table->string('title')->nullable();
             $table->string('description')->nullable();
             $table->string('price')->nullable();
@@ -23,7 +23,7 @@ class CreateToursTable extends Migration
             $table->string('created_by')->nullable();
             $table->string('location')->nullable();
             $table->boolean('is_active')->default(true);
-            $table->integer('user_id')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');

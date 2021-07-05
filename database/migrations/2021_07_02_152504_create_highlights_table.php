@@ -14,8 +14,8 @@ class CreateHighlightsTable extends Migration
     public function up()
     {
         Schema::create('highlights', function (Blueprint $table) {
-            $table->id();
-            $table->strring('title')->nullable();
+            $table->increments('id');
+            $table->string('title')->nullable();
             $table->string('description')->nullable();
             $table->string('image')->nullable();
             $table->string('video')->nullable();

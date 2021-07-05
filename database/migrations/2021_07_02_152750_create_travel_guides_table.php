@@ -14,7 +14,7 @@ class CreateTravelGuidesTable extends Migration
     public function up()
     {
         Schema::create('travel_guides', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->string('title')->nullable();
             $table->string('image')->nullable();
             $table->string('created_by')->nullable();
