@@ -91,32 +91,32 @@ class CreateDefaultRecord extends Command
         $peopleAndCultures = [
             [
                 'key' => 'Key_1',
-                'image' => "https://backend.tdms.com/images/culture/cu1.jpg",
+                'image' => "https://tdms-backend.herokuapp.com/images/culture/cu1.jpg",
                 'created_by' => 1
             ],
             [
                 'key' => 'Key_2',
-                'image' => "https://backend.tdms.com/images/culture/cu2.jpg",
+                'image' => "https://tdms-backend.herokuapp.com/images/culture/cu2.jpg",
                 'created_by' => 1
             ],
             [
                 'key' => 'Key_3',
-                'image' => "https://backend.tdms.com/images/culture/cu3.jpg",
+                'image' => "https://tdms-backend.herokuapp.com/images/culture/cu3.jpg",
                 'created_by' => 1
             ],
             [
                 'key' => 'Key_4',
-                'image' => "https://backend.tdms.com/images/culture/cu4.jpg",
+                'image' => "https://tdms-backend.herokuapp.com/images/culture/cu4.jpg",
                 'created_by' => 1
             ],
             [
                 'key' => 'Key_5',
-                'image' => "https://backend.tdms.com/images/culture/cu5.jpg",
+                'image' => "https://tdms-backend.herokuapp.com/images/culture/cu5.jpg",
                 'created_by' => 1
             ],
             [
                 'key' => 'Key_6',
-                'image' => "https://backend.tdms.com/images/culture/cu6.jpg",
+                'image' => "https://tdms-backend.herokuapp.com/images/culture/cu6.jpg",
                 'created_by' => 1
             ]
         ];
