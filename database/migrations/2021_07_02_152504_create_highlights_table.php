@@ -20,7 +20,7 @@ class CreateHighlightsTable extends Migration
             $table->mediumText('video');
             $table->string('slug');
             $table->mediumText('description')->nullable();
-            $table->unsignedBigInteger('created_by');
+            $table->unsignedInteger('created_by');
             $table->foreign('created_by')->references('id')->on('users')
             ->onDelete('cascade')
             ->onUpdate('cascade');

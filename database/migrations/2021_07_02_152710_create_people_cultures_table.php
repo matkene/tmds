@@ -16,7 +16,7 @@ class CreatePeopleCulturesTable extends Migration
         Schema::create('people_cultures', function (Blueprint $table) {
             $table->increments('id');
             $table->string('image');
-            $table->unsignedBigInteger('created_by');
+            $table->unsignedInteger('created_by');
             $table->string('key');
             $table->foreign('created_by')->references('id')->on('users')
             ->onDelete('cascade')

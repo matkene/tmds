@@ -20,11 +20,11 @@ class CreateBookingsTable extends Migration
             $table->integer('no_infants');
             $table->boolean('is_active')->default(true);
             $table->boolean('is_attended')->default(false);
-            $table->string('payment_status')->default("Pending")->comment("Pending, Paid, Declined");//interface for this
+            $table->string('payment_status')->default("Pending");//interface for this
             $table->timestamp('date_of_visit')->nullable();
             $table->string('ticket_no');
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('tour_id');
+            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('tour_id');
             $table->foreign('user_id')->references('id')->on('users')
             ->onDelete('cascade')
             ->onUpdate('cascade');

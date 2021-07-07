@@ -18,8 +18,7 @@ class CreateTravelGuidesTable extends Migration
             $table->string('title');
             $table->string('image');
             $table->boolean('is_active')->default(true);
-            $table->unsignedBigInteger('created_by');
-            $table->boolean('is_active')->default(true);
+            $table->unsignedInteger('created_by');
             $table->foreign('created_by')->references('id')->on('users')
             ->onDelete('cascade')
             ->onUpdate('cascade');

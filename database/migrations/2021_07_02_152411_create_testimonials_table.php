@@ -20,8 +20,8 @@ class CreateTestimonialsTable extends Migration
             $table->mediumText('image')->nullable();
             $table->boolean('is_active')->default(true);
             $table->decimal('rating');
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('tour_id');
+            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('tour_id');
             $table->foreign('user_id')->references('id')->on('users')
             ->onDelete('cascade')
             ->onUpdate('cascade');
