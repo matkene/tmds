@@ -15,8 +15,12 @@ class CreatePeopleCulturesTable extends Migration
     {
         Schema::create('people_cultures', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('image')->nullable();
-            $table->string('created_by')->nullable();
+            $table->string('image');
+            $table->unsignedBigInteger('created_by');
+            $table->string('key');
+            $table->foreign('created_by')->references('id')->on('users')
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

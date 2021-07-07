@@ -15,12 +15,15 @@ class CreateHighlightsTable extends Migration
     {
         Schema::create('highlights', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title')->nullable();
-            $table->string('description')->nullable();
-            $table->string('image')->nullable();
-            $table->string('video')->nullable();
-            $table->string('slug')->nullable();
-            $table->string('created_by')->nullable();
+            $table->string('title');
+            $table->mediumText('image');
+            $table->mediumText('video');
+            $table->string('slug');
+            $table->mediumText('description')->nullable();
+            $table->unsignedBigInteger('created_by');
+            $table->foreign('created_by')->references('id')->on('users')
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

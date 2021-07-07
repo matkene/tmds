@@ -15,19 +15,19 @@ class CreateBookingsTable extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('no_adults')->nullable();
-            $table->integer('no_children')->nullable();
-            $table->integer('no_infants')->nullable();
+            $table->integer('no_adults');
+            $table->integer('no_children');
+            $table->integer('no_infants');
             $table->boolean('is_active')->default(true);
-            $table->boolean('is_attended')->default(true);
-            $table->string('payment_status')->nullable();
-            $table->string('date_visited')->nullable();
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->boolean('is_attended')->default(false);
+            $table->string('payment_status')->default("Pending")->comment("Pending, Paid, Declined");//interface for this
+            $table->timestamp('date_of_visit')->nullable();
+            $table->string('ticket_no');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('tour_id');
             $table->foreign('user_id')->references('id')->on('users')
             ->onDelete('cascade')
             ->onUpdate('cascade');
-           // $table->unsignedBigInteger('tour_id')->nullable();
-            $table->unsignedInteger('tour_id')->nullable();
             $table->foreign('tour_id')->references('id')->on('tours')
             ->onDelete('cascade')
             ->onUpdate('cascade');

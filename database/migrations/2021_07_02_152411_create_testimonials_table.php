@@ -15,23 +15,19 @@ class CreateTestimonialsTable extends Migration
     {
         Schema::create('testimonials', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title')->nullable();
-            $table->string('description')->nullable();
-            $table->string('image')->nullable();
+            $table->string('title');
+            $table->mediumText('description');
+            $table->mediumText('image')->nullable();
             $table->boolean('is_active')->default(true);
-            $table->integer('rating')->nullable();
-            $table->string('created_by')->nullable();
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->decimal('rating');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('tour_id');
             $table->foreign('user_id')->references('id')->on('users')
             ->onDelete('cascade')
             ->onUpdate('cascade');
-            //$table->unsignedBigInteger('tour_id')->nullable();
-            $table->unsignedInteger('tour_id')->nullable();
             $table->foreign('tour_id')->references('id')->on('tours')
             ->onDelete('cascade')
             ->onUpdate('cascade');
-
-
             $table->timestamps();
         });
     }

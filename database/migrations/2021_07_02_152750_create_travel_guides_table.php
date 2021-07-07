@@ -15,10 +15,14 @@ class CreateTravelGuidesTable extends Migration
     {
         Schema::create('travel_guides', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title')->nullable();
-            $table->string('image')->nullable();
-            $table->string('created_by')->nullable();
+            $table->string('title');
+            $table->string('image');
             $table->boolean('is_active')->default(true);
+            $table->unsignedBigInteger('created_by');
+            $table->boolean('is_active')->default(true);
+            $table->foreign('created_by')->references('id')->on('users')
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
             $table->timestamps();
         });
     }

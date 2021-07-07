@@ -15,16 +15,16 @@ class CreateToursTable extends Migration
     {
         Schema::create('tours', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title')->nullable();
-            $table->string('description')->nullable();
-            $table->string('price')->nullable();
+            $table->string('title');
+            $table->mediumText('description');
+            $table->string('image');
+            $table->unsignedBigInteger('created_by');
+            $table->string('location');
+            $table->decimal('price')->default("0.00");
             $table->string('distance')->nullable();
-            $table->string('image')->nullable();
-            $table->string('created_by')->nullable();
-            $table->string('location')->nullable();
+            $table->string('ratings')->default("5.0");
             $table->boolean('is_active')->default(true);
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users')
+            $table->foreign('created_by')->references('id')->on('users')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->timestamps();

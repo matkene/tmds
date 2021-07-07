@@ -15,15 +15,19 @@ class CreateEventsTable extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->nullable();
-            $table->string('description')->nullable();
+            $table->string('title');
+            $table->string('description');
             $table->string('tags')->nullable();
-            $table->string('image')->nullable();
-            $table->string('created_by')->nullable();
-            $table->string('start_date')->nullable();
-            $table->string('end_date')->nullable();
-            $table->string('location')->nullable();
+            $table->mediumText('image');
+            $table->unsignedBigInteger('created_by');
+            $table->timestamp('start_date');
+            $table->timestamp('end_date');
+            $table->string('location');
+            $table->mediumText('guest')->nullable();
             $table->boolean('is_active')->default(true);
+            $table->foreign('created_by')->references('id')->on('users')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->timestamps();
         });
     }
