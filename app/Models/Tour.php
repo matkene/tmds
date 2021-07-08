@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Tour extends Model
 {
     use HasFactory;
+
+    public function users(){
+
+      return $this->belongsTo(Tour::class);
+      
+    }
 }

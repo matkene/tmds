@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class TravelGuide extends Model
 {
     use HasFactory;
+
+    public function user(){
+
+    return $this->belongTo(User::class);
+
+    }
 }
