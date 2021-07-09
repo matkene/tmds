@@ -3,9 +3,11 @@
 namespace App\Console\Commands;
 
 use App\Models\User;
-use App\Models\PeopleCulture;
 use Illuminate\Support\Str;
+use App\Models\PeopleCulture;
 use Illuminate\Console\Command;
+use App\Interfaces\UserStatusInterface;
+use App\Interfaces\AccountTypeInterface;
 
 class CreateDefaultRecord extends Command
 {
@@ -174,10 +176,12 @@ class CreateDefaultRecord extends Command
                 'email'    => 'admin@tdms.com',
                 'country' => 'Nigeria',
                 'state' => 'Lagos',
+                'username' => 'tdmsadmin',
+                'account_type' => AccountTypeInterface::INDIVIDUAL,
                 'phoneno' => '09088449933',
                 'address' => 'Lagos Nigeria',
                 'is_verified' => true,
-                'is_active' => true,
+                'is_active' => UserStatusInterface::ACTIVE,
                 'can_login' => true,
                 'email_verified_at' => now(),
                 'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
@@ -198,10 +202,12 @@ class CreateDefaultRecord extends Command
                 'email'    => 'developer@tdms.com',
                 'country' => 'Nigeria',
                 'state' => 'Lagos',
+                'username' => 'tdmsdeveloper',
+                'account_type' => AccountTypeInterface::INDIVIDUAL,
                 'phoneno' => '09051449933',
                 'address' => 'Lagos Nigeria',
                 'is_verified' => true,
-                'is_active' => true,
+                'is_active' => UserStatusInterface::ACTIVE,
                 'can_login' => true,
                 'email_verified_at' => now(),
                 'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
@@ -223,9 +229,11 @@ class CreateDefaultRecord extends Command
                 'phoneno' => '09088449693',
                 'country' => 'Nigeria',
                 'state' => 'Lagos',
+                'username' => 'tdmsuser',
+                'account_type' => AccountTypeInterface::INDIVIDUAL,
                 'address' => 'Lagos Nigeria',
                 'is_verified' => true,
-                'is_active' => true,
+                'is_active' => UserStatusInterface::ACTIVE,
                 'can_login' => true,
                 'email_verified_at' => now(),
                 'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password

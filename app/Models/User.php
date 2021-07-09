@@ -2,16 +2,22 @@
 
 namespace App\Models;
 
+use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use jeremykenedy\LaravelRoles\Traits\HasRoleAndPermission; // Added too
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable;
     use HasRoleAndPermission; // Added as request in Laravel-roles installation
+
+    // Values for user roles
+    const isUser = 1;
+    const isDeveloper = 3;
+    const isAdmin = 2;
 
     /**
      * The attributes that are mass assignable.
@@ -19,7 +25,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'firstname', 'lastname', 'email', 'password', 'phoneno', 'state', 'country', 'is_verified', 'can_login', 'is_active'
+        'firstname', 'lastname', 'email', 'password', 'phoneno', 'state', 'country', 'is_verified', 'can_login', 'is_active', 'username', 'gender', 'date_of_birth'
     ];
 
     /**
@@ -40,4 +46,19 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 }
