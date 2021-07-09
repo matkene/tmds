@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+
+class AdminMiddleware
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     */
+    public function handle($request, Closure $next)
+    {
+        if (!auth()->user()->hasRole("admin")) {
+            return response()->json([
+                "error" => true,
+                "message" => "Access Denied",
+                "data" => null
+            ], 403);
+        }
+        return $next($request);
+    }
+}

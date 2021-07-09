@@ -61,4 +61,50 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+    /*
+     * Get the booking for the user.
+     */
+
+    public function bookings(){
+
+       return $this->hasMany(Booking::class);
+    }
+    /*
+     * Get the testimonial for the user.
+     */
+
+    public function testimonials(){
+
+       return $this->hasMany(Testimonial::class);
+    }
+
+    public function booking(){
+
+        return $this->hasMany(Booking::class);
+     }
+
+    public function tours(){
+
+       return $this->hasMany(Tour::class, 'created_by');
+    }
+
+    public function events(){
+
+       return $this->hasMany(Event::class, 'created_by');
+    }
+
+    public function highlights(){
+
+       return $this->hasMany(Highlight::class, 'created_by');
+    }
+
+    public function peopleCultures(){
+
+       return $this->hasMany(PeopleCulture::class, 'created_by');
+    }
+
+    public function travelGuides(){
+
+       return $this->hasMany(TravelGuide::class, 'created_by');
+    }
 }

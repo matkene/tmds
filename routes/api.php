@@ -2,8 +2,12 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\V1\Api\User\UserController;
 use App\Http\Controllers\V1\Api\Auth\LoginController;
 use App\Http\Controllers\V1\Api\Auth\RegisterController;
+use App\Http\Controllers\v1\Auth\AccountSettingsController;
+use App\Http\Controllers\V1\Api\Auth\VerificationController;
+use App\Http\Controllers\v1\Api\Auth\ForgotPasswordController;
 
 
 Route::group(['prefix' => 'v1'], function ($router) {
@@ -16,17 +20,28 @@ Route::group(['prefix' => 'v1'], function ($router) {
     Route::group(['prefix' => 'auth', "namespace" => "V1\Api\Auth"], function () {
 
         Route::post('signup', [RegisterController::class, 'createUser']);
-        // Route::get('test', 'RegisterController@mergeTwoLists');
-        // Route::post('admin/signup', 'RegisterController@createAdmin');
-        // Route::get('/email/verification/{code}', 'VerificationController@verifyUser');
-        // Route::post('email/resend-verification', 'RegisterController@resendCode');
+        Route::post('admin/signup', [RegisterController::class, 'createAdmin']);
+        Route::get('/email/verification/{code}', [VerificationController::class, 'verifyUser']);
+        Route::post('email/resend-verification', [RegisterController::class, 'resendCode']);
         Route::post('login', [LoginController::class, 'login']);
-        // Route::get('logout', 'LoginController@logout')->middleware("auth:api");
-        // Route::post('recover', 'ForgotPasswordController@recover');
-        // Route::post('reset/password', 'ForgotPasswordController@reset');
-        // // // update password
-        // Route::post('update/password', 'AccountSettingsController@updatePassword')->middleware("auth:api");
-        // // social signup
-        // Route::post('/social/signup', 'SocialAuthController@socialAuth');
+        Route::get('logout', [LoginController::class, 'logout'])->middleware("auth:api");
+        Route::post('recover', [ForgotPasswordController::class, 'recover']);
+        Route::post('reset/password', [ForgotPasswordController::class, 'reset']);
+        // update password
+        Route::post('update/password', [AccountSettingsController::class, 'updatePassword'])->middleware("auth:api");
     });
+
+    // User Route
+    Route::group(["prefix" => "user",  "middleware" => ["auth:api", "user"], "namespace" => "V1\Api\User"], function () {
+
+        Route::get('/', [UserController::class, 'index']);
+        Route::post('update/', [UserController::class, 'update']);
+
+    });
+
+    // User Route
+    Route::group(["prefix" => "admin",  "middleware" => ["auth:api", "admin"], "namespace" => "V1\Api\Admin"], function () {
+
+    });
+
 });

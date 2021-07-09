@@ -16,6 +16,6 @@ class UserRepository {
     }
 
     public function findById($userId){
-        return $this->modelInstance::where('id', $userId)->first();
+        return $this->modelInstance::with('booking', 'testimonials')->where('id', $userId)->first();
     }
 }
