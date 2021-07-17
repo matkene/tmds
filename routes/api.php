@@ -8,7 +8,7 @@ use App\Http\Controllers\V1\Api\Auth\RegisterController;
 use App\Http\Controllers\v1\Auth\AccountSettingsController;
 use App\Http\Controllers\V1\Api\Auth\VerificationController;
 use App\Http\Controllers\v1\Api\Auth\ForgotPasswordController;
-
+use App\Http\Controllers\v1\Api\Admin\EventController;
 
 Route::group(['prefix' => 'v1'], function ($router) {
 
@@ -37,10 +37,27 @@ Route::group(['prefix' => 'v1'], function ($router) {
         Route::get('/', [UserController::class, 'index']);
         Route::post('update/', [UserController::class, 'update']);
 
+        // Event
+        Route::group(["prefix" => "events"], function () {
+
+            Route::get('/', [EventController::class, 'index']);
+
+
+});
+
     });
 
-    // User Route
+    // Admin Route
     Route::group(["prefix" => "admin",  "middleware" => ["auth:api", "admin"], "namespace" => "V1\Api\Admin"], function () {
+
+
+        Route::group(["prefix" => "events"], function () {
+
+            Route::get('/', [EventController::class, 'index']);
+            Route::post('/create', [EventController::class, 'createEvent']);
+            Route::post('/update', [EventController::class, 'update']);
+
+        });
 
     });
 

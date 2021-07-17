@@ -17,14 +17,14 @@ class EventRepository {
 
     public function allEvents()
     {
-        return $this->modelInstance::with('user')
+        return $this->modelInstance::with('creator')
             ->orderBy('id', 'DESC')
             ->paginate(3);
     }
 
     public function findEventById($id)
     {
-        return $this->modelInstance::with('user')
+        return $this->modelInstance::with('creator')
             ->whereId($id)
             ->first();
     }

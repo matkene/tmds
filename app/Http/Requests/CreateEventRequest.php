@@ -27,14 +27,14 @@ class CreateEventRequest extends FormRequest
     {
         return [
             'title' => ['required','string',new CheckIfTitleExists()],
-            'description' => ['required','string',new CheckIfDescriptionExists()],
+            'description' => ['required','string'],
             'start_date' => 'required',
             'end_date' => 'required',
             'tags' => 'required|string',
             'image' => 'required|string',
-            'location' => 'required|string',
-            'guest' => 'required',
-            'is_active' => 'required'
+            'location' => 'required|string'
+
+
         ];
 
         return $rules;

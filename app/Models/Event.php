@@ -11,7 +11,7 @@ class Event extends Model
 
     protected $guarded = ['id'];
 
-    public function user(){
+    public function creator(){
 
         return $this->belongsTo(User::class, 'created_by');
 

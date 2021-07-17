@@ -89,7 +89,7 @@ class EventController extends Controller
      public function update(Request $request)
     {
         try {
-            //$userId = auth()->user()->id;
+           $userId = auth()->user()->id;
 
             $eventInstance = $this->eventRepository->findEventById($request->id);
 
@@ -108,8 +108,11 @@ class EventController extends Controller
 
             DB::beginTransaction();
             $updateEventInstance = $eventInstance->update([
+                "description" => $request->description,
                 "tags" => $request->tags,
+                "created_by" => $userId,
                 "location" => $request->location,
+                "image" => $request->image,
                 "start_date" => $request->start_date,
                 "end_date" => $request->end_date
             ]);
