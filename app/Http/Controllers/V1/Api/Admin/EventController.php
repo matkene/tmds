@@ -86,7 +86,7 @@ class EventController extends Controller
     /**
      * Edit Event
      */
-     public function update(Request $request)
+     public function update(CreateEventRequest $request)
     {
         try {
            $userId = auth()->user()->id;

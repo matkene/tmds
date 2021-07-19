@@ -42,7 +42,6 @@ Route::group(['prefix' => 'v1'], function ($router) {
 
             Route::get('/', [EventController::class, 'index']);
 
-
 });
 
     });
