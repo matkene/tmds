@@ -40,19 +40,14 @@ Route::group(['prefix' => 'v1'], function ($router) {
 
         // Event
         Route::group(["prefix" => "events"], function () {
-
             Route::get('/', [EventController::class, 'index']);
             Route::get('/show/{id}', [EventController::class, 'showEvent']);
-
         });
 
-        // Tour
+        // Tour Route
         Route::group(["prefix" => "tours"], function () {
-
-        Route::get('/', [TourController::class, 'index']);
-        Route::get('/show/{id}',[TourController::class, 'showTour']);
-
-
+            Route::get('/', [TourController::class, 'index']);
+            Route::get('/show/{id}',[TourController::class, 'showTour']);
         });
 
     });
