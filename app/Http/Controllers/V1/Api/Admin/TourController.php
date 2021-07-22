@@ -46,6 +46,31 @@ class TourController extends Controller
     }
 
 
+    /**
+     * Get tour details by Id
+     */
+     public function showTour(Request $request)
+    {
+        try {
+
+            $tourInstance = $this->tourRepository->findTourById($request->id);
+
+            if(!$tourInstance){
+                return JsonResponser::send(true, "Tour Record not found", null, 401);
+            }
+
+            return JsonResponser::send(false, "Tour Record found successfully.", $tourInstance);
+
+        } catch (\Throwable $error) {
+            return $error->getMessage();
+            logger($error);
+            return JsonResponser::send(true, 'Internal server error', null, 500);
+        }
+
+    }
+
+
+
     public function createTour(CreateTourRequest $request)
     {
         try {
@@ -59,9 +84,7 @@ class TourController extends Controller
                 "location" => $request->location,
                 "image" => $request->image,
                 "price" => $request->price,
-                "distance" => $request->distance,
-                "ratings" => $request->ratings,
-                "is_active" => true
+                "distance" => $request->distance
             ]);
             if(!$newTourInstance){
                 $error = true;
@@ -87,7 +110,7 @@ class TourController extends Controller
     /**
      * Edit Tour
      */
-     public function update(Request $request)
+     public function update(CreateTourRequest $request)
     {
         try {
             //$userId = auth()->user()->id;
@@ -101,10 +124,12 @@ class TourController extends Controller
 
             DB::beginTransaction();
             $updateTourInstance = $tourInstance->update([
-                "price" => $request->price,
+                "title" => $request->title,
+                "description" => $request->description,
                 "location" => $request->location,
-                "distance" => $request->distance,
-                "ratings" => $request->ratings
+                "image" => $request->image,
+                "price" => $request->price,
+                "distance" => $request->distance
             ]);
             if(!$updateTourInstance){
                 $error = true;

@@ -46,5 +46,29 @@ class TourController extends Controller
 
     }
 
+    /**
+     * Get tour details by Id
+     */
+     public function showTour(Request $request)
+    {
+        try {
+
+            $tourInstance = $this->tourRepository->findTourById($request->id);
+
+            if(!$tourInstance){
+                return JsonResponser::send(true, "Tour Record not found", null, 401);
+            }
+
+            return JsonResponser::send(false, "Tour Record found successfully.", $tourInstance);
+
+        } catch (\Throwable $error) {
+            return $error->getMessage();
+            logger($error);
+            return JsonResponser::send(true, 'Internal server error', null, 500);
+        }
+
+    }
+
+
 
 }

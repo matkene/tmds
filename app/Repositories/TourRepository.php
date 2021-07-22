@@ -17,17 +17,17 @@ class TourRepository {
 
     public function allTours()
     {
-        return $this->modelInstance::with('user')
-            ->orderBy('id', 'DESC')
-            ->paginate(3);
+
+        return $this->modelInstance::with('booking','user')
+        ->orderBy('id', 'DESC')
+        ->paginate(3);
+        ;
     }
 
-    public function findTourById($id)
-    {
-        //return $this->modelInstance::with('user')
-          //  ->whereId($id)
-            //->first();
-       return $this->modelInstance::with('booking')->where('id', $id)->first();
+    public function findTourById($id)    {
+
+
+       return $this->modelInstance::with('booking', 'user')->where('id', $id)->first();
 
     }
 

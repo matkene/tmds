@@ -61,14 +61,8 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
-    /*
-     * Get the booking for the user.
-     */
 
-    public function bookings(){
 
-       return $this->hasMany(Booking::class);
-    }
     /*
      * Get the testimonial for the user.
      */
@@ -77,6 +71,11 @@ class User extends Authenticatable implements JWTSubject
 
        return $this->hasMany(Testimonial::class);
     }
+
+    /*
+     * Get the booking for the user.
+     */
+
 
     public function booking(){
 

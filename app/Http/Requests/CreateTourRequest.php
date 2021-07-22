@@ -27,13 +27,11 @@ class CreateTourRequest extends FormRequest
     {
         return [
             'title' => ['required','string',new CheckIfTitleExists()],
-            'description' => ['required','string',new CheckIfDescriptionExists()],
+            'description' => ['required'],
             'price' => 'required|string',
             'image' => 'required|string',
             'location' => 'required|string',
             'distance' => 'required|string',
-            'ratings' => 'required|string',
-            'is_active' => 'required'
         ];
 
         return $rules;
