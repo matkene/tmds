@@ -57,22 +57,18 @@ Route::group(['prefix' => 'v1'], function ($router) {
 
           // Events
         Route::group(["prefix" => "events"], function () {
-
             Route::get('/', [EventController::class, 'index']);
             Route::get('/show/{id}', [EventController::class, 'showEvent']);
             Route::post('/create', [EventController::class, 'createEvent']);
             Route::post('/update', [EventController::class, 'update']);
-
         });
 
         // Tours
         Route::group(["prefix" => "tours"], function () {
-
-        Route::get('/', [TourController::class, 'index']);
-        Route::get('/show/{id}', [TourController::class, 'showTour']);
-        Route::post('/create', [TourController::class, 'createTour']);
-        Route::post('/update', [TourController::class, 'update']);
-
+            Route::get('/', [TourController::class, 'index']);
+            Route::get('/show/{id}', [TourController::class, 'showTour']);
+            Route::post('/create', [TourController::class, 'createTour']);
+            Route::post('/update', [TourController::class, 'update']);
         });
 
     });
