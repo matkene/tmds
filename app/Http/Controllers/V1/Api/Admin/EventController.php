@@ -3,15 +3,16 @@
 namespace App\Http\Controllers\V1\Api\Admin;
 
 use Carbon\Carbon;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use App\Http\Requests\CreateEventRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Responser\JsonResponser;
 use App\Repositories\EventRepository;
+use App\Http\Requests\CreateEventRequest;
+use App\Http\Requests\UpdateEventRequest;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
@@ -53,7 +54,11 @@ class EventController extends Controller
     {
         try {
 
-            $eventInstance = $this->eventRepository->findEventById($request->id);
+            if(!isset($request->event_id)){
+                return JsonResponser::send(true, "Error occured. Please select an event", null, 403);
+            }
+
+            $eventInstance = $this->eventRepository->findEventById($request->event_id);
 
             if(!$eventInstance){
                 return JsonResponser::send(true, "Event Record not found", null, 401);
@@ -62,7 +67,6 @@ class EventController extends Controller
             return JsonResponser::send(false, "Event Record found successfully.", $eventInstance);
 
         } catch (\Throwable $error) {
-            return $error->getMessage();
             logger($error);
             return JsonResponser::send(true, 'Internal server error', null, 500);
         }
@@ -75,13 +79,21 @@ class EventController extends Controller
             $userId = auth()->user()->id;
 
             DB::beginTransaction();
+
+            if ($file = $request->file('image')) {
+                $name = $file->getClientOriginalName();
+                $uniqueId = rand(10, 100000);
+                $imageName = config('app.url') . '/Event/' . $uniqueId . '_'. date("Y-m-d") . '_' . time() . $name;
+                $file->move(('Event/'), $imageName);
+            }
+
             $newEventInstance = $this->eventRepository->create([
                 "title" => $request->title,
                 "description" => $request->description,
                 "tags" => $request->tags,
                 "created_by" => $userId,
                 "location" => $request->location,
-                "image" => $request->image,
+                "image" => $imageName,
                 "guest" => $request->guest,
                 "is_active" => true,
                 "start_date" => $request->start_date,
@@ -110,35 +122,38 @@ class EventController extends Controller
     /**
      * Edit Event
      */
-     public function update(CreateEventRequest $request)
+     public function update(UpdateEventRequest $request)
     {
         try {
            $userId = auth()->user()->id;
 
-            $eventInstance = $this->eventRepository->findEventById($request->id);
+            $eventInstance = $this->eventRepository->findEventById($request->tour_id);
 
             if(!$eventInstance){
                 return JsonResponser::send(true, "Event Record not found", null, 401);
             }
 
-            /*
-            $validate = $this->validateUser($request);
-
-            if ($validate->fails()) {
-                return JsonResponser::send(true, 'Validation Failed', $validate->errors()->all());
-            }
-            */
-
-
             DB::beginTransaction();
+
+            if ($file = $request->file('image')) {
+                $name = $file->getClientOriginalName();
+                $uniqueId = rand(10, 100000);
+                $imageName = config('app.url') . '/Event/' . $uniqueId . '_'. date("Y-m-d") . '_' . time() . $name;
+                $file->move(('Event/'), $imageName);
+            }else{
+                $imageName = $eventInstance->image;
+            }
+
             $updateEventInstance = $eventInstance->update([
                 "description" => $request->description,
                 "tags" => $request->tags,
                 "created_by" => $userId,
                 "location" => $request->location,
-                "image" => $request->image,
+                "image" => $imageName,
                 "start_date" => $request->start_date,
-                "end_date" => $request->end_date
+                "end_date" => $request->end_date,
+                "title" => $request->title,
+                "guest" => $request->guest
             ]);
             if(!$updateEventInstance){
                 $error = true;
@@ -149,7 +164,7 @@ class EventController extends Controller
             DB::commit();
             $error = false;
             $message = "Event updated successfully.";
-            $data = $updateEventInstance;
+            $data = $eventInstance;
             return JsonResponser::send($error, $message, $data);
         } catch (\Throwable $th) {
             DB::rollback();

@@ -53,10 +53,14 @@ class TourController extends Controller
     {
         try {
 
-            $tourInstance = $this->tourRepository->findTourById($request->id);
+            if(!isset($request->tour_id)){
+                return JsonResponser::send(true, "Error occured. Please select a tour", null, 403);
+            }
+
+            $tourInstance = $this->tourRepository->findTourById($request->tour_id);
 
             if(!$tourInstance){
-                return JsonResponser::send(true, "Tour Record not found", null, 401);
+                return JsonResponser::send(true, "Tour Record not found", null, 403);
             }
 
             return JsonResponser::send(false, "Tour Record found successfully.", $tourInstance);

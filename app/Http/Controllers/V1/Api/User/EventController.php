@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\V1\Api\User;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CreateEventRequest;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Responser\JsonResponser;
 use App\Repositories\EventRepository;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\CreateEventRequest;
 
 class EventController extends Controller
 {
@@ -27,7 +28,7 @@ class EventController extends Controller
             $eventInstance = $this->eventRepository->allEvents();
 
             if(!$eventInstance){
-                return JsonResponser::send(true, "Event Record not found", null, 401);
+                return JsonResponser::send(true, "Event Record not found", null, 403);
             }
 
             return JsonResponser::send(false, "Event Record found successfully.", $eventInstance);
@@ -48,16 +49,19 @@ class EventController extends Controller
     {
         try {
 
-            $eventInstance = $this->eventRepository->findEventById($request->id);
+            if(!isset($request->event_id)){
+                return JsonResponser::send(true, "Error occured. Please select an event", null, 403);
+            }
+
+            $eventInstance = $this->eventRepository->findEventById($request->event_id);
 
             if(!$eventInstance){
-                return JsonResponser::send(true, "Event Record not found", null, 401);
+                return JsonResponser::send(true, "Event Record not found", null, 403);
             }
 
             return JsonResponser::send(false, "Event Record found successfully.", $eventInstance);
 
         } catch (\Throwable $error) {
-            return $error->getMessage();
             logger($error);
             return JsonResponser::send(true, 'Internal server error', null, 500);
         }

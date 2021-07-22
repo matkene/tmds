@@ -9,6 +9,7 @@ use App\Http\Controllers\v1\Auth\AccountSettingsController;
 use App\Http\Controllers\V1\Api\Auth\VerificationController;
 use App\Http\Controllers\v1\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\v1\Api\Admin\EventController;
+use App\Http\Controllers\v1\Api\User\EventController AS UserEventController;
 use App\Http\Controllers\v1\Api\Admin\TourController;
 
 Route::group(['prefix' => 'v1'], function ($router) {
@@ -40,8 +41,8 @@ Route::group(['prefix' => 'v1'], function ($router) {
 
         // Event
         Route::group(["prefix" => "events"], function () {
-            Route::get('/', [EventController::class, 'index']);
-            Route::get('/show/{id}', [EventController::class, 'showEvent']);
+            Route::get('/', [UserEventController::class, 'index']);
+            Route::post('view-single-event', [UserEventController::class, 'showEvent']);
         });
 
         // Tour Route
@@ -58,7 +59,7 @@ Route::group(['prefix' => 'v1'], function ($router) {
           // Events
         Route::group(["prefix" => "events"], function () {
             Route::get('/', [EventController::class, 'index']);
-            Route::get('/show/{id}', [EventController::class, 'showEvent']);
+            Route::post('view-single-event', [EventController::class, 'showEvent']);
             Route::post('/create', [EventController::class, 'createEvent']);
             Route::post('/update', [EventController::class, 'update']);
         });
@@ -66,7 +67,7 @@ Route::group(['prefix' => 'v1'], function ($router) {
         // Tours
         Route::group(["prefix" => "tours"], function () {
             Route::get('/', [TourController::class, 'index']);
-            Route::get('/show/{id}', [TourController::class, 'showTour']);
+            Route::post('view-single-tour', [TourController::class, 'showTour']);
             Route::post('/create', [TourController::class, 'createTour']);
             Route::post('/update', [TourController::class, 'update']);
         });

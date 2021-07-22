@@ -2,8 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\CheckIfTitleExists;
-use App\Rules\CheckIfDescriptionExists;
+use App\Rules\CheckIfTourTitleExists;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateTourRequest extends FormRequest
@@ -26,10 +25,10 @@ class CreateTourRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => ['required','string',new CheckIfTitleExists()],
+            'title' => ['required','string',new CheckIfTourTitleExists()],
             'description' => ['required'],
             'price' => 'required|string',
-            'image' => 'required|string',
+            'image' => 'required|file',
             'location' => 'required|string',
             'distance' => 'required|string',
         ];

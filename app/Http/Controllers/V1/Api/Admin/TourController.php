@@ -3,15 +3,16 @@
 namespace App\Http\Controllers\V1\Api\Admin;
 
 use Carbon\Carbon;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use App\Http\Requests\CreateTourRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Responser\JsonResponser;
+use App\Http\Controllers\Controller;
 use App\Repositories\TourRepository;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Responser\JsonResponser;
+use App\Http\Requests\CreateTourRequest;
+use App\Http\Requests\UpdateTourRequest;
+use Illuminate\Support\Facades\Validator;
 
 class TourController extends Controller
 {
@@ -53,7 +54,11 @@ class TourController extends Controller
     {
         try {
 
-            $tourInstance = $this->tourRepository->findTourById($request->id);
+            if(!isset($request->tour_id)){
+                return JsonResponser::send(true, "Error occured. Please select a tour", null, 403);
+            }
+
+            $tourInstance = $this->tourRepository->findTourById($request->tour_id);
 
             if(!$tourInstance){
                 return JsonResponser::send(true, "Tour Record not found", null, 401);
@@ -77,14 +82,23 @@ class TourController extends Controller
             $userId = auth()->user()->id;
 
             DB::beginTransaction();
+
+            if ($file = $request->file('image')) {
+                $name = $file->getClientOriginalName();
+                $uniqueId = rand(10, 100000);
+                $imageName = config('app.url') . '/Tour/' . $uniqueId . '_'. date("Y-m-d") . '_' . time() . $name;
+                $file->move(('Tour/'), $imageName);
+            }
+
             $newTourInstance = $this->tourRepository->create([
                 "title" => $request->title,
                 "description" => $request->description,
                 "created_by" => $userId,
                 "location" => $request->location,
-                "image" => $request->image,
+                "image" => $imageName,
                 "price" => $request->price,
-                "distance" => $request->distance
+                "distance" => $request->distance,
+                "ratings" => "5.00"
             ]);
             if(!$newTourInstance){
                 $error = true;
@@ -110,12 +124,11 @@ class TourController extends Controller
     /**
      * Edit Tour
      */
-     public function update(CreateTourRequest $request)
+     public function update(UpdateTourRequest $request)
     {
         try {
-            //$userId = auth()->user()->id;
 
-            $tourInstance = $this->tourRepository->findTourById($request->id);
+            $tourInstance = $this->tourRepository->findTourById($request->tour_id);
 
             if(!$tourInstance){
                 return JsonResponser::send(true, "Tour Record not found", null, 401);
@@ -123,11 +136,21 @@ class TourController extends Controller
 
 
             DB::beginTransaction();
+
+            if ($file = $request->file('image')) {
+                $name = $file->getClientOriginalName();
+                $uniqueId = rand(10, 100000);
+                $imageName = config('app.url') . '/Tour/' . $uniqueId . '_'. date("Y-m-d") . '_' . time() . $name;
+                $file->move(('Tour/'), $imageName);
+            }else{
+                $imageName = $tourInstance->image;
+            }
+
             $updateTourInstance = $tourInstance->update([
                 "title" => $request->title,
                 "description" => $request->description,
                 "location" => $request->location,
-                "image" => $request->image,
+                "image" => $imageName,
                 "price" => $request->price,
                 "distance" => $request->distance
             ]);
@@ -140,7 +163,7 @@ class TourController extends Controller
             DB::commit();
             $error = false;
             $message = "Tour updated successfully.";
-            $data = $updateTourInstance;
+            $data = $tourInstance;
             return JsonResponser::send($error, $message, $data);
         } catch (\Throwable $th) {
             DB::rollback();

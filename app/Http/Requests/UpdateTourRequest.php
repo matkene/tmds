@@ -2,12 +2,10 @@
 
 namespace App\Http\Requests;
 
-
-use App\Rules\CheckIfEventTitleExists;
-use App\Rules\CheckIfDescriptionExists;
+use App\Rules\CheckIfTourTitleExists;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateEventRequest extends FormRequest
+class UpdateTourRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,15 +25,11 @@ class CreateEventRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => ['required','string',new CheckIfEventTitleExists()],
-            'description' => ['required','string'],
-            'start_date' => 'required',
-            'end_date' => 'required',
-            'tags' => 'required|string',
-            'image' => 'required|string',
-            'location' => 'required|string'
-
-
+            'title' => ['required','string'],
+            'description' => ['required'],
+            'price' => 'required|string',
+            'location' => 'required|string',
+            'distance' => 'required|string',
         ];
 
         return $rules;
@@ -51,10 +45,10 @@ class CreateEventRequest extends FormRequest
         return [
             'title.required' => 'Title is required',
             'description.required' => 'Description is required',
-            'start_date.required' => 'Start Date is required',
-            'end_date.required' => 'End Date is required',
+            'distance.required' => 'Distance is required',
+            'ratings.required' => 'Ratings is required',
             'location.required' => 'Location is required',
-            'tags.required' => 'Tags is required',
+            'price.required' => 'Price is required',
         ];
     }
 }

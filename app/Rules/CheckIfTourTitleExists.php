@@ -2,10 +2,10 @@
 
 namespace App\Rules;
 
-use App\Models\Event;
+use App\Models\Tour;
 use Illuminate\Contracts\Validation\Rule;
 
-class CheckIfTitleExists implements Rule
+class CheckIfTourTitleExists implements Rule
 {
 
     public $attributeMessage;
@@ -15,7 +15,7 @@ class CheckIfTitleExists implements Rule
      *
      * @return void
      */
-   
+
 
     /**
      * Determine if the validation rule passes.
@@ -50,7 +50,7 @@ class CheckIfTitleExists implements Rule
      */
     private function CheckIfTitleExists($title)
     {
-        $titleName = Event::where('title', $title)->first();
+        $titleName = Tour::where('title', $title)->first();
 
         if (is_null($titleName)) {
             return false;
