@@ -11,6 +11,16 @@ use App\Http\Controllers\v1\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\v1\Api\Admin\EventController;
 use App\Http\Controllers\v1\Api\User\EventController AS UserEventController;
 use App\Http\Controllers\v1\Api\Admin\TourController;
+use App\Http\Controllers\v1\Api\User\TourController AS UserTourController;
+use App\Http\Controllers\v1\Api\Admin\PeopleCultureController;
+use App\Http\Controllers\v1\Api\User\PeopleCultureController AS UserPeopleCultureController;
+use App\Http\Controllers\v1\Api\Admin\HighlightController;
+use App\Http\Controllers\v1\Api\User\HighlightController AS UserHighlightController;
+use App\Http\Controllers\v1\Api\Admin\BookingController;
+use App\Http\Controllers\v1\Api\User\BookingController AS UserBookingController;
+use App\Http\Controllers\v1\Api\Admin\TestimonialController;
+use App\Http\Controllers\v1\Api\User\TestimonialController AS UserTestimonialController;
+
 
 Route::group(['prefix' => 'v1'], function ($router) {
 
@@ -47,8 +57,31 @@ Route::group(['prefix' => 'v1'], function ($router) {
 
         // Tour Route
         Route::group(["prefix" => "tours"], function () {
-            Route::get('/', [TourController::class, 'index']);
-            Route::get('/show/{id}',[TourController::class, 'showTour']);
+            Route::get('/', [UserTourController::class, 'index']);
+            Route::post('view-single-tour', [UserTourController::class, 'showTour']);
+        });
+
+        // People Culture Route
+        Route::group(["prefix" => "people-cultures"], function () {
+            Route::get('/', [UserPeopleCultureController::class, 'index']);
+        });
+
+        // Highlight Route
+        Route::group(["prefix" => "highlights"], function () {
+            Route::get('/', [UserHighlightController::class, 'index']);
+        });
+
+        // Booking Route
+        Route::group(["prefix" => "bookings"], function () {
+            Route::post('/create', [UserBookingController::class, 'createBooking']);
+            Route::post('view-single-booking', [UserBookingController::class, 'showBooking']);
+        });
+
+        // Testimonial Route
+        Route::group(["prefix" => "testimonials"], function () {
+            Route::get('/', [UserTestimonialController::class, 'index']);
+            Route::post('/create', [UserTestimonialController::class, 'createTestimonial']);
+            Route::post('view-single-testimonial', [UserTestimonialController::class, 'showTestimonial']);
         });
 
     });
@@ -71,6 +104,36 @@ Route::group(['prefix' => 'v1'], function ($router) {
             Route::post('/create', [TourController::class, 'createTour']);
             Route::post('/update', [TourController::class, 'update']);
         });
+
+
+        // People Culture Route
+        Route::group(["prefix" => "people-cultures"], function () {
+            Route::get('/', [PeopleCultureController::class, 'index']);
+            Route::post('view-single-people-culture', [PeopleCultureController::class, 'showPeopleCulture']);
+            Route::post('/update', [PeopleCultureController::class, 'update']);
+        });
+
+         // Highlight Route
+        Route::group(["prefix" => "highlights"], function () {
+            Route::get('/', [HighlightController::class, 'index']);
+            Route::post('view-single-highlight', [HighlightController::class, 'showHightlight']);
+            Route::post('/update', [HighlightController::class, 'update']);
+        });
+
+        // Booking Route
+        Route::group(["prefix" => "bookings"], function () {
+            Route::get('/', [BookingController::class, 'index']);
+            Route::post('view-single-booking', [BookingController::class, 'showBooking']);
+            //Route::post('/create', [BookingController::class, 'createBooking']);
+        });
+
+
+        // Testimonial Route
+        Route::group(["prefix" => "testimonials"], function () {
+            Route::get('/', [TestimonialController::class, 'index']);
+            Route::post('view-single-testimonial', [TestimonialController::class, 'showTestimonial']);
+        });
+
 
     });
 

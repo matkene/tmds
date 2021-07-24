@@ -4,18 +4,18 @@ namespace App\Repositories;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use App\Models\Booking;
+use App\Models\Testimonial;
 
 
-class BookingRepository {
+class TestimonialRepository {
 
     private $modelInstance;
 
-    public function __construct(Booking $booking) {
-        $this->modelInstance = $booking;
+    public function __construct(Testimonial $testimonial) {
+        $this->modelInstance = $testimonial;
     }
 
-    public function allBookings()
+    public function allTestimonials()
     {
 
         return $this->modelInstance::with('tour','user')
@@ -24,7 +24,7 @@ class BookingRepository {
 
     }
 
-    public function findBookingById($id)    {
+    public function findTestimonialById($id)    {
 
 
        return $this->modelInstance::with('tour', 'user')->where('id', $id)->first();

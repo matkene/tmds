@@ -9,7 +9,14 @@ class PeopleCulture extends Model
 {
     use HasFactory;
 
+
+    protected $fillable = [
+        'image'
+    ];
+
+
     protected $guarded = ['id'];
+
 
     public function user(){
 

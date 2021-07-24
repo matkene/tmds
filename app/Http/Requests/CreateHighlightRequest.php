@@ -3,11 +3,10 @@
 namespace App\Http\Requests;
 
 
-use App\Rules\CheckIfEventTitleExists;
-use App\Rules\CheckIfDescriptionExists;
+use App\Rules\CheckIfHighlightTitleExists;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateEventRequest extends FormRequest
+class CreateHightlightRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,13 +26,11 @@ class UpdateEventRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => ['required','string'],
-            'description' => ['required','string'],
-            'start_date' => 'required',
-            'end_date' => 'required',
-            'tags' => 'required|string',
-            'location' => 'required|string'
-
+            'title' => ['required','string',new CheckIfHighlightTitleExists()],
+            'description' => 'required|string',
+            'image' => 'required|file',
+            'video' => 'required|file',
+            'slug' => 'required|string'
 
         ];
 
@@ -50,10 +47,10 @@ class UpdateEventRequest extends FormRequest
         return [
             'title.required' => 'Title is required',
             'description.required' => 'Description is required',
-            'start_date.required' => 'Start Date is required',
-            'end_date.required' => 'End Date is required',
-            'location.required' => 'Location is required',
-            'tags.required' => 'Tags is required',
+            'image.required' => 'Image is is required',
+            'video.required' => 'Video is required',
+            'slug.required' => 'Slug is required',
+            
         ];
     }
 }
