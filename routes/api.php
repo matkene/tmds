@@ -20,6 +20,8 @@ use App\Http\Controllers\v1\Api\Admin\BookingController;
 use App\Http\Controllers\v1\Api\User\BookingController AS UserBookingController;
 use App\Http\Controllers\v1\Api\Admin\TestimonialController;
 use App\Http\Controllers\v1\Api\User\TestimonialController AS UserTestimonialController;
+use App\Http\Controllers\v1\Api\Admin\TravelGuideController;
+use App\Http\Controllers\v1\Api\User\TravelGuideController AS UserTravelGuideController;
 
 
 Route::group(['prefix' => 'v1'], function ($router) {
@@ -84,6 +86,12 @@ Route::group(['prefix' => 'v1'], function ($router) {
             Route::post('view-single-testimonial', [UserTestimonialController::class, 'showTestimonial']);
         });
 
+        // Travel Guide Route
+        Route::group(["prefix" => "travelguides"], function () {
+            Route::get('/', [UserTravelGuideController::class, 'index']);
+            Route::post('view-single-travelguide', [UserTravelGuideController::class, 'showTravelGuide']);
+        });
+
     });
 
     // Admin Route
@@ -132,6 +140,14 @@ Route::group(['prefix' => 'v1'], function ($router) {
         Route::group(["prefix" => "testimonials"], function () {
             Route::get('/', [TestimonialController::class, 'index']);
             Route::post('view-single-testimonial', [TestimonialController::class, 'showTestimonial']);
+        });
+
+        // Travel Guide Route
+        Route::group(["prefix" => "travelguides"], function () {
+            Route::get('/', [TravelGuideController::class, 'index']);
+            Route::post('view-single-travelguide', [TravelGuideController::class, 'showTravelGuide']);
+            Route::post('/create', [TravelGuideController::class, 'createTravelGuide']);
+            Route::post('/update', [TravelGuideController::class, 'update']);
         });
 
 
