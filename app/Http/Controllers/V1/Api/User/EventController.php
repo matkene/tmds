@@ -21,54 +21,46 @@ class EventController extends Controller
     /**
      * Get Event details
      */
-     public function index()
+    public function index()
     {
         try {
 
             $eventInstance = $this->eventRepository->allEvents();
 
-            if(!$eventInstance){
+            if (!$eventInstance) {
                 return JsonResponser::send(true, "Event Record not found", null, 403);
             }
 
             return JsonResponser::send(false, "Event Record found successfully.", $eventInstance);
-
         } catch (\Throwable $error) {
             return $error->getMessage();
             logger($error);
             return JsonResponser::send(true, 'Internal server error', null, 500);
         }
-
     }
 
 
     /**
      * Get a Particular Event details
      */
-     public function showEvent(Request $request)
+    public function showEvent(Request $request)
     {
         try {
 
-            if(!isset($request->event_id)){
+            if (!isset($request->event_id)) {
                 return JsonResponser::send(true, "Error occured. Please select an event", null, 403);
             }
 
             $eventInstance = $this->eventRepository->findEventById($request->event_id);
 
-            if(!$eventInstance){
+            if (!$eventInstance) {
                 return JsonResponser::send(true, "Event Record not found", null, 403);
             }
 
             return JsonResponser::send(false, "Event Record found successfully.", $eventInstance);
-
         } catch (\Throwable $error) {
             logger($error);
             return JsonResponser::send(true, 'Internal server error', null, 500);
         }
-
     }
-
-
-
-
 }
