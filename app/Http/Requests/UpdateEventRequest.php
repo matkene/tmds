@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 
 use App\Rules\CheckIfEventTitleExists;
-use App\Rules\CheckIfDescriptionExists;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateEventRequest extends FormRequest
@@ -27,11 +26,12 @@ class UpdateEventRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => ['required','string'],
+            'title' => ['required','string',new CheckIfEventTitleExists()],
             'description' => ['required','string'],
             'start_date' => 'required',
             'end_date' => 'required',
             'tags' => 'required|string',
+            'image' => 'required|file',
             'location' => 'required|string'
 
 

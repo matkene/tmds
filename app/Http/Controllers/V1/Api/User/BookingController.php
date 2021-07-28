@@ -58,6 +58,8 @@ class BookingController extends Controller
     {
         try {
             $userId = auth()->user()->id;
+            $userEmail = auth()->user()->email;
+            $userId = auth()->user()->id;
 
             DB::beginTransaction();
 
@@ -79,6 +81,14 @@ class BookingController extends Controller
                 $data = [];
                 return JsonResponser::send($error, $message, $data);
             }
+            $data = [
+                'email' => $request->email,
+                'name' => $request->lastname.' '.$request->firstname,
+                'user' => $newUserInstance,
+                'subject' => "Account Created Successfully",
+                'verification_code' => $newUserToken
+            ];
+            Mail::to($request->email)->send(new UserVerifyEmail($data));
             DB::commit();
             $error = false;
             $message = "Booking created successfully.";

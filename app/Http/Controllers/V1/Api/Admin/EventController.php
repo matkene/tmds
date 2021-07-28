@@ -127,7 +127,7 @@ class EventController extends Controller
         try {
            $userId = auth()->user()->id;
 
-            $eventInstance = $this->eventRepository->findEventById($request->tour_id);
+            $eventInstance = $this->eventRepository->findEventById($request->event_id);
 
             if(!$eventInstance){
                 return JsonResponser::send(true, "Event Record not found", null, 401);

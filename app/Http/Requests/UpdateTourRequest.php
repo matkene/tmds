@@ -25,11 +25,13 @@ class UpdateTourRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => ['required','string'],
-            'description' => ['required'],
+            'title' => ['required','string',new CheckIfTourTitleExists()],
+            'description' => ['required','string'],
             'price' => 'required|string',
             'location' => 'required|string',
             'distance' => 'required|string',
+            'image' => 'required|file',
+
         ];
 
         return $rules;
@@ -46,9 +48,9 @@ class UpdateTourRequest extends FormRequest
             'title.required' => 'Title is required',
             'description.required' => 'Description is required',
             'distance.required' => 'Distance is required',
-            'ratings.required' => 'Ratings is required',
             'location.required' => 'Location is required',
             'price.required' => 'Price is required',
+            'image.required' => 'Image is required',
         ];
     }
 }

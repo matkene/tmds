@@ -71,6 +71,7 @@ Route::group(['prefix' => 'v1'], function ($router) {
         // Highlight Route
         Route::group(["prefix" => "highlights"], function () {
             Route::get('/', [UserHighlightController::class, 'index']);
+            Route::post('view-single-highlight', [UserHighlightController::class, 'showHighlight']);
         });
 
         // Booking Route
@@ -124,8 +125,9 @@ Route::group(['prefix' => 'v1'], function ($router) {
          // Highlight Route
         Route::group(["prefix" => "highlights"], function () {
             Route::get('/', [HighlightController::class, 'index']);
-            Route::post('view-single-highlight', [HighlightController::class, 'showHightlight']);
+            Route::post('view-single-highlight', [HighlightController::class, 'showHighlight']);
             Route::post('/update', [HighlightController::class, 'update']);
+            Route::post('/create', [HighlightController::class, 'createHighlight']);
         });
 
         // Booking Route

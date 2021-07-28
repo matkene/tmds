@@ -100,7 +100,7 @@ class HighlightController extends Controller
                 "video" => $videoName,
                 "slug" => $request->slug,
                 "is_active" => true,
-                "created_by" => $request->$userId
+                "created_by" => $userId,
             ]);
             if(!$newHighlightInstance){
                 $error = true;

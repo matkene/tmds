@@ -6,7 +6,7 @@ namespace App\Http\Requests;
 use App\Rules\CheckIfHighlightTitleExists;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateHightlightRequest extends FormRequest
+class CreateHighlightRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -50,7 +50,7 @@ class CreateHightlightRequest extends FormRequest
             'image.required' => 'Image is is required',
             'video.required' => 'Video is required',
             'slug.required' => 'Slug is required',
-            
+
         ];
     }
 }

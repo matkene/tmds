@@ -28,8 +28,8 @@ class UpdateHighlightRequest extends FormRequest
         return [
             'title' => ['required','string',new CheckIfHighlightTitleExists()],
             'description' => ['required','string'],
-            'image' => 'required',
-            'video' => 'required',
+            'image' => 'required|file',
+            'video' => 'required|file',
             'slug' => 'required|string',
 
 

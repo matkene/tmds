@@ -152,7 +152,8 @@ class TourController extends Controller
                 "location" => $request->location,
                 "image" => $imageName,
                 "price" => $request->price,
-                "distance" => $request->distance
+                "distance" => $request->distance,
+                "ratings" => $request->ratings
             ]);
             if(!$updateTourInstance){
                 $error = true;

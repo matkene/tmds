@@ -53,11 +53,11 @@ class PeopleCultureController extends Controller
     {
         try {
 
-            if(!isset($request->people_culture_id)){
+            if(!isset($request->id)){
                 return JsonResponser::send(true, "Error occured. Please select a People Culture", null, 403);
             }
 
-            $peopleCultureInstance = $this->peopleCultureRepository->findPeopleCultureById($request->people_culture_id);
+            $peopleCultureInstance = $this->peopleCultureRepository->findPeopleCultureById($request->id);
 
             if(!$peopeleCultureInstance){
                 return JsonResponser::send(true, "People Culture Record not found", null, 401);
