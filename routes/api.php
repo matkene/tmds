@@ -3,14 +3,15 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\Api\User\UserController;
+use App\Http\Controllers\v1\Api\Admin\TourController;
 use App\Http\Controllers\V1\Api\Auth\LoginController;
+use App\Http\Controllers\v1\Api\Admin\EventController;
+use App\Http\Controllers\V1\Api\Guest\GuestController;
 use App\Http\Controllers\V1\Api\Auth\RegisterController;
 use App\Http\Controllers\v1\Auth\AccountSettingsController;
 use App\Http\Controllers\V1\Api\Auth\VerificationController;
 use App\Http\Controllers\v1\Api\Auth\ForgotPasswordController;
-use App\Http\Controllers\v1\Api\Admin\EventController;
 use App\Http\Controllers\v1\Api\User\EventController AS UserEventController;
-use App\Http\Controllers\v1\Api\Admin\TourController;
 
 Route::group(['prefix' => 'v1'], function ($router) {
 
@@ -70,6 +71,16 @@ Route::group(['prefix' => 'v1'], function ($router) {
             Route::post('view-single-tour', [TourController::class, 'showTour']);
             Route::post('/create', [TourController::class, 'createTour']);
             Route::post('/update', [TourController::class, 'update']);
+        });
+
+    });
+
+    // Guest Route
+    Route::group(["prefix" => "guest", "namespace" => "V1\Api\Guest"], function () {
+
+        // Events
+        Route::group(["prefix" => "events"], function () {
+            Route::get('/', [GuestController::class, 'listAllActiveEvents']);
         });
 
     });
