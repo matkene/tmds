@@ -7,17 +7,20 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Models\Highlight;
 
 
-class HighlightRepository {
+class HighlightRepository
+{
 
     private $modelInstance;
 
-    public function __construct(Highlight $highlight) {
+    public function __construct(Highlight $highlight)
+    {
         $this->modelInstance = $highlight;
     }
 
     public function allHighlights()
     {
         return $this->modelInstance::with('user')
+            ->where('is_active', true)
             ->orderBy('id', 'DESC')
             ->paginate(3);
     }
@@ -29,10 +32,8 @@ class HighlightRepository {
             ->first();
     }
 
-    public function create($dataToCreate){
+    public function create($dataToCreate)
+    {
         return $this->modelInstance::firstOrCreate($dataToCreate);
     }
-
-
-
 }

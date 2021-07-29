@@ -7,11 +7,13 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Models\TravelGuide;
 
 
-class TravelGuideRepository {
+class TravelGuideRepository
+{
 
     private $modelInstance;
 
-    public function __construct(TravelGuide $travelguide) {
+    public function __construct(TravelGuide $travelguide)
+    {
         $this->modelInstance = $travelguide;
     }
 
@@ -19,22 +21,20 @@ class TravelGuideRepository {
     {
 
         return $this->modelInstance::with('user')
-        ->orderBy('id', 'DESC')
-        ->paginate(3);
-        ;
+            ->where('is_active', true)
+            ->orderBy('id', 'DESC')
+            ->paginate(3);;
     }
 
-    public function findTravelGuideById($id)    {
+    public function findTravelGuideById($id)
+    {
 
 
-       return $this->modelInstance::with('user')->where('id', $id)->first();
-
+        return $this->modelInstance::with('user')->where('id', $id)->first();
     }
 
-    public function create($dataToCreate){
+    public function create($dataToCreate)
+    {
         return $this->modelInstance::firstOrCreate($dataToCreate);
     }
-
-
-
 }

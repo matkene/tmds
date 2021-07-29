@@ -7,17 +7,20 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Models\PeopleCulture;
 
 
-class PeopleCultureRepository {
+class PeopleCultureRepository
+{
 
     private $modelInstance;
 
-    public function __construct(PeopleCulture $peopleculture) {
+    public function __construct(PeopleCulture $peopleculture)
+    {
         $this->modelInstance = $peopleculture;
     }
 
     public function allPeopleCultures()
     {
         return $this->modelInstance::with('user')
+            ->where('is_active', true)
             ->orderBy('id', 'DESC')
             ->paginate(3);
     }
@@ -29,10 +32,8 @@ class PeopleCultureRepository {
             ->first();
     }
 
-    public function create($dataToCreate){
+    public function create($dataToCreate)
+    {
         return $this->modelInstance::firstOrCreate($dataToCreate);
     }
-
-
-
 }

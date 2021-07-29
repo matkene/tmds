@@ -7,17 +7,20 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Models\Event;
 
 
-class EventRepository {
+class EventRepository
+{
 
     private $modelInstance;
 
-    public function __construct(Event $event) {
+    public function __construct(Event $event)
+    {
         $this->modelInstance = $event;
     }
 
     public function allEvents()
     {
         return $this->modelInstance::with('creator')
+            ->where('is_active', true)
             ->orderBy('id', 'DESC')
             ->paginate(3);
     }
@@ -29,10 +32,8 @@ class EventRepository {
             ->first();
     }
 
-    public function create($dataToCreate){
+    public function create($dataToCreate)
+    {
         return $this->modelInstance::firstOrCreate($dataToCreate);
     }
-
-
-
 }
