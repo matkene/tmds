@@ -9,6 +9,10 @@ class Highlight extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'image','title', 'video','slug','description','created_by','is_active'
+    ];
+
     protected $guarded = ['id'];
 
     public function user(){

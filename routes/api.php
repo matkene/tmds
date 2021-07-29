@@ -15,7 +15,8 @@ use App\Http\Controllers\V1\Api\Auth\RegisterController;
 use App\Http\Controllers\V1\Auth\AccountSettingsController;
 use App\Http\Controllers\V1\Api\Auth\VerificationController;
 use App\Http\Controllers\v1\Api\Auth\ForgotPasswordController;
-
+use App\Http\Controllers\V1\Api\Admin\BookingController;
+use App\Http\Controllers\V1\Api\User\BookingController as UserBookingController;
 use App\Http\Controllers\V1\Api\User\EventController as UserEventController;
 use App\Http\Controllers\V1\Api\User\TourController as UserTourController;
 use App\Http\Controllers\V1\Api\User\PeopleCultureController as UserPeopleCultureController;
@@ -58,8 +59,40 @@ Route::group(['prefix' => 'v1'], function ($router) {
 
         // Tour Route
         Route::group(["prefix" => "tours"], function () {
-            Route::get('/', [TourController::class, 'index']);
-            Route::get('/show/{id}', [TourController::class, 'showTour']);
+
+            Route::get('/', [UserTourController::class, 'index']);
+            Route::post('view-single-tour', [UserTourController::class, 'showTour']);
+        });
+
+        // People Culture Route
+        Route::group(["prefix" => "people-cultures"], function () {
+            Route::get('/', [UserPeopleCultureController::class, 'index']);
+        });
+
+        // Highlight Route
+        Route::group(["prefix" => "highlights"], function () {
+            Route::get('/', [UserHighlightController::class, 'index']);
+            Route::post('view-single-highlight', [UserHighlightController::class, 'showHighlight']);
+        });
+
+        // Booking Route
+        Route::group(["prefix" => "bookings"], function () {
+            Route::post('/create', [UserBookingController::class, 'createBooking']);
+            Route::post('view-single-booking', [UserBookingController::class, 'showBooking']);
+        });
+
+        // Testimonial Route
+        Route::group(["prefix" => "testimonials"], function () {
+            Route::get('/', [UserTestimonialController::class, 'index']);
+            Route::post('/create', [UserTestimonialController::class, 'createTestimonial']);
+            Route::post('view-single-testimonial', [UserTestimonialController::class, 'showTestimonial']);
+        });
+
+        // Travel Guide Route
+        Route::group(["prefix" => "travelguides"], function () {
+            Route::get('/', [UserTravelGuideController::class, 'index']);
+            Route::post('view-single-travelguide', [UserTravelGuideController::class, 'showTravelGuide']);
+
         });
     });
 
@@ -81,6 +114,47 @@ Route::group(['prefix' => 'v1'], function ($router) {
             Route::post('/create', [TourController::class, 'createTour']);
             Route::post('/update', [TourController::class, 'update']);
         });
+
+
+        // People Culture Route
+        Route::group(["prefix" => "people-cultures"], function () {
+            Route::get('/', [PeopleCultureController::class, 'index']);
+            Route::post('view-single-people-culture', [PeopleCultureController::class, 'showPeopleCulture']);
+            Route::post('/update', [PeopleCultureController::class, 'update']);
+        });
+
+         // Highlight Route
+        Route::group(["prefix" => "highlights"], function () {
+            Route::get('/', [HighlightController::class, 'index']);
+            Route::post('view-single-highlight', [HighlightController::class, 'showHighlight']);
+            Route::post('/update', [HighlightController::class, 'update']);
+            Route::post('/create', [HighlightController::class, 'createHighlight']);
+        });
+
+        // Booking Route
+        Route::group(["prefix" => "bookings"], function () {
+            Route::get('/', [BookingController::class, 'index']);
+            Route::post('view-single-booking', [BookingController::class, 'showBooking']);
+            //Route::post('/create', [BookingController::class, 'createBooking']);
+        });
+
+
+        // Testimonial Route
+        Route::group(["prefix" => "testimonials"], function () {
+            Route::get('/', [TestimonialController::class, 'index']);
+            Route::post('view-single-testimonial', [TestimonialController::class, 'showTestimonial']);
+        });
+
+        // Travel Guide Route
+        Route::group(["prefix" => "travelguides"], function () {
+            Route::get('/', [TravelGuideController::class, 'index']);
+            Route::post('view-single-travelguide', [TravelGuideController::class, 'showTravelGuide']);
+            Route::post('/create', [TravelGuideController::class, 'createTravelGuide']);
+            Route::post('/update', [TravelGuideController::class, 'update']);
+        });
+
+
+
     });
 
     // Guest Route

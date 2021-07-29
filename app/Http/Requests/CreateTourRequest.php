@@ -47,9 +47,9 @@ class CreateTourRequest extends FormRequest
             'title.required' => 'Title is required',
             'description.required' => 'Description is required',
             'distance.required' => 'Distance is required',
-            'ratings.required' => 'Ratings is required',
             'location.required' => 'Location is required',
             'price.required' => 'Price is required',
+            'image.required' => 'Image is required',
         ];
     }
 }

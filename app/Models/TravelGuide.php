@@ -9,11 +9,15 @@ class TravelGuide extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'title', 'is_active', 'image', 'created_by'
+    ];
+
     protected $guarded = ['id'];
 
     public function user(){
 
-    return $this->belongTo(User::class, 'user_id');
+    return $this->belongsTo(User::class, 'created_by');
 
     }
 }

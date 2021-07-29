@@ -26,9 +26,9 @@ class CheckIfTourTitleExists implements Rule
      */
     public function passes($attribute, $title)
     {
-        $CheckIfTitleExists = $this->CheckIfTitleExists($title);
+        $CheckIfTourTitleExists = $this->CheckIfTourTitleExists($title);
 
-        if($CheckIfTitleExists){
+        if($CheckIfTourTitleExists){
             $this->attributeMessage =  "Title with the title {$title} already exist";
             return false;
         }
@@ -48,7 +48,7 @@ class CheckIfTourTitleExists implements Rule
     /**
      * Check if Projecy no exist
      */
-    private function CheckIfTitleExists($title)
+    private function CheckIfTourTitleExists($title)
     {
         $titleName = Tour::where('title', $title)->first();
 

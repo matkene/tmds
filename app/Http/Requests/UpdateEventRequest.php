@@ -4,10 +4,9 @@ namespace App\Http\Requests;
 
 
 use App\Rules\CheckIfEventTitleExists;
-use App\Rules\CheckIfDescriptionExists;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateEventRequest extends FormRequest
+class UpdateEventRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,11 +26,12 @@ class CreateEventRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => ['required','string'],
+            'title' => ['required','string',new CheckIfEventTitleExists()],
             'description' => ['required','string'],
             'start_date' => 'required',
             'end_date' => 'required',
             'tags' => 'required|string',
+            'image' => 'required|file',
             'location' => 'required|string'
 
 
