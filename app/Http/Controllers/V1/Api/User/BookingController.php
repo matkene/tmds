@@ -26,9 +26,9 @@ class BookingController extends Controller
 
 
     /**
-     * Get Booking details by Id
+     * Get Booking details by Ids
      */
-     public function showBooking(Request $request)
+    public function showBooking(Request $request)
     {
         try {
 
@@ -38,21 +38,17 @@ class BookingController extends Controller
 
             $bookingInstance = $this->bookingRepository->findBookingById($request->booking_id);
 
-            if(!$bookingInstance){
+            if (!$bookingInstance) {
                 return JsonResponser::send(true, "Booking Record not found", null, 401);
             }
 
             return JsonResponser::send(false, "Booking Record found successfully.", $bookingInstance);
-
         } catch (\Throwable $error) {
             return $error->getMessage();
             logger($error);
             return JsonResponser::send(true, 'Internal server error', null, 500);
         }
-
     }
-
-
 
     public function createBooking(CreateBookingRequest $request)
     {
@@ -104,7 +100,5 @@ class BookingController extends Controller
             return JsonResponser::send($error, $message, $data);
         }
     }
-
-
 
 }

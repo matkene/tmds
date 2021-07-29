@@ -72,8 +72,4 @@ class PeopleCultureController extends Controller
     }
 
 
-    
-
-
-
 }

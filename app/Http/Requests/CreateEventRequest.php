@@ -26,16 +26,14 @@ class CreateEventRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => ['required','string',new CheckIfEventTitleExists()],
-            'description' => ['required','string'],
+            'title' => ['required', 'string', new CheckIfEventTitleExists()],
+            'description' => ['required', 'string'],
             'start_date' => 'required',
             'end_date' => 'required',
             'tags' => 'required|string',
             'image' => 'required|file',
             'location' => 'required|string'
         ];
-
-        return $rules;
     }
 
     /**
@@ -43,7 +41,7 @@ class CreateEventRequest extends FormRequest
      *
      * @return array
      */
-     public function messages()
+    public function messages()
     {
         return [
             'title.required' => 'Title is required',

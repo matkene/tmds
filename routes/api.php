@@ -3,30 +3,30 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\Api\User\UserController;
+use App\Http\Controllers\V1\Api\Admin\TourController;
+use App\Http\Controllers\V1\Api\Admin\PeopleCultureController;
 use App\Http\Controllers\V1\Api\Auth\LoginController;
+use App\Http\Controllers\V1\Api\Admin\TestimonialController;
+use App\Http\Controllers\V1\Api\Admin\TravelGuideController;
+use App\Http\Controllers\V1\Api\Admin\HighlightController;
+use App\Http\Controllers\V1\Api\Admin\EventController;
+use App\Http\Controllers\V1\Api\Guest\GuestController;
 use App\Http\Controllers\V1\Api\Auth\RegisterController;
-use App\Http\Controllers\v1\Auth\AccountSettingsController;
+use App\Http\Controllers\V1\Auth\AccountSettingsController;
 use App\Http\Controllers\V1\Api\Auth\VerificationController;
 use App\Http\Controllers\v1\Api\Auth\ForgotPasswordController;
-use App\Http\Controllers\v1\Api\Admin\EventController;
-use App\Http\Controllers\v1\Api\User\EventController AS UserEventController;
-use App\Http\Controllers\v1\Api\Admin\TourController;
-use App\Http\Controllers\v1\Api\User\TourController AS UserTourController;
-use App\Http\Controllers\v1\Api\Admin\PeopleCultureController;
-use App\Http\Controllers\v1\Api\User\PeopleCultureController AS UserPeopleCultureController;
-use App\Http\Controllers\v1\Api\Admin\HighlightController;
-use App\Http\Controllers\v1\Api\User\HighlightController AS UserHighlightController;
-use App\Http\Controllers\v1\Api\Admin\BookingController;
-use App\Http\Controllers\v1\Api\User\BookingController AS UserBookingController;
-use App\Http\Controllers\v1\Api\Admin\TestimonialController;
-use App\Http\Controllers\v1\Api\User\TestimonialController AS UserTestimonialController;
-use App\Http\Controllers\v1\Api\Admin\TravelGuideController;
-use App\Http\Controllers\v1\Api\User\TravelGuideController AS UserTravelGuideController;
-
+use App\Http\Controllers\V1\Api\Admin\BookingController;
+use App\Http\Controllers\V1\Api\User\BookingController as UserBookingController;
+use App\Http\Controllers\V1\Api\User\EventController as UserEventController;
+use App\Http\Controllers\V1\Api\User\TourController as UserTourController;
+use App\Http\Controllers\V1\Api\User\PeopleCultureController as UserPeopleCultureController;
+use App\Http\Controllers\V1\Api\User\TestimonialController as UserTestimonialController;
+use App\Http\Controllers\V1\Api\User\TravelGuideController as UserTravelGuideController;
+use App\Http\Controllers\V1\Api\User\HighlightController as UserHighlightController;
 
 Route::group(['prefix' => 'v1'], function ($router) {
 
-    Route::get('/test', function() {
+    Route::get('/test', function () {
         return 'Hello test 1';
     });
 
@@ -59,6 +59,7 @@ Route::group(['prefix' => 'v1'], function ($router) {
 
         // Tour Route
         Route::group(["prefix" => "tours"], function () {
+
             Route::get('/', [UserTourController::class, 'index']);
             Route::post('view-single-tour', [UserTourController::class, 'showTour']);
         });
@@ -91,14 +92,14 @@ Route::group(['prefix' => 'v1'], function ($router) {
         Route::group(["prefix" => "travelguides"], function () {
             Route::get('/', [UserTravelGuideController::class, 'index']);
             Route::post('view-single-travelguide', [UserTravelGuideController::class, 'showTravelGuide']);
-        });
 
+        });
     });
 
     // Admin Route
     Route::group(["prefix" => "admin",  "middleware" => ["auth:api", "admin"], "namespace" => "V1\Api\Admin"], function () {
 
-          // Events
+        // Events
         Route::group(["prefix" => "events"], function () {
             Route::get('/', [EventController::class, 'index']);
             Route::post('view-single-event', [EventController::class, 'showEvent']);
@@ -153,6 +154,42 @@ Route::group(['prefix' => 'v1'], function ($router) {
         });
 
 
+
     });
 
+    // Guest Route
+    Route::group(["prefix" => "guest", "namespace" => "V1\Api\Guest"], function () {
+
+        // Events
+        Route::group(["prefix" => "events"], function () {
+            Route::get('/', [GuestController::class, 'listAllActiveEvents']);
+            Route::post('/', [GuestController::class, 'viewSingleEvent']);
+        });
+
+        // Tour
+        Route::group(["prefix" => "tours"], function () {
+            Route::get('/', [GuestController::class, 'listAllActiveTours']);
+            Route::post('/', [GuestController::class, 'viewSingleTour']);
+        });
+
+        // People Culture
+        Route::group(["prefix" => "peoplecultures"], function () {
+            Route::get('/', [GuestController::class, 'listAllActivePeopleCultures']);
+        });
+
+        // People Highlight
+        Route::group(["prefix" => "highlights"], function () {
+            Route::get('/', [GuestController::class, 'listAllActiveHighlights']);
+        });
+
+        // People Testimonial
+        Route::group(["prefix" => "testimonials"], function () {
+            Route::get('/', [GuestController::class, 'listAllActiveTestimonials']);
+        });
+
+        // People Travel Guide
+        Route::group(["prefix" => "travelguides"], function () {
+            Route::get('/', [GuestController::class, 'listAllActiveTravelGuides']);
+        });
+    });
 });

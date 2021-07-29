@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ViewEventRequest extends FormRequest
+class ViewTourRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,14 +24,14 @@ class ViewEventRequest extends FormRequest
     public function rules()
     {
         return [
-            'event_id' => ['required', 'integer'],
+            'tour_id' => ['required', 'integer'],
         ];
     }
 
     public function messages()
     {
         return [
-            'event_id' => 'Event Id Is Required',
+            'tour_id' => 'Tour Id Is Required',
         ];
     }
 }
