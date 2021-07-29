@@ -4,14 +4,24 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\Api\User\UserController;
 use App\Http\Controllers\V1\Api\Admin\TourController;
+use App\Http\Controllers\V1\Api\Admin\PeopleCultureController;
 use App\Http\Controllers\V1\Api\Auth\LoginController;
-use App\Http\Controllers\v1\Api\Admin\EventController;
+use App\Http\Controllers\V1\Api\Admin\TestimonialController;
+use App\Http\Controllers\V1\Api\Admin\TravelGuideController;
+use App\Http\Controllers\V1\Api\Admin\HighlightController;
+use App\Http\Controllers\V1\Api\Admin\EventController;
 use App\Http\Controllers\V1\Api\Guest\GuestController;
 use App\Http\Controllers\V1\Api\Auth\RegisterController;
-use App\Http\Controllers\v1\Auth\AccountSettingsController;
+use App\Http\Controllers\V1\Auth\AccountSettingsController;
 use App\Http\Controllers\V1\Api\Auth\VerificationController;
 use App\Http\Controllers\v1\Api\Auth\ForgotPasswordController;
-use App\Http\Controllers\v1\Api\User\EventController as UserEventController;
+
+use App\Http\Controllers\V1\Api\User\EventController as UserEventController;
+use App\Http\Controllers\V1\Api\User\TourController as UserTourController;
+use App\Http\Controllers\V1\Api\User\PeopleCultureController as UserPeopleCultureController;
+use App\Http\Controllers\V1\Api\User\TestimonialController as UserTestimonialController;
+use App\Http\Controllers\V1\Api\User\TravelGuideController as UserTravelGuideController;
+use App\Http\Controllers\V1\Api\User\HighlightController as UserHighlightController;
 
 Route::group(['prefix' => 'v1'], function ($router) {
 
@@ -79,6 +89,31 @@ Route::group(['prefix' => 'v1'], function ($router) {
         // Events
         Route::group(["prefix" => "events"], function () {
             Route::get('/', [GuestController::class, 'listAllActiveEvents']);
+        });
+
+        // Tour
+        Route::group(["prefix" => "tours"], function () {
+            Route::get('/', [GuestController::class, 'listAllActiveTours']);
+        });
+
+        // People Culture
+        Route::group(["prefix" => "peoplecultures"], function () {
+            Route::get('/', [GuestController::class, 'listAllActivePeopleCultures']);
+        });
+
+        // People Highlight
+        Route::group(["prefix" => "highlights"], function () {
+            Route::get('/', [GuestController::class, 'listAllActiveHighlights']);
+        });
+
+        // People Testimonial
+        Route::group(["prefix" => "testimonials"], function () {
+            Route::get('/', [GuestController::class, 'listAllActiveTestimonials']);
+        });
+
+        // People Travel Guide
+        Route::group(["prefix" => "travelguides"], function () {
+            Route::get('/', [GuestController::class, 'listAllActiveTravelGuides']);
         });
     });
 });
