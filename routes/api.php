@@ -89,11 +89,13 @@ Route::group(['prefix' => 'v1'], function ($router) {
         // Events
         Route::group(["prefix" => "events"], function () {
             Route::get('/', [GuestController::class, 'listAllActiveEvents']);
+            Route::post('/', [GuestController::class, 'viewSingleEvent']);
         });
 
         // Tour
         Route::group(["prefix" => "tours"], function () {
             Route::get('/', [GuestController::class, 'listAllActiveTours']);
+            Route::post('/', [GuestController::class, 'viewSingleTour']);
         });
 
         // People Culture
