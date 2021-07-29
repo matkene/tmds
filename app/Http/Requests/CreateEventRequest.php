@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 
 use App\Rules\CheckIfEventTitleExists;
-use App\Rules\CheckIfDescriptionExists;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateEventRequest extends FormRequest
@@ -34,8 +33,6 @@ class CreateEventRequest extends FormRequest
             'tags' => 'required|string',
             'image' => 'required|file',
             'location' => 'required|string'
-
-
         ];
     }
 
@@ -53,6 +50,7 @@ class CreateEventRequest extends FormRequest
             'end_date.required' => 'End Date is required',
             'location.required' => 'Location is required',
             'tags.required' => 'Tags is required',
+            'image.required' => 'Image is required',
         ];
     }
 }

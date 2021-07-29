@@ -21,7 +21,7 @@ class BookingRepository {
         return $this->modelInstance::with('tour','user')
         ->orderBy('id', 'DESC')
         ->paginate(3);
-        ;
+
     }
 
     public function findBookingById($id)    {

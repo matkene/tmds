@@ -2,10 +2,11 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\CheckIfTourTitleExists;
+
+use App\Rules\CheckIfHighlightTitleExists;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateTourRequest extends FormRequest
+class UpdateHighlightRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,12 +26,12 @@ class UpdateTourRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => ['required','string',new CheckIfTourTitleExists()],
+            'title' => ['required','string',new CheckIfHighlightTitleExists()],
             'description' => ['required','string'],
-            'price' => 'required|string',
-            'location' => 'required|string',
-            'distance' => 'required|string',
             'image' => 'required|file',
+            'video' => 'required|file',
+            'slug' => 'required|string',
+
 
         ];
 
@@ -47,10 +48,9 @@ class UpdateTourRequest extends FormRequest
         return [
             'title.required' => 'Title is required',
             'description.required' => 'Description is required',
-            'distance.required' => 'Distance is required',
-            'location.required' => 'Location is required',
-            'price.required' => 'Price is required',
-            'image.required' => 'Image is required',
+            'image.required' => 'Image is is required',
+            'video.required' => 'Video is required',
+            'slug.required' => 'Slug is required',
         ];
     }
 }

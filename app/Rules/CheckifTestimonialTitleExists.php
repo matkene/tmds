@@ -2,10 +2,10 @@
 
 namespace App\Rules;
 
-use App\Models\Event;
+use App\Models\Testimonial;
 use Illuminate\Contracts\Validation\Rule;
 
-class CheckIfEventTitleExists implements Rule
+class CheckIfTestimonialTitleExists implements Rule
 {
 
     public $attributeMessage;
@@ -26,9 +26,9 @@ class CheckIfEventTitleExists implements Rule
      */
     public function passes($attribute, $title)
     {
-        $CheckIfEventTitleExists = $this->CheckIfEventTitleExists($title);
+        $CheckIfTestimonialTitleExists = $this->CheckIfTestimonialTitleExists($title);
 
-        if($CheckIfEventTitleExists){
+        if($CheckIfTestimonialTitleExists){
             $this->attributeMessage =  "Title with the title {$title} already exist";
             return false;
         }
@@ -48,9 +48,9 @@ class CheckIfEventTitleExists implements Rule
     /**
      * Check if Project no exist
      */
-    private function CheckIfEventTitleExists($title)
+    private function CheckIfTestimonialTitleExists($title)
     {
-        $titleName = Event::where('title', $title)->first();
+        $titleName = Testimonial::where('title', $title)->first();
 
         if (is_null($titleName)) {
             return false;

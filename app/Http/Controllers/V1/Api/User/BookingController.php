@@ -10,10 +10,11 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Http\Responser\JsonResponser;
 use App\Repositories\BookingRepository;
+use App\Http\Requests\CreateBookingRequest;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 
-class TourController extends Controller
+class BookingController extends Controller
 {
     //
     protected $bookingRepository;
@@ -31,7 +32,11 @@ class TourController extends Controller
     {
         try {
 
-            $bookingInstance = $this->bookingRepository->findBookingById($request->id);
+            if(!isset($request->booking_id)){
+                return JsonResponser::send(true, "Error occured. Please select a booking", null, 403);
+            }
+
+            $bookingInstance = $this->bookingRepository->findBookingById($request->booking_id);
 
             if (!$bookingInstance) {
                 return JsonResponser::send(true, "Booking Record not found", null, 401);
@@ -44,4 +49,56 @@ class TourController extends Controller
             return JsonResponser::send(true, 'Internal server error', null, 500);
         }
     }
+
+    public function createBooking(CreateBookingRequest $request)
+    {
+        try {
+
+            $userId = auth()->user()->id;
+            //$userEmail = auth()->user()->email;
+            //$userLastName = auth()->user()->lastname;
+            //$userFirstName = auth()->user()->firstname;
+
+            DB::beginTransaction();
+
+            $newBookingInstance = $this->bookingRepository->create([
+                "no_adults" => $request->no_adults,
+                "no_children" => $request->no_children,
+                "no_infants" => $request->no_infants,
+                "date_of_visit" => $request->date_of_visit,
+                "ticket_no" => $request->ticket_no,
+                "user_id" => $userId,
+                "tour_id" => $request->tour_id,
+                "is_active" => true
+
+            ]);
+            if(!$newBookingInstance){
+                $error = true;
+                $message = "Booking was not created successfully. Please try again";
+                $data = [];
+                return JsonResponser::send($error, $message, $data);
+            }
+            /*
+            $data = [
+                'email' => $userEmail,
+                'name' => $userLastName.' '.$userFirstName,
+                'user' => $newBookingInstance,
+                'subject' => "Booking Created Successfully"
+            ];
+            Mail::to($userEmail)->send(new UserVerifyEmail($data));
+            */
+            DB::commit();
+            $error = false;
+            $message = "Booking created successfully.";
+            $data = $newBookingInstance;
+            return JsonResponser::send($error, $message, $data);
+        } catch (\Throwable $th) {
+            DB::rollback();
+            $error = true;
+            $message = $th->getMessage();
+            $data = [];
+            return JsonResponser::send($error, $message, $data);
+        }
+    }
+
 }
