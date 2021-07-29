@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\Api\User\UserController;
-use App\Http\Controllers\v1\Api\Admin\TourController;
+use App\Http\Controllers\V1\Api\Admin\TourController;
 use App\Http\Controllers\V1\Api\Auth\LoginController;
 use App\Http\Controllers\v1\Api\Admin\EventController;
 use App\Http\Controllers\V1\Api\Guest\GuestController;
