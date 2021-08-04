@@ -46,6 +46,16 @@ class BookingRepository {
         return $this->modelInstance::whereDate('created_at', Carbon::today())->sum('amount');
     }
 
+    public function processTotalVisit()
+    {
+        return $this->modelInstance::where("is_attended", true)->where("status", "completed")->count();
+    }
+
+    public function processVisitType($bookingType)
+    {
+        return $this->modelInstance::where("booking_type", $bookingType)->count();
+    }
+
 
 
 }
