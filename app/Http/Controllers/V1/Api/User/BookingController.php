@@ -4,15 +4,16 @@
 namespace App\Http\Controllers\V1\Api\User;
 
 use Carbon\Carbon;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Responser\JsonResponser;
 use App\Repositories\BookingRepository;
-use App\Http\Requests\CreateBookingRequest;
+use App\Interfaces\BookingTypeInterface;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\CreateBookingRequest;
 
 class BookingController extends Controller
 {
@@ -55,11 +56,14 @@ class BookingController extends Controller
         try {
 
             $userId = auth()->user()->id;
-            //$userEmail = auth()->user()->email;
-            //$userLastName = auth()->user()->lastname;
-            //$userFirstName = auth()->user()->firstname;
 
             DB::beginTransaction();
+
+            //get tour
+            $tourInstance = Tour::find($request->tour_id);
+            if(is_null($tourInstance)){
+                return JsonResponser::send(true, "Unable to fetch data. Please refresh and try again", $data);
+            }
 
             $newBookingInstance = $this->bookingRepository->create([
                 "no_adults" => $request->no_adults,
@@ -69,6 +73,8 @@ class BookingController extends Controller
                 "ticket_no" => $request->ticket_no,
                 "user_id" => $userId,
                 "tour_id" => $request->tour_id,
+                "booking_type" => BookingTypeInterface::ONLINE_BOOKING,
+                "price" => $tourInstance->price, //to be modified
                 "is_active" => true
 
             ]);
@@ -89,7 +95,7 @@ class BookingController extends Controller
             */
             DB::commit();
             $error = false;
-            $message = "Booking created successfully.";
+            $message = "Your booking was successfully. Please check your email for ticket Id.";
             $data = $newBookingInstance;
             return JsonResponser::send($error, $message, $data);
         } catch (\Throwable $th) {

@@ -4,25 +4,26 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\Api\User\UserController;
 use App\Http\Controllers\V1\Api\Admin\TourController;
-use App\Http\Controllers\V1\Api\Admin\PeopleCultureController;
 use App\Http\Controllers\V1\Api\Auth\LoginController;
-use App\Http\Controllers\V1\Api\Admin\TestimonialController;
-use App\Http\Controllers\V1\Api\Admin\TravelGuideController;
-use App\Http\Controllers\V1\Api\Admin\HighlightController;
 use App\Http\Controllers\V1\Api\Admin\EventController;
 use App\Http\Controllers\V1\Api\Guest\GuestController;
-use App\Http\Controllers\V1\Api\Auth\RegisterController;
-use App\Http\Controllers\V1\Auth\AccountSettingsController;
-use App\Http\Controllers\V1\Api\Auth\VerificationController;
-use App\Http\Controllers\v1\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\V1\Api\Admin\BookingController;
-use App\Http\Controllers\V1\Api\User\BookingController as UserBookingController;
-use App\Http\Controllers\V1\Api\User\EventController as UserEventController;
+use App\Http\Controllers\V1\Api\Auth\RegisterController;
+use App\Http\Controllers\V1\Api\Admin\DashboardController;
+use App\Http\Controllers\V1\Api\Admin\HighlightController;
+use App\Http\Controllers\V1\Auth\AccountSettingsController;
+use App\Http\Controllers\V1\Api\Admin\TestimonialController;
+use App\Http\Controllers\V1\Api\Admin\TravelGuideController;
+use App\Http\Controllers\V1\Api\Auth\VerificationController;
+use App\Http\Controllers\V1\Api\Admin\PeopleCultureController;
+use App\Http\Controllers\v1\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\V1\Api\User\TourController as UserTourController;
-use App\Http\Controllers\V1\Api\User\PeopleCultureController as UserPeopleCultureController;
+use App\Http\Controllers\V1\Api\User\EventController as UserEventController;
+use App\Http\Controllers\V1\Api\User\BookingController as UserBookingController;
+use App\Http\Controllers\V1\Api\User\HighlightController as UserHighlightController;
 use App\Http\Controllers\V1\Api\User\TestimonialController as UserTestimonialController;
 use App\Http\Controllers\V1\Api\User\TravelGuideController as UserTravelGuideController;
-use App\Http\Controllers\V1\Api\User\HighlightController as UserHighlightController;
+use App\Http\Controllers\V1\Api\User\PeopleCultureController as UserPeopleCultureController;
 
 Route::group(['prefix' => 'v1'], function ($router) {
 
@@ -98,6 +99,11 @@ Route::group(['prefix' => 'v1'], function ($router) {
 
     // Admin Route
     Route::group(["prefix" => "admin",  "middleware" => ["auth:api", "admin"], "namespace" => "V1\Api\Admin"], function () {
+
+        // Dashboard
+        Route::group(["prefix" => "dashboard"], function () {
+            Route::get('/', [DashboardController::class, 'index']);
+        });
 
         // Events
         Route::group(["prefix" => "events"], function () {

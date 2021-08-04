@@ -26,13 +26,19 @@ class BookingRepository {
 
     public function findBookingById($id)    {
 
-
        return $this->modelInstance::with('tour', 'user')->where('id', $id)->first();
 
     }
 
     public function create($dataToCreate){
+
         return $this->modelInstance::firstOrCreate($dataToCreate);
+
+    }
+
+    public function processTotalRevenue()
+    {
+        return $this->modelInstance::sum('amount');
     }
 
 
