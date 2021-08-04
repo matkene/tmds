@@ -20,7 +20,7 @@ class DashboardController extends Controller
 
     public function index(){
         try {
-            return Carbon::today();
+
             $totalRevenueGenerated = $this->bookingRepository->processTotalRevenue();
             $todayRevenueGenerated = $this->bookingRepository->processTodayRevenue();
             $todayVisit = $this->bookingRepository->processTotalVisit();
