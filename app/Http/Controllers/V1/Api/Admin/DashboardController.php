@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1\Api\Admin;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Responser\JsonResponser;
@@ -19,6 +20,7 @@ class DashboardController extends Controller
 
     public function index(){
         try {
+            return Carbon::today();
             $totalRevenueGenerated = $this->bookingRepository->processTotalRevenue();
             $todayRevenueGenerated = $this->bookingRepository->processTodayRevenue();
             $todayVisit = $this->bookingRepository->processTotalVisit();
