@@ -41,6 +41,11 @@ class BookingRepository {
         return $this->modelInstance::sum('amount');
     }
 
+    public function processTodayRevenue()
+    {
+        return $this->modelInstance::whereDate('created_at', Carbon::today())->sum('amount');
+    }
+
 
 
 }
