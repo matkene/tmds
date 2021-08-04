@@ -23,14 +23,14 @@ class DashboardController extends Controller
 
             $totalRevenueGenerated = $this->bookingRepository->processTotalRevenue();
             $todayRevenueGenerated = $this->bookingRepository->processTodayRevenue();
-            $todayVisit = $this->bookingRepository->processTotalVisit();
+            $totalVisit = $this->bookingRepository->processTotalVisit();
             $onlineBooking = $this->bookingRepository->processVisitType(BookingTypeInterface::ONLINE_BOOKING);
             $physicalBooking = $this->bookingRepository->processVisitType(BookingTypeInterface::IN_PERSON);
 
             $data = [
                 "totalRevenueGenerated" => $totalRevenueGenerated,
                 "todayRevenueGenerated" => $todayRevenueGenerated,
-                "todayVisit" => $todayVisit,
+                "totalVisit" => $totalVisit,
                 "onlineBooking" => $onlineBooking,
                 "physicalBooking" => $physicalBooking,
             ];
