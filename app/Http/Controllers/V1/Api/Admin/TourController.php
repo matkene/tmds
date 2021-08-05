@@ -252,7 +252,7 @@ class TourController extends Controller
                 return JsonResponser::send(true, "Error occured. Please select a tour to activate", null, 403);
             }
 
-            return $tourId = $request->tour_id;
+            $tourId = $request->tour_id;
 
             $tourInstance = $this->tourRepository->findTourById($request->tour_id);
 
@@ -261,7 +261,7 @@ class TourController extends Controller
             }
 
             //check if tour has booking
-            $bookings = Booking::where('tour_id', $tourId)->get();
+            return $bookings = Booking::where('tour_id', $tourId)->get();
 
             if(!is_null($bookings)){
                 return JsonResponser::send(true, "Record cannot be deleted because it has been attached to booking.", null, 401);
