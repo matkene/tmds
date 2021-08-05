@@ -36,4 +36,13 @@ class EventRepository
     {
         return $this->modelInstance::firstOrCreate($dataToCreate);
     }
+
+    public function processUpcomingEvents()
+    {
+        return $this->modelInstance::with('creator')
+                                    ->where('is_active', true)
+                                    ->orderBy('start_date', 'DESC')
+                                    ->take(3)
+                                    ->get();
+    }
 }
