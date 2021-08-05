@@ -76,7 +76,7 @@ class TourController extends Controller
 
 
 
-    public function createTour(CreateTourRequest $request)
+    public function createTour(Request $request)
     {
         try {
             $userId = auth()->user()->id;
