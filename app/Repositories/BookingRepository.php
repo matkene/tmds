@@ -76,7 +76,7 @@ class BookingRepository {
                                         $endDate = Carbon::parse($request->end_date);
                                         return $query->whereBetween(\DB::raw('DATE(created_at)'), [$startDate, $endDate]);
                                     })
-                                    ->where('status', 'Pending')
+                                    ->where('status', 'pending')
                                     ->orderBy('id', 'DESC')
                                     ->paginate(5);
 

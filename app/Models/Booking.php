@@ -15,8 +15,8 @@ class Booking extends Model
      *
      * @var array
      */
-     protected $fillable = [
-        'no_adults', 'no_children', 'no_infants', 'is_active', 'is_attended', 'payment_status', 'date_of_visit', 'ticket_no', 'user_id', 'tour_id'
+     protected $guarded = [
+        'id'
     ];
 
     /**
