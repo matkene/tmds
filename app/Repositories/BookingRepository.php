@@ -16,7 +16,7 @@ class BookingRepository {
         $this->modelInstance = $booking;
     }
 
-    public function allBookings($search_param = null, $dateSearchParam = null)
+    public function allBookings($searchParam = null, $dateSearchParam = null)
     {
 
         return $this->modelInstance::with('tour','user')
