@@ -16,8 +16,12 @@ class BookingRepository {
         $this->modelInstance = $booking;
     }
 
-    public function allBookings($searchParam = null, $dateSearchParam = null)
+    public function allBookings($request)
     {
+
+        $searchParam = $request->search_params;
+        (!is_null($request->start_date) && !is_null($request->end_date)) ? $dateSearchParam = true : $dateSearchParam = false;
+
 
         return $this->modelInstance::with('tour','user')
                                     ->when($searchParam, function($query, $searchParam) use($request) {

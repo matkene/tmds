@@ -30,10 +30,7 @@ class BookingController extends Controller
     {
         try {
 
-            $searchParam = $request->search_params;
-            (!is_null($request->start_date) && !is_null($request->end_date)) ? $dateSearchParam = true : $dateSearchParam = false;
-
-            $bookingInstance = $this->bookingRepository->allBookings();
+            $bookingInstance = $this->bookingRepository->allBookings($request);
 
             if(!$bookingInstance){
                 return JsonResponser::send(true, "Booking Record not found", null, 401);
