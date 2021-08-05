@@ -79,7 +79,7 @@ class TourController extends Controller
     public function createTour(CreateTourRequest $request)
     {
         try {
-            $userId = auth()->user()->id;
+            return $userId = auth()->user()->id;
 
             DB::beginTransaction();
 
