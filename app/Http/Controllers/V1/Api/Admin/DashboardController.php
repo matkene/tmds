@@ -9,6 +9,7 @@ use App\Http\Responser\JsonResponser;
 use App\Repositories\EventRepository;
 use App\Repositories\BookingRepository;
 use App\Interfaces\BookingTypeInterface;
+use App\Interfaces\PaymentMethodInterface;
 
 class DashboardController extends Controller
 {
@@ -30,6 +31,25 @@ class DashboardController extends Controller
             $onlineBooking = $this->bookingRepository->processVisitType(BookingTypeInterface::ONLINE_BOOKING);
             $physicalBooking = $this->bookingRepository->processVisitType(BookingTypeInterface::IN_PERSON);
             $upcomingEvents = $this->eventRepository->processUpcomingEvents();
+            $adultVisit = $this->bookingRepository->processAdultVisit();
+            $childrenVisit = $this->bookingRepository->processChildrenVisit();
+            $infantsVisit = $this->bookingRepository->processInfantVisit();
+
+            $onlinePayment = $this->bookingRepository->processRevenueByPaymentMethod(PaymentMethodInterface::ONLINE_PAYMENT);
+            $posPayment = $this->bookingRepository->processRevenueByPaymentMethod(PaymentMethodInterface::POS);
+            $cashPayment = $this->bookingRepository->processRevenueByPaymentMethod(PaymentMethodInterface::CASH);
+
+            $visitSummary = [
+                "adultVisit" => $adultVisit,
+                "childrenVisit" => $childrenVisit,
+                "infantsVisit" => $infantsVisit,
+            ];
+
+            $ticketSummary = [
+                "onlinePayment" => $onlinePayment,
+                "posPayment" => $posPayment,
+                "cashPayment" => $cashPayment
+            ];
 
             $data = [
                 "totalRevenueGenerated" => $totalRevenueGenerated,
@@ -38,6 +58,8 @@ class DashboardController extends Controller
                 "onlineBooking" => $onlineBooking,
                 "physicalBooking" => $physicalBooking,
                 "upcomingEvents" => $upcomingEvents,
+                "visitSummary" => $visitSummary,
+                "ticketSummary" => $ticketSummary
             ];
 
             return JsonResponser::send(false, "Dashboard data generated successfully.", $data, 200);
