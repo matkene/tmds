@@ -121,6 +121,7 @@ Route::group(['prefix' => 'v1'], function ($router) {
             Route::post('/update', [TourController::class, 'update']);
             Route::post('/activate', [TourController::class, 'activateTour']);
             Route::post('/deactivate', [TourController::class, 'deactivateTour']);
+            Route::post('/delete', [TourController::class, 'deleteTours']);
         });
 
 

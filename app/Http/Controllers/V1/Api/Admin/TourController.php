@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\V1\Api\Admin;
 
 use Carbon\Carbon;
+use App\Models\Booking;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -246,7 +247,32 @@ class TourController extends Controller
 
     public function deleteTours(Request $request)
     {
-        # code...
+        try {
+            if(!isset($request->tour_id)){
+                return JsonResponser::send(true, "Error occured. Please select a tour to activate", null, 403);
+            }
+
+            $tourId = $request->tour_id;
+
+            $tourInstance = $this->tourRepository->findTourById($request->tour_id);
+
+            if(!$tourInstance){
+                return JsonResponser::send(true, "Tour Record not found", null, 401);
+            }
+
+            //check if tour has booking
+            $bookings = Booking::where('tour_id', $tourId)->get();
+
+            if(!is_null($bookings)){
+                return JsonResponser::send(true, "Record cannot be deleted because it has been attached to booking.", null, 401);
+            }
+
+            $deleteTour = $tourInstance->delete();
+
+            return JsonResponser::send(false, "Record deleted successfully", [], 200);
+        } catch (\Exception $error) {
+            return JsonResponser::send(true, "Internal Server Error. Please refresh and try again", null, 401);
+        }
     }
 
 }
