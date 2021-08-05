@@ -35,8 +35,7 @@ class EventRepository
     public function processOngoingEvents()
     {
         $todayDate = Carbon::today();
-        return $this->modelInstance::with('creator')
-            ->whereBetween(['start_date', 'end_date'], $todayDate);
+        return $this->modelInstance::with('creator');
     }
 
     public function findEventById($id)
