@@ -89,7 +89,7 @@ class GuestController extends Controller
     {
         try {
 
-            $tourInstance = $this->tourRepository->allTours();
+            $tourInstance = $this->tourRepository->activeTours();
 
             if (!$tourInstance) {
                 return JsonResponser::send(true, "Tour Record not found", null, 403);
@@ -115,7 +115,6 @@ class GuestController extends Controller
 
             return JsonResponser::send(false, "Tour Record found successfully.", $tourInstance);
         } catch (\Throwable $error) {
-            return $error->getMessage();
             logger($error);
             return JsonResponser::send(true, 'Internal server error', null, 500);
         }

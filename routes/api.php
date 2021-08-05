@@ -119,6 +119,8 @@ Route::group(['prefix' => 'v1'], function ($router) {
             Route::post('view-single-tour', [TourController::class, 'showTour']);
             Route::post('/create', [TourController::class, 'createTour']);
             Route::post('/update', [TourController::class, 'update']);
+            Route::post('/activate', [TourController::class, 'activateTour']);
+            Route::post('/deactivate', [TourController::class, 'deactivateTour']);
         });
 
 

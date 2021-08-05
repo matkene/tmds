@@ -145,23 +145,36 @@ class TourController extends Controller
 
             DB::beginTransaction();
 
-            if ($file = $request->file('image')) {
-                $name = $file->getClientOriginalName();
-                $uniqueId = rand(10, 100000);
-                $imageName = config('app.url') . '/Tour/' . $uniqueId . '_'. date("Y-m-d") . '_' . time() . $name;
-                $file->move(('Tour/'), $imageName);
+            $images = [];
+
+            if($files=$request->file('image')){
+                foreach($files as $file){
+                    $uniqueId = bin2hex(openssl_random_pseudo_bytes(9));
+                    $fileExt = $file->getClientOriginalExtension();
+                    $name = $uniqueId.'_'. date("Y-m-d").'_'.time().'.'.$fileExt;
+                    $imageName = config('app.url').'/Tour/'. $uniqueId. '_'. date("Y-m-d"). '_' .time(). $name;
+                    $file->move(('Tour/'), $imageName);
+                    $images[]=$imageName;
+                }
+                $tourInstance->update([
+                    "image" => implode("|",$images),
+                ]);
             }else{
-                $imageName = $tourInstance->image;
+                $images = $tourInstance->image;
+                $tourInstance->update([
+                    "image" => $images,
+                ]);
             }
 
             $updateTourInstance = $tourInstance->update([
                 "title" => $request->title,
                 "description" => $request->description,
+                "created_by" => $userId,
                 "location" => $request->location,
-                "image" => $imageName,
-                "price" => $request->price,
+                "adult_price" => $request->adult_price,
+                "children_price" => $request->children_price,
                 "distance" => $request->distance,
-                "ratings" => $request->ratings
+                "ratings" => "5.00"
             ]);
             if(!$updateTourInstance){
                 $error = true;
@@ -183,6 +196,57 @@ class TourController extends Controller
         }
     }
 
+    public function activateTour(Request $request)
+    {
+        try {
+            if(!isset($request->tour_id)){
+                return JsonResponser::send(true, "Error occured. Please select a tour to activate", null, 403);
+            }
 
+            $tourInstance = $this->tourRepository->findTourById($request->tour_id);
+
+            if(!$tourInstance){
+                return JsonResponser::send(true, "Tour Record not found", null, 401);
+            }
+
+            $activateTour = $tourInstance->update([
+                'is_active' => true
+            ]);
+
+            return JsonResponser::send(false, "Record activated successfully", $tourInstance, 201);
+        } catch (\Exception $error) {
+            return JsonResponser::send(true, "Internal Server Error. Please refresh and try again", null, 401);
+        }
+
+    }
+
+    public function deactivateTour(Request $request)
+    {
+        try {
+            if(!isset($request->tour_id)){
+                return JsonResponser::send(true, "Error occured. Please select a tour to activate", null, 403);
+            }
+
+            $tourInstance = $this->tourRepository->findTourById($request->tour_id);
+
+            if(!$tourInstance){
+                return JsonResponser::send(true, "Tour Record not found", null, 401);
+            }
+
+            $deactivateTour = $tourInstance->update([
+                'is_active' => false
+            ]);
+
+            return JsonResponser::send(false, "Record deactivated successfully", $tourInstance, 201);
+        } catch (\Exception $error) {
+            return JsonResponser::send(true, "Internal Server Error. Please refresh and try again", null, 401);
+        }
+
+    }
+
+    public function deleteTours(Request $request)
+    {
+        # code...
+    }
 
 }
