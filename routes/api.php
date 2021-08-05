@@ -139,7 +139,7 @@ Route::group(['prefix' => 'v1'], function ($router) {
 
         // Booking Route
         Route::group(["prefix" => "bookings"], function () {
-            Route::get('/', [BookingController::class, 'index']);
+            Route::post('/', [BookingController::class, 'index']);
             Route::post('view-single-booking', [BookingController::class, 'showBooking']);
             //Route::post('/create', [BookingController::class, 'createBooking']);
         });

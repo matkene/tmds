@@ -26,9 +26,12 @@ class BookingController extends Controller
      /**
      * Get All Bookings details
      */
-     public function index()
+     public function index(Request $request)
     {
         try {
+
+            $searchParam = $request->search_params;
+            (!is_null($request->start_date) && !is_null($request->end_date)) ? $dateSearchParam = true : $dateSearchParam = false;
 
             $bookingInstance = $this->bookingRepository->allBookings();
 
