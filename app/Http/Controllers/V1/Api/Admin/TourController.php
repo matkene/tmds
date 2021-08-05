@@ -252,7 +252,7 @@ class TourController extends Controller
                 return JsonResponser::send(true, "Error occured. Please select a tour to activate", null, 403);
             }
 
-            $tourId = $request->tour_id;
+            return $tourId = $request->tour_id;
 
             $tourInstance = $this->tourRepository->findTourById($request->tour_id);
 
