@@ -12,7 +12,8 @@
         "jeremykenedy/laravel-roles": "^6.0",
         "laravel/framework": "^8.40",
         "laravel/tinker": "^2.5",
-        "tymon/jwt-auth": "^1.0"
+        "tymon/jwt-auth": "^1.0",
+        "doctrine/dbal": "v2.4.2"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
