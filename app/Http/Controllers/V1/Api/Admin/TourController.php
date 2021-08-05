@@ -88,6 +88,8 @@ class TourController extends Controller
                 $uniqueId = rand(10, 100000);
                 $imageName = config('app.url') . '/Tour/' . $uniqueId . '_'. date("Y-m-d") . '_' . time() . $name;
                 $file->move(('Tour/'), $imageName);
+            }else{
+                $imageName = null;
             }
 
             $newTourInstance = $this->tourRepository->create([
@@ -96,7 +98,8 @@ class TourController extends Controller
                 "created_by" => $userId,
                 "location" => $request->location,
                 "image" => $imageName,
-                "price" => $request->price,
+                "adult_price" => $request->adult_price,
+                "children_price" => $request->children_price,
                 "distance" => $request->distance,
                 "ratings" => "5.00"
             ]);

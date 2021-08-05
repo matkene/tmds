@@ -27,7 +27,8 @@ class CreateTourRequest extends FormRequest
         return [
             'title' => ['required','string',new CheckIfTourTitleExists()],
             'description' => ['required'],
-            'price' => 'required|string',
+            'children_price' => 'required',
+            'adult_price' => 'required',
             'image' => 'required|file',
             'location' => 'required|string',
             'distance' => 'required|string',
@@ -48,7 +49,8 @@ class CreateTourRequest extends FormRequest
             'description.required' => 'Description is required',
             'distance.required' => 'Distance is required',
             'location.required' => 'Location is required',
-            'price.required' => 'Price is required',
+            'children_price.required' => 'Children Price is required',
+            'adult_price.required' => 'Adult Price is required',
             'image.required' => 'Image is required',
         ];
     }
