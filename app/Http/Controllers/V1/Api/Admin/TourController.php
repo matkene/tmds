@@ -83,7 +83,6 @@ class TourController extends Controller
 
             DB::beginTransaction();
 
-            return $images = [];
             if ($files = $request->file('image')) {
                 foreach ($files as $file) {
                     $uniqueId = rand(10, 100000);
@@ -95,7 +94,7 @@ class TourController extends Controller
                 }
             }
 
-            $newTourInstance = $this->tourRepository->create([
+            return $newTourInstance = $this->tourRepository->create([
                 "title" => $request->title,
                 "description" => $request->description,
                 "created_by" => $userId,
