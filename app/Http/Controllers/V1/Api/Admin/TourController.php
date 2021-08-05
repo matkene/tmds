@@ -85,38 +85,30 @@ class TourController extends Controller
 
             $images = [];
 
+            if($files=$request->file('image')){
+                foreach($files as $file){
+                    $uniqueId = bin2hex(openssl_random_pseudo_bytes(9));
+                    $fileExt = $file->getClientOriginalExtension();
+                    $name = $uniqueId.'_'. date("Y-m-d").'_'.time().'.'.$fileExt;
+                    $imageName = config('app.url').'/Tour/'. $uniqueId. '_'. date("Y-m-d"). '_' .time(). $name;
+                    $file->move(('Tour/'), $imageName);
+                    $images[]=$imageName;
+                }
+            }
+
             $newTourInstance = $this->tourRepository->create([
                 "title" => $request->title,
                 "description" => $request->description,
                 "created_by" => $userId,
                 "location" => $request->location,
-                "image" => "",
+                "image" => implode("|",$images),
                 "adult_price" => $request->adult_price,
                 "children_price" => $request->children_price,
                 "distance" => $request->distance,
                 "ratings" => "5.00"
             ]);
 
-            if  (empty($request->image)) {
-                $newTourInstance->update([
-                    'image'=>  null
-                ]);
-            } else {
-                if($files=$request->file('image')){
-                    foreach($files as $file){
-                        $uniqueId = bin2hex(openssl_random_pseudo_bytes(9));
-                        $fileExt = $file->getClientOriginalExtension();
-                        $name = $uniqueId.'_'. date("Y-m-d").'_'.time().'.'.$fileExt;
-                        $imageName = config('app.url').'/Tour/'. $uniqueId. '_'. date("Y-m-d"). '_' .time(). $name;
-                        $file->move(('Tour/'), $imageName);
-                        $images[]=$imageName;
-                    }
-                }
-                return implode("|",$images);
-                $newTourInstance->update([
-                    'image'=>  implode("|",$images),
-                ]);
-            }
+
             if(!$newTourInstance){
                 $error = true;
                 $message = "Tour was not created successfully. Please try again";
