@@ -112,7 +112,8 @@ class TourController extends Controller
                         $images[]=$imageName;
                     }
                 }
-                return $newTourInstance->update([
+                return implode("|",$images);
+                $newTourInstance->update([
                     'image'=>  implode("|",$images),
                 ]);
             }
