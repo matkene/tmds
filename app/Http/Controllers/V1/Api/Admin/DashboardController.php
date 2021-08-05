@@ -64,6 +64,7 @@ class DashboardController extends Controller
 
             return JsonResponser::send(false, "Dashboard data generated successfully.", $data, 200);
         } catch (\Throwable $error) {
+            return $error->getMessage();
             return JsonResponser::send(true, "Internal Server Error. Please refresh and try again.", null, 401);
         }
     }
