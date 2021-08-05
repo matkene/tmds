@@ -261,9 +261,9 @@ class TourController extends Controller
             }
 
             //check if tour has booking
-            return $bookings = Booking::where('tour_id', $tourId)->get();
+            $bookings = Booking::where('tour_id', $tourId)->get();
 
-            if(!is_null($bookings)){
+            if(count($bookings) > 0){
                 return JsonResponser::send(true, "Record cannot be deleted because it has been attached to booking.", null, 401);
             }
 
