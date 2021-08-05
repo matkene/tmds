@@ -91,11 +91,11 @@ class TourController extends Controller
                     $imageName = $file->storeOnCloudinaryAs("product", $name)->getSecurePath();
                     $imageName = config('app.url') . '/Tour/' . $uniqueId . '_'. date("Y-m-d") . '_' . time() . $name;
                     $file->move(('Tour/'), $imageName);
-                    $images[] = $imageName;
+                    return $images[] = $imageName;
                 }
             }
 
-            return $newTourInstance = $this->tourRepository->create([
+            $newTourInstance = $this->tourRepository->create([
                 "title" => $request->title,
                 "description" => $request->description,
                 "created_by" => $userId,
