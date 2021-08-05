@@ -85,17 +85,6 @@ class TourController extends Controller
 
             $images = [];
 
-            if ($files = $request->file('image')) {
-                foreach ($files as $file) {
-                    $uniqueId = rand(10, 100000);
-                    $name               = $uniqueId . '_' . date("Y-m-d") . '_' . time();
-                    $imageName = $file->storeOnCloudinaryAs("product", $name)->getSecurePath();
-                    $imageName = config('app.url') . '/Tour/' . $uniqueId . '_'. date("Y-m-d") . '_' . time() . $name;
-                    $file->move(('Tour/'), $imageName);
-                    return $images[] = $imageName;
-                }
-            }
-
             $newTourInstance = $this->tourRepository->create([
                 "title" => $request->title,
                 "description" => $request->description,
