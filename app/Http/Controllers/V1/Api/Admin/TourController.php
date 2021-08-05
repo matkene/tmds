@@ -108,7 +108,6 @@ class TourController extends Controller
                 "ratings" => "5.00"
             ]);
 
-
             if(!$newTourInstance){
                 $error = true;
                 $message = "Tour was not created successfully. Please try again";
