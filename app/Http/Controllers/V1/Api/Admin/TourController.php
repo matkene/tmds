@@ -79,17 +79,21 @@ class TourController extends Controller
     public function createTour(CreateTourRequest $request)
     {
         try {
-            return $userId = auth()->user()->id;
+            $userId = auth()->user()->id;
 
             DB::beginTransaction();
 
-            if ($file = $request->file('image')) {
-                $name = $file->getClientOriginalName();
-                $uniqueId = rand(10, 100000);
-                $imageName = config('app.url') . '/Tour/' . $uniqueId . '_'. date("Y-m-d") . '_' . time() . $name;
-                $file->move(('Tour/'), $imageName);
-            }else{
-                $imageName = null;
+
+            $images = [];
+            if ($files = $request->file('image')) {
+                foreach ($files as $file) {
+                    $uniqueId = rand(10, 100000);
+                    $name               = $uniqueId . '_' . date("Y-m-d") . '_' . time();
+                    $imageName = $file->storeOnCloudinaryAs("product", $name)->getSecurePath();
+                    $imageName = config('app.url') . '/Tour/' . $uniqueId . '_'. date("Y-m-d") . '_' . time() . $name;
+                    $file->move(('Tour/'), $imageName);
+                    $images[] = $imageName;
+                }
             }
 
             $newTourInstance = $this->tourRepository->create([
@@ -97,7 +101,7 @@ class TourController extends Controller
                 "description" => $request->description,
                 "created_by" => $userId,
                 "location" => $request->location,
-                "image" => $imageName,
+                "image" => implode("|", $images),
                 "adult_price" => $request->adult_price,
                 "children_price" => $request->children_price,
                 "distance" => $request->distance,
