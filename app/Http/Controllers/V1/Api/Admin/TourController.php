@@ -84,6 +84,7 @@ class TourController extends Controller
             DB::beginTransaction();
 
             $images = [];
+            return $request->file('image');
             if ($files = $request->file('image')) {
                 foreach ($files as $file) {
                     $uniqueId = rand(10, 100000);
