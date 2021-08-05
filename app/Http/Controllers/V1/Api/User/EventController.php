@@ -25,7 +25,7 @@ class EventController extends Controller
     {
         try {
 
-            $eventInstance = $this->eventRepository->allEvents();
+            $eventInstance = $this->eventRepository->activeEvents();
 
             if (!$eventInstance) {
                 return JsonResponser::send(true, "Event Record not found", null, 403);

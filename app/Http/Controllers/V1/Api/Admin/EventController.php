@@ -39,11 +39,25 @@ class EventController extends Controller
             return JsonResponser::send(false, "Event Record found successfully.", $eventInstance);
 
         } catch (\Throwable $error) {
-            return $error->getMessage();
+
             logger($error);
             return JsonResponser::send(true, 'Internal server error', null, 500);
         }
 
+    }
+
+    public function ongoingEvents()
+    {
+        try {
+
+            $eventInstance = $this->eventRepository->processOngoingEvents();
+
+            return JsonResponser::send(false, "Record found successfully.", $eventInstance);
+
+        } catch (\Throwable $error) {
+            logger($error);
+            return JsonResponser::send(true, 'Internal server error', null, 500);
+        }
     }
 
 

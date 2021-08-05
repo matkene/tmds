@@ -111,6 +111,7 @@ Route::group(['prefix' => 'v1'], function ($router) {
             Route::post('view-single-event', [EventController::class, 'showEvent']);
             Route::post('/create', [EventController::class, 'createEvent']);
             Route::post('/update', [EventController::class, 'update']);
+            Route::get('/ongoing', [EventController::class, 'ongoingEvents']);
         });
 
         // Tours

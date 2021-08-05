@@ -20,9 +20,23 @@ class EventRepository
     public function allEvents()
     {
         return $this->modelInstance::with('creator')
+            ->orderBy('id', 'DESC')
+            ->paginate(5);
+    }
+
+    public function activeEvents()
+    {
+        return $this->modelInstance::with('creator')
             ->where('is_active', true)
             ->orderBy('id', 'DESC')
             ->paginate(3);
+    }
+
+    public function processOngoingEvents()
+    {
+        $todayDate = Carbon::today();
+        return $this->modelInstance::with('creator')
+            ->whereBetween(['start_date', 'end_date'], $todayDate);
     }
 
     public function findEventById($id)
