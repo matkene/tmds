@@ -76,7 +76,7 @@ class TourController extends Controller
 
 
 
-    public function createTour(Request $request)
+    public function createTour(CreateTourRequest $request)
     {
         try {
             $userId = auth()->user()->id;
@@ -112,7 +112,7 @@ class TourController extends Controller
                         $images[]=$imageName;
                     }
                 }
-                $newTourInstance->update([
+                return $newTourInstance->update([
                     'image'=>  implode("|",$images),
                 ]);
             }
