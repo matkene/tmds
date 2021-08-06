@@ -7,3 +7,4 @@ interface EventStatusInterface {
     const ONGOING = 'Ongoing';
     const PAST = 'Past';
 }
+
