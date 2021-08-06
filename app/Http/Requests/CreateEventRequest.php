@@ -31,7 +31,7 @@ class CreateEventRequest extends FormRequest
             'start_date' => 'required',
             'end_date' => 'required',
             'tags' => 'required|string',
-            'image' => 'required|file',
+            'image' => 'required',
             'location' => 'required|string'
         ];
     }
