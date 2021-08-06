@@ -20,6 +20,7 @@ use App\Http\Controllers\v1\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\V1\Api\User\TourController as UserTourController;
 use App\Http\Controllers\V1\Api\User\EventController as UserEventController;
 use App\Http\Controllers\V1\Api\User\BookingController as UserBookingController;
+use App\Http\Controllers\V1\Api\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\V1\Api\User\HighlightController as UserHighlightController;
 use App\Http\Controllers\V1\Api\User\TestimonialController as UserTestimonialController;
 use App\Http\Controllers\V1\Api\User\TravelGuideController as UserTravelGuideController;
@@ -51,6 +52,7 @@ Route::group(['prefix' => 'v1'], function ($router) {
 
         Route::get('/', [UserController::class, 'index']);
         Route::post('update/', [UserController::class, 'update']);
+        Route::get('/dashboard', [UserDashboardController::class, 'index']);
 
         // Event
         Route::group(["prefix" => "events"], function () {
@@ -63,6 +65,9 @@ Route::group(['prefix' => 'v1'], function ($router) {
 
             Route::get('/', [UserTourController::class, 'index']);
             Route::post('view-single-tour', [UserTourController::class, 'showTour']);
+            Route::get('tour-history', [UserTourController::class, 'tourHistory']);
+            Route::get('top-attraction', [UserTourController::class, 'topAttraction']);
+            Route::get('favourite', [UserTourController::class, 'tourFavourite']);
         });
 
         // People Culture Route
@@ -93,7 +98,6 @@ Route::group(['prefix' => 'v1'], function ($router) {
         Route::group(["prefix" => "travelguides"], function () {
             Route::get('/', [UserTravelGuideController::class, 'index']);
             Route::post('view-single-travelguide', [UserTravelGuideController::class, 'showTravelGuide']);
-
         });
     });
 
@@ -133,7 +137,7 @@ Route::group(['prefix' => 'v1'], function ($router) {
             Route::post('/update', [PeopleCultureController::class, 'update']);
         });
 
-         // Highlight Route
+        // Highlight Route
         Route::group(["prefix" => "highlights"], function () {
             Route::get('/', [HighlightController::class, 'index']);
             Route::post('view-single-highlight', [HighlightController::class, 'showHighlight']);
@@ -165,9 +169,6 @@ Route::group(['prefix' => 'v1'], function ($router) {
             Route::post('/create', [TravelGuideController::class, 'createTravelGuide']);
             Route::post('/update', [TravelGuideController::class, 'update']);
         });
-
-
-
     });
 
     // Guest Route
