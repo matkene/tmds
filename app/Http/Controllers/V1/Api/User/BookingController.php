@@ -14,6 +14,7 @@ use App\Repositories\BookingRepository;
 use App\Interfaces\BookingTypeInterface;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\CreateBookingRequest;
+use App\Models\Tour;
 
 class BookingController extends Controller
 {
@@ -33,7 +34,7 @@ class BookingController extends Controller
     {
         try {
 
-            if(!isset($request->booking_id)){
+            if (!isset($request->booking_id)) {
                 return JsonResponser::send(true, "Error occured. Please select a booking", null, 403);
             }
 
@@ -61,8 +62,8 @@ class BookingController extends Controller
 
             //get tour
             $tourInstance = Tour::find($request->tour_id);
-            if(is_null($tourInstance)){
-                return JsonResponser::send(true, "Unable to fetch data. Please refresh and try again", $data);
+            if (is_null($tourInstance)) {
+                return JsonResponser::send(true, "Unable to fetch data. Please refresh and try again", $tourInstance);
             }
 
             $newBookingInstance = $this->bookingRepository->create([
@@ -78,7 +79,7 @@ class BookingController extends Controller
                 "is_active" => true
 
             ]);
-            if(!$newBookingInstance){
+            if (!$newBookingInstance) {
                 $error = true;
                 $message = "Booking was not created successfully. Please try again";
                 $data = [];
@@ -106,5 +107,4 @@ class BookingController extends Controller
             return JsonResponser::send($error, $message, $data);
         }
     }
-
 }
