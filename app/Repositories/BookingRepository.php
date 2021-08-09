@@ -2,21 +2,27 @@
 
 namespace App\Repositories;
 
+use App\Helpers\Payment;
+use App\Http\Responser\JsonResponser;
 use Carbon\Carbon;
 use App\Models\Booking;
 use Illuminate\Support\Facades\DB;
 use App\Interfaces\BookingTypeInterface;
+use App\Models\Tour;
+use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Builder;
-
+use Illuminate\Support\Facades\Auth;
 
 class BookingRepository
 {
 
     private $modelInstance;
+    private $paymentToken;
 
     public function __construct(Booking $booking)
     {
         $this->modelInstance = $booking;
+        $this->paymentToken = Payment::authenticate()->data->api_key;
     }
 
     public function allBookings($request)
@@ -153,5 +159,76 @@ class BookingRepository
     public function processVisitType($bookingType)
     {
         return $this->modelInstance::where("booking_type", $bookingType)->count();
+    }
+
+    public function processBooking($request)
+    {
+        $user = Auth::user();
+        $userId = auth()->user()->id;
+
+        DB::beginTransaction();
+
+        //get tour
+        $tourInstance = Tour::find($request['tour_id']);
+        if (is_null($tourInstance)) {
+            return [
+                'error' => true,
+                'message' => 'Tour Id Not Found',
+                'data' => [],
+            ];
+        }
+
+        // Save the booking to the db
+        $this->create([
+            "no_adults" => $request['no_adults'],
+            "no_children" => $request['no_children'],
+            "no_infants" => $request['no_infants'],
+            "date_of_visit" => $request['date_of_visit'],
+            "ticket_no" => $request['ticket_no'],
+            "user_id" => $userId,
+            "tour_id" => $request['tour_id'],
+            "booking_type" => BookingTypeInterface::ONLINE_BOOKING,
+            "amount" => $tourInstance->price, //to be modified
+            "is_active" => true
+
+        ]);
+
+        // Make the payment
+        $client = new Client();
+        $url = config('payment.base_url') . '/mda-integration/generate-bill';
+
+
+        $response = $client->post($url, [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer ' . $this->paymentToken,
+            ],
+            'json' => [
+                "customer_first_name" => $user->firstname,
+                "customer_last_name" => $user->lastname,
+                "customer_email" => $user->email,
+                "customer_phone" => $user->phoneno,
+                "customer_address" => $user->state . ',  ' . $user->country,
+                "bill_description" => $tourInstance->description,
+                "billed_amount" => floatval($tourInstance->price),
+                "overwrite_existing" => false,
+                "request_id" => time(),
+                "service_id" =>  46,
+                "demand_notices" => array(
+                    array(
+                        "amount" => floatval($tourInstance->price),
+                        "revenue_code" => "100010011114021"
+                    )
+                )
+            ]
+        ]);
+
+        $data =  json_decode($response->getBody());
+
+        return [
+            'error' => false,
+            'message' => 'Data retrieved',
+            'data' => $data
+        ];
     }
 }

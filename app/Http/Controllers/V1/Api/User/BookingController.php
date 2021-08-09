@@ -9,25 +9,19 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Responser\JsonResponser;
 use App\Repositories\BookingRepository;
-use App\Interfaces\BookingTypeInterface;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\CreateBookingRequest;
-use App\Models\Tour;
-use GuzzleHttp\Client;
 
 class BookingController extends Controller
 {
     //
     protected $bookingRepository;
-    private $paymentToken;
 
     public function __construct(BookingRepository $bookingRepository)
     {
         $this->bookingRepository = $bookingRepository;
-        $this->paymentToken = Payment::authenticate()->data->api_key;
     }
 
 
@@ -59,84 +53,23 @@ class BookingController extends Controller
     public function createBooking(CreateBookingRequest $request)
     {
         try {
+            $data = $request->all();
+            $createBooking = $this->bookingRepository->processBooking($data);
 
-            $user = Auth::user();
-            $userId = auth()->user()->id;
-
-            DB::beginTransaction();
-
-            //get tour
-            $tourInstance = Tour::find($request->tour_id);
-            if (is_null($tourInstance)) {
-                return JsonResponser::send(true, "Unable to fetch data. Please refresh and try again", $tourInstance);
+            if ($createBooking['error'] == false) {
+                return JsonResponser::send(false, $createBooking['message'], $createBooking['data']);
             }
 
-            $newBookingInstance = $this->bookingRepository->create([
-                "no_adults" => $request->no_adults,
-                "no_children" => $request->no_children,
-                "no_infants" => $request->no_infants,
-                "date_of_visit" => $request->date_of_visit,
-                "ticket_no" => $request->ticket_no,
-                "user_id" => $userId,
-                "tour_id" => $request->tour_id,
-                "booking_type" => BookingTypeInterface::ONLINE_BOOKING,
-                "amount" => $tourInstance->price, //to be modified
-                "is_active" => true
-
-            ]);
-            if (!$newBookingInstance) {
-                $error = true;
-                $message = "Booking was not created successfully. Please try again";
-                $data = [];
-                return JsonResponser::send($error, $message, $data);
-            }
-
-            // Make the payment
-            $client = new Client();
-
-            $url = config('payment.base_url') . '/mda-integration/generate-bill';
-
-            $response = $client->post($url, [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer ' . $this->paymentToken,
-                ],
-                'json' => [
-                    "customer_first_name" => $user->firstname,
-                    "customer_last_name" => $user->lastname,
-                    "customer_email" => $user->email,
-                    "customer_phone" => $user->phoneno,
-                    "customer_address" => $user->state . ',  ' . $user->country,
-                    "bill_description" => $tourInstance->description,
-                    "billed_amount" => floatval($tourInstance->price),
-                    "overwrite_existing" => false,
-                    "request_id" => time(),
-                    "service_id" =>  46,
-                    "demand_notices" => array(
-                        array(
-                            "amount" => floatval($tourInstance->price),
-                            "revenue_code" => "100010011114021"
-                        )
-                    )
-                ]
-            ]);
-
-            $data =  json_decode($response->getBody());
-
-            return JsonResponser::send(false, 'Data Retrieved', $data);
-
-
+            return JsonResponser::send(true, $createBooking['message'], $createBooking['data']);
             /*
-            $data = [
-                'email' => $userEmail,
-                'name' => $userLastName.' '.$userFirstName,
-                'user' => $newBookingInstance,
-                'subject' => "Booking Created Successfully"
-            ];
-            Mail::to($userEmail)->send(new UserVerifyEmail($data));
+                $data = [
+                    'email' => $userEmail,
+                    'name' => $userLastName.' '.$userFirstName,
+                    'user' => $newBookingInstance,
+                    'subject' => "Booking Created Successfully"
+                ];
+                Mail::to($userEmail)->send(new UserVerifyEmail($data));
             */
-
-
 
             // DB::commit();
             // $error = false;
