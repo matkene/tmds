@@ -16,6 +16,7 @@ use App\Interfaces\BookingTypeInterface;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\CreateBookingRequest;
 use App\Models\Tour;
+use GuzzleHttp\Client;
 
 class BookingController extends Controller
 {
@@ -59,6 +60,7 @@ class BookingController extends Controller
     {
         try {
 
+            $user = Auth::user();
             $userId = auth()->user()->id;
 
             DB::beginTransaction();
@@ -88,6 +90,42 @@ class BookingController extends Controller
                 $data = [];
                 return JsonResponser::send($error, $message, $data);
             }
+
+            // Make the payment
+            $client = new Client();
+
+            $url = config('payment.base_url') . '/mda-integration/generate-bill';
+
+            $response = $client->post($url, [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer ' . $this->paymentToken,
+                ],
+                'json' => [
+                    "customer_first_name" => $user->firstname,
+                    "customer_last_name" => $user->lastname,
+                    "customer_email" => $user->email,
+                    "customer_phone" => $user->phoneno,
+                    "customer_address" => $user->state . ',  ' . $user->country,
+                    "bill_description" => $tourInstance->description,
+                    "billed_amount" => floatval($tourInstance->price),
+                    "overwrite_existing" => false,
+                    "request_id" => time(),
+                    "service_id" =>  46,
+                    "demand_notices" => array(
+                        array(
+                            "amount" => floatval($tourInstance->price),
+                            "revenue_code" => "100010011114021"
+                        )
+                    )
+                ]
+            ]);
+
+            $data =  json_decode($response->getBody());
+
+            return JsonResponser::send(false, 'Data Retrieved', $data);
+
+
             /*
             $data = [
                 'email' => $userEmail,
@@ -97,11 +135,14 @@ class BookingController extends Controller
             ];
             Mail::to($userEmail)->send(new UserVerifyEmail($data));
             */
-            DB::commit();
-            $error = false;
-            $message = "Your booking was successfully. Please check your email for ticket Id.";
-            $data = $newBookingInstance;
-            return JsonResponser::send($error, $message, $data);
+
+
+
+            // DB::commit();
+            // $error = false;
+            // $message = "Your booking was successfully. Please check your email for ticket Id.";
+            // $data = $newBookingInstance;
+            // return JsonResponser::send($error, $message, $data);
         } catch (\Throwable $th) {
             DB::rollback();
             $error = true;
