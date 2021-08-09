@@ -75,7 +75,7 @@ class BookingController extends Controller
                 "user_id" => $userId,
                 "tour_id" => $request->tour_id,
                 "booking_type" => BookingTypeInterface::ONLINE_BOOKING,
-                "price" => $tourInstance->price, //to be modified
+                "amount" => $tourInstance->price, //to be modified
                 "is_active" => true
 
             ]);
