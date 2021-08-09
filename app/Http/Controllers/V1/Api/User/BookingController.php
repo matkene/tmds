@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers\V1\Api\User;
 
+use App\Helpers\Payment;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -20,10 +21,12 @@ class BookingController extends Controller
 {
     //
     protected $bookingRepository;
+    private $paymentToken;
 
     public function __construct(BookingRepository $bookingRepository)
     {
         $this->bookingRepository = $bookingRepository;
+        $this->paymentToken = Payment::authenticate()->data->api_key;
     }
 
 
