@@ -216,7 +216,7 @@ class BookingRepository
                 "service_id" =>  156,
                 "demand_notices" => array(
                     array(
-                        "name" => "Earnings from Olumo tourists' centre",
+                        "name" => "Olumo tourists centre - Gate Fee",
                         "amount" => floatval($tourInstance->price),
                         "revenue_code" => "200040021114005"
                     )
