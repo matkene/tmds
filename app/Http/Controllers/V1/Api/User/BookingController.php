@@ -61,23 +61,23 @@ class BookingController extends Controller
             }
 
             return JsonResponser::send(true, $createBooking['message'], $createBooking['data']);
-            /*
-                $data = [
-                    'email' => $userEmail,
-                    'name' => $userLastName.' '.$userFirstName,
-                    'user' => $newBookingInstance,
-                    'subject' => "Booking Created Successfully"
-                ];
-                Mail::to($userEmail)->send(new UserVerifyEmail($data));
-            */
-
-            // DB::commit();
-            // $error = false;
-            // $message = "Your booking was successfully. Please check your email for ticket Id.";
-            // $data = $newBookingInstance;
-            // return JsonResponser::send($error, $message, $data);
         } catch (\Throwable $th) {
-            DB::rollback();
+            $error = true;
+            $message = $th->getMessage();
+            $data = [];
+            return JsonResponser::send($error, $message, $data);
+        }
+    }
+
+    public function verifyBookingPayment($paymentRequestId)
+    {
+        try {
+
+            $verifyBooking = $this->bookingRepository->verifyBookingPayment($paymentRequestId);
+
+
+            return JsonResponser::send(true, 'Data Retrieved', $verifyBooking);
+        } catch (\Throwable $th) {
             $error = true;
             $message = $th->getMessage();
             $data = [];

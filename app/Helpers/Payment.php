@@ -16,8 +16,8 @@ class Payment
                 'Content-Type' => 'application/json',
             ],
             'json' => [
-                "username" =>  "username",
-                "password" =>  "password",
+                "username" =>  "dev_culture_tourism_mda",
+                "password" =>  "dev@culture_and_tourism_ministry#2021",
                 "generate_new_key"  => false,
             ]
         ]);

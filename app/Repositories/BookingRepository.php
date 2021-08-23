@@ -166,7 +166,6 @@ class BookingRepository
         $user = Auth::user();
         $userId = auth()->user()->id;
 
-        DB::beginTransaction();
 
         //get tour
         $tourInstance = Tour::find($request['tour_id']);
@@ -178,8 +177,9 @@ class BookingRepository
             ];
         }
 
+
         // Save the booking to the db
-        $this->create([
+        $booking = Booking::create([
             "no_adults" => $request['no_adults'],
             "no_children" => $request['no_children'],
             "no_infants" => $request['no_infants'],
@@ -190,10 +190,10 @@ class BookingRepository
             "booking_type" => BookingTypeInterface::ONLINE_BOOKING,
             "amount" => $tourInstance->price, //to be modified
             "is_active" => true
-
         ]);
 
-        // Make the payment
+
+        //Make the payment
         $client = new Client();
         $url = config('payment.base_url') . '/mda-integration/generate-bill';
 
@@ -209,15 +209,16 @@ class BookingRepository
                 "customer_email" => $user->email,
                 "customer_phone" => $user->phoneno,
                 "customer_address" => $user->state . ',  ' . $user->country,
-                "bill_description" => $tourInstance->description,
+                "bill_description" => 'Payment for one round tour for ' . $user->firstname . ' ' . $user->lastname, //$tourInstance->description,
                 "billed_amount" => floatval($tourInstance->price),
                 "overwrite_existing" => false,
                 "request_id" => time(),
-                "service_id" =>  46,
+                "service_id" =>  156,
                 "demand_notices" => array(
                     array(
+                        "name" => "Earnings from Olumo tourists' centre",
                         "amount" => floatval($tourInstance->price),
-                        "revenue_code" => "100010011114021"
+                        "revenue_code" => "200040021114005"
                     )
                 )
             ]
@@ -225,10 +226,49 @@ class BookingRepository
 
         $data =  json_decode($response->getBody());
 
+        // Get the payment Id
+        $paymentRequestId = $data->data->request_id;
+
+        // Update the database to hold Payment Request Id
+        $tourBooking = $this->modelInstance::whereId($booking['id'])->first();
+        $tourBooking->payment_request_id = $paymentRequestId;
+        $tourBooking->save();
+
         return [
             'error' => false,
             'message' => 'Data retrieved',
             'data' => $data
         ];
+    }
+
+    public function verifyBookingPayment($paymentRequestId)
+    {
+        $client = new Client();
+        $url = config('payment.base_url');
+
+        $response = $client->get($url . '/mda-integration/get-bill?request_id=' . $paymentRequestId, [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer ' . $this->paymentToken,
+            ],
+        ]);
+
+        $data = json_decode($response->getBody());
+
+        if (count($data->data->payments_transactions) === 0) {
+            return [
+                'paid' => false,
+            ];
+        } else {
+
+            $booking = $this->modelInstance::wherePaymentRequestId($paymentRequestId)->first();
+            $booking->payment_status = 'Paid';
+            $booking->save();
+
+            return [
+                'paid' => true,
+                $data
+            ];
+        }
     }
 }
