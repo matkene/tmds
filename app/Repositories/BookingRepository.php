@@ -195,26 +195,34 @@ class BookingRepository
             ];
         }
 
+
+        // Calculate the total
+        $adultTotal = ($request['no_adult_male'] + $request['no_adult_female']) + $tourInstance->adultPrice;
+        $childrenTotal = ($request['no_children_male'] + $request['no_children_female']) + $tourInstance->children_price;
+        $infantTotal = ($request['no_infant_male'] + $request['no_childrno_infant_femaleen_female']) + $tourInstance->infant_price;
+
+        $grandTotal = $adultTotal + $childrenTotal + $infantTotal;
+
         // Save the booking to the db
         $booking = Booking::create([
-
             "user_id" => $userId,
             "tour_id" => $request['tour_id'],
             "booking_type" => BookingTypeInterface::ONLINE_BOOKING,
-
-
-
-
-            "no_adults" => $request['no_adults'],
-            "no_children" => $request['no_children'],
-            "no_infants" => $request['no_infants'],
             "date_of_visit" => $request['date_of_visit'],
-            "ticket_no" => $request['ticket_no'],
-
-
-            "amount" => $tourInstance->price, //to be modified
+            "ticket_no" => 'OGT-' . time(),
+            "amount" => $grandTotal,
             "is_active" => true,
-            "options" => $request['options'],
+            'no_adult_male' => $request['no_adult_male'],
+            'no_adult_female' => $request['no_adult_female'],
+            'adult_option' => $request['adult_option'],
+            'no_children_male' => $request['no_children_male'],
+            'no_children_female' => $request['no_children_female'],
+            'children_option' => $request['children_option'],
+            'no_infant_male' => $request['no_infant_male'],
+            'no_infant_female' => $request['no_infant_female'],
+            'infant_option' => $request['infant_option'],
+            'no_adult_sight_seeing' => $request['no_adult_sight_seeing'],
+            'no_children_sight_seeing' => $request['no_children_sight_seeing'],
         ]);
 
 
@@ -235,14 +243,14 @@ class BookingRepository
                 "customer_phone" => $user->phoneno,
                 "customer_address" => $user->state . ',  ' . $user->country,
                 "bill_description" => 'Payment for one round tour for ' . $user->firstname . ' ' . $user->lastname, //$tourInstance->description,
-                "billed_amount" => floatval($tourInstance->price),
+                "billed_amount" => floatval($grandTotal),
                 "overwrite_existing" => false,
                 "request_id" => time(),
                 "service_id" =>  156,
                 "demand_notices" => array(
                     array(
                         "name" => "Olumo tourists centre - Gate Fee",
-                        "amount" => floatval($tourInstance->price),
+                        "amount" => floatval($grandTotal),
                         "revenue_code" => "200040021114005"
                     )
                 )

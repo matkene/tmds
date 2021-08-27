@@ -27,14 +27,18 @@ class CreateBookingRequest extends FormRequest
         return [
             'no_adult_male' => 'required',
             'no_adult_female' => 'required',
+            'adult_option' => 'required',
             'no_children_male' => 'required',
             'no_children_female' => 'required',
-            'no_infants' => 'required|string',
-            'date_of_visit' => 'required|string',
-            'ticket_no' => 'required|string',
-            'user_id' => 'required|string',
-            'tour_id' => 'required|string',
-            'options' => 'required|string',
+            'children_option' => 'required',
+            'no_infant_male' => 'required',
+            'no_infant_female' => 'required',
+            'infant_option' => 'required',
+            'user_id' => 'required',
+            'tour_id' => 'required',
+            'no_adult_sight_seeing' => 'required',
+            'no_children_sight_seeing' => 'required',
+            'date_of_visit' => 'required',
         ];
     }
 
