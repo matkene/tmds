@@ -197,14 +197,21 @@ class BookingRepository
 
         // Save the booking to the db
         $booking = Booking::create([
+
+            "user_id" => $userId,
+            "tour_id" => $request['tour_id'],
+            "booking_type" => BookingTypeInterface::ONLINE_BOOKING,
+
+
+
+
             "no_adults" => $request['no_adults'],
             "no_children" => $request['no_children'],
             "no_infants" => $request['no_infants'],
             "date_of_visit" => $request['date_of_visit'],
             "ticket_no" => $request['ticket_no'],
-            "user_id" => $userId,
-            "tour_id" => $request['tour_id'],
-            "booking_type" => BookingTypeInterface::ONLINE_BOOKING,
+
+
             "amount" => $tourInstance->price, //to be modified
             "is_active" => true,
             "options" => $request['options'],

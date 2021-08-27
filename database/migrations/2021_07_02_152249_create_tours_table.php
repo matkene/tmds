@@ -25,6 +25,8 @@ class CreateToursTable extends Migration
             $table->string('ratings')->default("5.0");
             $table->boolean('is_active')->default(true);
             $table->integer('daily_limit')->nullable();
+            $table->decimal('children_price')->default(0);
+            $table->integer('infant_price')->default(0);
             $table->foreign('created_by')->references('id')->on('users')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');

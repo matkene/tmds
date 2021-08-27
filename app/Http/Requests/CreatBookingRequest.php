@@ -25,8 +25,10 @@ class CreateBookingRequest extends FormRequest
     public function rules()
     {
         return [
-            'no_adults' => 'required|string',
-            'no_children' => 'required|string',
+            'no_adult_male' => 'required',
+            'no_adult_female' => 'required',
+            'no_children_male' => 'required',
+            'no_children_female' => 'required',
             'no_infants' => 'required|string',
             'date_of_visit' => 'required|string',
             'ticket_no' => 'required|string',

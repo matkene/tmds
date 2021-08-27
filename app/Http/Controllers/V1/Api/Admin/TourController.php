@@ -27,52 +27,48 @@ class TourController extends Controller
     /**
      * Get tour details
      */
-     public function index()
+    public function index()
     {
         try {
 
             $tourInstance = $this->tourRepository->allTours();
 
-            if(!$tourInstance){
+            if (!$tourInstance) {
                 return JsonResponser::send(true, "Tour Record not found", null, 401);
             }
 
             return JsonResponser::send(false, "Tour Record found successfully.", $tourInstance);
-
         } catch (\Throwable $error) {
             return $error->getMessage();
             logger($error);
             return JsonResponser::send(true, 'Internal server error', null, 500);
         }
-
     }
 
 
     /**
      * Get tour details by Id
      */
-     public function showTour(Request $request)
+    public function showTour(Request $request)
     {
         try {
 
-            if(!isset($request->tour_id)){
+            if (!isset($request->tour_id)) {
                 return JsonResponser::send(true, "Error occured. Please select a tour", null, 403);
             }
 
             $tourInstance = $this->tourRepository->findTourById($request->tour_id);
 
-            if(!$tourInstance){
+            if (!$tourInstance) {
                 return JsonResponser::send(true, "Tour Record not found", null, 401);
             }
 
             return JsonResponser::send(false, "Tour Record found successfully.", $tourInstance);
-
         } catch (\Throwable $error) {
             return $error->getMessage();
             logger($error);
             return JsonResponser::send(true, 'Internal server error', null, 500);
         }
-
     }
 
 
@@ -86,14 +82,14 @@ class TourController extends Controller
 
             $images = [];
 
-            if($files=$request->file('image')){
-                foreach($files as $file){
+            if ($files = $request->file('image')) {
+                foreach ($files as $file) {
                     $uniqueId = bin2hex(openssl_random_pseudo_bytes(9));
                     $fileExt = $file->getClientOriginalExtension();
-                    $name = $uniqueId.'_'. date("Y-m-d").'_'.time().'.'.$fileExt;
-                    $imageName = config('app.url').'/Tour/'. $uniqueId. '_'. date("Y-m-d"). '_' .time(). $name;
+                    $name = $uniqueId . '_' . date("Y-m-d") . '_' . time() . '.' . $fileExt;
+                    $imageName = config('app.url') . '/Tour/' . $uniqueId . '_' . date("Y-m-d") . '_' . time() . $name;
                     $file->move(('Tour/'), $imageName);
-                    $images[]=$imageName;
+                    $images[] = $imageName;
                 }
             }
 
@@ -102,14 +98,15 @@ class TourController extends Controller
                 "description" => $request->description,
                 "created_by" => $userId,
                 "location" => $request->location,
-                "image" => implode("|",$images),
+                "image" => implode("|", $images),
                 "adult_price" => $request->adult_price,
                 "children_price" => $request->children_price,
+                "infant_price" => $request->infant_price,
                 "distance" => $request->distance,
                 "ratings" => "5.00"
             ]);
 
-            if(!$newTourInstance){
+            if (!$newTourInstance) {
                 $error = true;
                 $message = "Tour was not created successfully. Please try again";
                 $data = [];
@@ -133,13 +130,14 @@ class TourController extends Controller
     /**
      * Edit Tour
      */
-     public function update(UpdateTourRequest $request)
+    public function update(UpdateTourRequest $request)
     {
+        $userId = Auth::user()->id;
         try {
 
             $tourInstance = $this->tourRepository->findTourById($request->tour_id);
 
-            if(!$tourInstance){
+            if (!$tourInstance) {
                 return JsonResponser::send(true, "Tour Record not found", null, 401);
             }
 
@@ -148,19 +146,19 @@ class TourController extends Controller
 
             $images = [];
 
-            if($files=$request->file('image')){
-                foreach($files as $file){
+            if ($files = $request->file('image')) {
+                foreach ($files as $file) {
                     $uniqueId = bin2hex(openssl_random_pseudo_bytes(9));
                     $fileExt = $file->getClientOriginalExtension();
-                    $name = $uniqueId.'_'. date("Y-m-d").'_'.time().'.'.$fileExt;
-                    $imageName = config('app.url').'/Tour/'. $uniqueId. '_'. date("Y-m-d"). '_' .time(). $name;
+                    $name = $uniqueId . '_' . date("Y-m-d") . '_' . time() . '.' . $fileExt;
+                    $imageName = config('app.url') . '/Tour/' . $uniqueId . '_' . date("Y-m-d") . '_' . time() . $name;
                     $file->move(('Tour/'), $imageName);
-                    $images[]=$imageName;
+                    $images[] = $imageName;
                 }
                 $tourInstance->update([
-                    "image" => implode("|",$images),
+                    "image" => implode("|", $images),
                 ]);
-            }else{
+            } else {
                 $images = $tourInstance->image;
                 $tourInstance->update([
                     "image" => $images,
@@ -177,7 +175,7 @@ class TourController extends Controller
                 "distance" => $request->distance,
                 "ratings" => "5.00"
             ]);
-            if(!$updateTourInstance){
+            if (!$updateTourInstance) {
                 $error = true;
                 $message = "Tour was not updated successfully. Please try again";
                 $data = [];
@@ -200,13 +198,13 @@ class TourController extends Controller
     public function activateTour(Request $request)
     {
         try {
-            if(!isset($request->tour_id)){
+            if (!isset($request->tour_id)) {
                 return JsonResponser::send(true, "Error occured. Please select a tour to activate", null, 403);
             }
 
             $tourInstance = $this->tourRepository->findTourById($request->tour_id);
 
-            if(!$tourInstance){
+            if (!$tourInstance) {
                 return JsonResponser::send(true, "Tour Record not found", null, 401);
             }
 
@@ -218,19 +216,18 @@ class TourController extends Controller
         } catch (\Exception $error) {
             return JsonResponser::send(true, "Internal Server Error. Please refresh and try again", null, 401);
         }
-
     }
 
     public function deactivateTour(Request $request)
     {
         try {
-            if(!isset($request->tour_id)){
+            if (!isset($request->tour_id)) {
                 return JsonResponser::send(true, "Error occured. Please select a tour to activate", null, 403);
             }
 
             $tourInstance = $this->tourRepository->findTourById($request->tour_id);
 
-            if(!$tourInstance){
+            if (!$tourInstance) {
                 return JsonResponser::send(true, "Tour Record not found", null, 401);
             }
 
@@ -242,13 +239,12 @@ class TourController extends Controller
         } catch (\Exception $error) {
             return JsonResponser::send(true, "Internal Server Error. Please refresh and try again", null, 401);
         }
-
     }
 
     public function deleteTours(Request $request)
     {
         try {
-            if(!isset($request->tour_id)){
+            if (!isset($request->tour_id)) {
                 return JsonResponser::send(true, "Error occured. Please select a tour to activate", null, 403);
             }
 
@@ -256,14 +252,14 @@ class TourController extends Controller
 
             $tourInstance = $this->tourRepository->findTourById($request->tour_id);
 
-            if(!$tourInstance){
+            if (!$tourInstance) {
                 return JsonResponser::send(true, "Tour Record not found", null, 401);
             }
 
             //check if tour has booking
             $bookings = Booking::where('tour_id', $tourId)->get();
 
-            if(count($bookings) > 0){
+            if (count($bookings) > 0) {
                 return JsonResponser::send(true, "Record cannot be deleted because it has been attached to booking.", null, 401);
             }
 
@@ -274,5 +270,4 @@ class TourController extends Controller
             return JsonResponser::send(true, "Internal Server Error. Please refresh and try again", null, 401);
         }
     }
-
 }
