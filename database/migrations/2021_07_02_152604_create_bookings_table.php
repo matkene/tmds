@@ -26,6 +26,7 @@ class CreateBookingsTable extends Migration
             $table->string('payment_request_id')->nullable();
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('tour_id');
+            $table->string('options')->nullable();
             $table->foreign('user_id')->references('id')->on('users')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');

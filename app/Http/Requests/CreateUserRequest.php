@@ -27,12 +27,11 @@ class CreateUserRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'email' => ['required','string',new CheckIfEmailExists()],
-            'phoneno' => ['required','string',new CheckIfPhoneExists()],
-            'username' => ['required','string',new CheckIfUsernameExists()],
+            'email' => ['required', 'string', new CheckIfEmailExists()],
+            'phoneno' => ['required', 'string', new CheckIfPhoneExists()],
+            'username' => ['required', 'string', new CheckIfUsernameExists()],
             'password' => 'required|string|min:6',
             'lastname' => 'required|string',
-            'date_of_birth' => 'required',
             'gender' => 'required',
             'account_type' => 'required',
             'firstname' => 'required|string',

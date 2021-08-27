@@ -60,6 +60,5 @@ class VerificationController extends Controller
         }
 
         return JsonResponser::send(true, "Verification code is invalid.", null, 400);
-
     }
 }

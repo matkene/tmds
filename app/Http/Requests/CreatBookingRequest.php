@@ -32,6 +32,7 @@ class CreateBookingRequest extends FormRequest
             'ticket_no' => 'required|string',
             'user_id' => 'required|string',
             'tour_id' => 'required|string',
+            'options' => 'required|string',
         ];
     }
 

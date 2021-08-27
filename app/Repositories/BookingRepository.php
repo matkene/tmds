@@ -178,6 +178,23 @@ class BookingRepository
         }
 
 
+        // Check if the tour is full for that day
+        $inputDate = Carbon::parse($request['date_of_visit']);
+        $bookingCount = Booking::where('tour_id', $tourInstance->id)
+            ->whereMonth('date_of_visit', $inputDate->month)
+            ->whereDay('date_of_visit', $inputDate->day)
+            ->count();
+
+
+
+        if ($bookingCount >= $tourInstance->daily_limit) {
+            return [
+                'error' => true,
+                'message' => 'Booking filled up for Date of visit Selected',
+                'data' => [],
+            ];
+        }
+
         // Save the booking to the db
         $booking = Booking::create([
             "no_adults" => $request['no_adults'],
@@ -189,7 +206,8 @@ class BookingRepository
             "tour_id" => $request['tour_id'],
             "booking_type" => BookingTypeInterface::ONLINE_BOOKING,
             "amount" => $tourInstance->price, //to be modified
-            "is_active" => true
+            "is_active" => true,
+            "options" => $request['options'],
         ]);
 
 
