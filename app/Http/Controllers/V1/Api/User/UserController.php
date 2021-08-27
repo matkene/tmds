@@ -13,7 +13,8 @@ class UserController extends Controller
 {
     protected $userRepository;
 
-    public function __construct(UserRepository $userRepository){
+    public function __construct(UserRepository $userRepository)
+    {
         $this->userRepository = $userRepository;
     }
 
@@ -27,18 +28,16 @@ class UserController extends Controller
 
             $userInstance = $this->userRepository->findById($userId);
 
-            if(!$userInstance){
+            if (!$userInstance) {
                 return JsonResponser::send(true, "Record not found", null, 401);
             }
 
             return JsonResponser::send(false, "Record found successfully.", $userInstance);
-
         } catch (\Throwable $error) {
             return $error->getMessage();
             logger($error);
             return JsonResponser::send(true, 'Internal server error', null, 500);
         }
-
     }
 
     /**
@@ -51,7 +50,7 @@ class UserController extends Controller
 
             $userInstance = $this->userRepository->findById($userId);
 
-            if(!$userInstance){
+            if (!$userInstance) {
                 return JsonResponser::send(true, "Record not found", null, 401);
             }
 
@@ -67,29 +66,29 @@ class UserController extends Controller
                 "lastname" => $request->lastname,
                 "firstname" => $request->firstname,
                 "phoneno" => $request->phoneno,
-                "date_of_birth" => $request->date_of_birth,
-                "gender" => $request->gender,
-                "highest_qualification" => $request->highest_qualification,
-                "interest" => $request->interest,
-                "years_of_experience" => $request->years_of_experience
+                "dateemail_of_birth" => $request->date_of_birth,
+                "email" => $request->email,
+                "address" => $request->address,
+                "state" => $request->state,
+                "country" => $request->country
             ]);
-            if(!$updateUserInstance){
+            if (!$updateUserInstance) {
                 $error = true;
                 $message = "Account was not updated successfully. Please try again";
                 $data = [];
                 return JsonResponser::send($error, $message, $data);
             }
-            if($file=$request->file('resume')){
-                $name=$file->getClientOriginalName();
-                $fileName = config('app.url').'/Resume/'.$newUserInstance->email.'/'.$request->lastname.'_'. date("Y-m-d").'_'.time().$name;
-                $file->move(('Resume/'.$newUserInstance->email.'/'), $fileName);
+            // if ($file = $request->file('resume')) {
+            //     $name = $file->getClientOriginalName();
+            //     $fileName = config('app.url') . '/Resume/' . $newUserInstance->email . '/' . $request->lastname . '_' . date("Y-m-d") . '_' . time() . $name;
+            //     $file->move(('Resume/' . $newUserInstance->email . '/'), $fileName);
 
-                $storeResume = Document::firstOrCreate([
-                    "user_id" => $newUserInstance->id,
-                    "type" => "Resume",
-                    "file" => $fileName
-                ]);
-            }
+            //     $storeResume = Document::firstOrCreate([
+            //         "user_id" => $newUserInstance->id,
+            //         "type" => "Resume",
+            //         "file" => $fileName
+            //     ]);
+            // }
 
             DB::commit();
 
