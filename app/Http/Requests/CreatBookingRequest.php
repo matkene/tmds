@@ -41,22 +41,4 @@ class CreateBookingRequest extends FormRequest
             'date_of_visit' => 'required',
         ];
     }
-
-    /**
-     * Get the error messages for the defined validation rules.
-     *
-     * @return array
-     */
-    public function messages()
-    {
-        return [
-            'no_adults.required' => 'No of Adults is required',
-            'no_children.required' => 'No of Children is required',
-            'no_infants.required' => 'No of Infants is required',
-            'date_of_visit.required' => 'Date of Visit is required',
-            'ticket_no.required' => 'Ticket No is required',
-            'user_id.required' => 'User Id is required',
-            'tour_id.required' => 'Tour Id is required',
-        ];
-    }
 }
