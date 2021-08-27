@@ -66,7 +66,7 @@ class UserController extends Controller
                 "lastname" => $request->lastname,
                 "firstname" => $request->firstname,
                 "phoneno" => $request->phoneno,
-                "dateemail_of_birth" => $request->date_of_birth,
+                "date_of_birth" => $request->date_of_birth,
                 "email" => $request->email,
                 "address" => $request->address,
                 "state" => $request->state,
