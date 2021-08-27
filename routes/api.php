@@ -11,7 +11,7 @@ use App\Http\Controllers\V1\Api\Admin\BookingController;
 use App\Http\Controllers\V1\Api\Auth\RegisterController;
 use App\Http\Controllers\V1\Api\Admin\DashboardController;
 use App\Http\Controllers\V1\Api\Admin\HighlightController;
-use App\Http\Controllers\V1\Auth\AccountSettingsController;
+use App\Http\Controllers\V1\Api\Auth\AccountSettingsController;
 use App\Http\Controllers\V1\Api\Admin\TestimonialController;
 use App\Http\Controllers\V1\Api\Admin\TravelGuideController;
 use App\Http\Controllers\V1\Api\Auth\VerificationController;
