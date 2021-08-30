@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\V1\Api\User;
 
 use App\Helpers\Payment;
+use App\Helpers\ProcessAuditLog;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -59,6 +60,17 @@ class BookingController extends Controller
             if ($createBooking['error'] == false) {
                 return JsonResponser::send(false, $createBooking['message'], $createBooking['data']);
             }
+
+            $currentUserInstance = auth()->user();
+            $dataToLog = [
+                'causer_id' => auth()->user()->id,
+                'action_id' => $createBooking['booking_id'],
+                'action_type' => "Models\Booking",
+                'log_name' => "Booking Created Successfully",
+                'description' => "Booking Created Successfully by {$currentUserInstance->lastname} {$currentUserInstance->firstname}",
+            ];
+
+            ProcessAuditLog::storeAuditLog($dataToLog);
 
             return JsonResponser::send(true, $createBooking['message'], $createBooking['data']);
         } catch (\Throwable $th) {

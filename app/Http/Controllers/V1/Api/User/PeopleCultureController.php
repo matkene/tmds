@@ -24,52 +24,46 @@ class PeopleCultureController extends Controller
     /**
      * Get People Culture details
      */
-     public function index()
+    public function index()
     {
         try {
 
             $peopleCultureInstance = $this->peopleCultureRepository->allPeopleCultures();
 
-            if(!$peopleCultureInstance){
+            if (!$peopleCultureInstance) {
                 return JsonResponser::send(true, "People Culture Record not found", null, 401);
             }
 
             return JsonResponser::send(false, "People Culture found successfully.", $peopleCultureInstance);
-
         } catch (\Throwable $error) {
             return $error->getMessage();
             logger($error);
             return JsonResponser::send(true, 'Internal server error', null, 500);
         }
-
     }
 
 
     /**
      * Get a Particular People and Culture details
      */
-     public function showPeopleCulture(Request $request)
+    public function showPeopleCulture(Request $request)
     {
         try {
 
-            if(!isset($request->people_culture_id)){
+            if (!isset($request->people_culture_id)) {
                 return JsonResponser::send(true, "Error occured. Please select a People Culture", null, 403);
             }
 
             $peopleCultureInstance = $this->peopleCultureRepository->findPeopleCultureById($request->people_culture_id);
 
-            if(!$peopeleCultureInstance){
+            if (!$peopleCultureInstance) {
                 return JsonResponser::send(true, "People Culture Record not found", null, 401);
             }
 
             return JsonResponser::send(false, "People Culture Record found successfully.", $peopleCultureInstance);
-
         } catch (\Throwable $error) {
             logger($error);
             return JsonResponser::send(true, 'Internal server error', null, 500);
         }
-
     }
-
-
 }

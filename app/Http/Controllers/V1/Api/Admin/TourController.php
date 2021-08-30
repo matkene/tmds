@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1\Api\Admin;
 
+use App\Helpers\ProcessAuditLog;
 use Carbon\Carbon;
 use App\Models\Booking;
 use Illuminate\Support\Str;
@@ -113,6 +114,18 @@ class TourController extends Controller
                 return JsonResponser::send($error, $message, $data);
             }
             DB::commit();
+
+            $currentUserInstance = auth()->user();
+            $dataToLog = [
+                'causer_id' => auth()->user()->id,
+                'action_id' => $newTourInstance->id,
+                'action_type' => "Models\Tour",
+                'log_name' => "Tour Created Successfully",
+                'description' => "Tour Created Successfully by {$currentUserInstance->lastname} {$currentUserInstance->firstname}",
+            ];
+
+            ProcessAuditLog::storeAuditLog($dataToLog);
+
             $error = false;
             $message = "Tour created successfully.";
             $data = $newTourInstance;
@@ -182,6 +195,18 @@ class TourController extends Controller
                 return JsonResponser::send($error, $message, $data);
             }
             DB::commit();
+
+            $currentUserInstance = auth()->user();
+            $dataToLog = [
+                'causer_id' => auth()->user()->id,
+                'action_id' => $updateTourInstance->id,
+                'action_type' => "Models\Tour",
+                'log_name' => "Tour Updated Successfully",
+                'description' => "Tour Updated Successfully by {$currentUserInstance->lastname} {$currentUserInstance->firstname}",
+            ];
+
+            ProcessAuditLog::storeAuditLog($dataToLog);
+
             $error = false;
             $message = "Tour updated successfully.";
             $data = $tourInstance;

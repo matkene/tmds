@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1\Api\Admin;
 
+use App\Helpers\ProcessAuditLog;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -26,52 +27,48 @@ class TravelGuideController extends Controller
     /**
      * Get travel Guide details
      */
-     public function index()
+    public function index()
     {
         try {
 
             $travelGuideInstance = $this->travelGuideRepository->allTravelGuides();
 
-            if(!$travelGuideInstance){
+            if (!$travelGuideInstance) {
                 return JsonResponser::send(true, "Travel Guide Record not found", null, 401);
             }
 
             return JsonResponser::send(false, "Travel Guide found successfully.", $travelGuideInstance);
-
         } catch (\Throwable $error) {
             return $error->getMessage();
             logger($error);
             return JsonResponser::send(true, 'Internal server error', null, 500);
         }
-
     }
 
 
     /**
      * Get Travel Guide details by Id
      */
-     public function showTravelGuide(Request $request)
+    public function showTravelGuide(Request $request)
     {
         try {
 
-            if(!isset($request->travelguide_id)){
+            if (!isset($request->travelguide_id)) {
                 return JsonResponser::send(true, "Error occured. Please select a travel guide", null, 403);
             }
 
             $travelGuideInstance = $this->travelGuideRepository->findTravelGuideById($request->travelguide_id);
 
-            if(!$travelGuideInstance){
+            if (!$travelGuideInstance) {
                 return JsonResponser::send(true, "Travel Guide Record not found", null, 401);
             }
 
             return JsonResponser::send(false, "Travel Guide Record found successfully.", $travelGuideInstance);
-
         } catch (\Throwable $error) {
             return $error->getMessage();
             logger($error);
             return JsonResponser::send(true, 'Internal server error', null, 500);
         }
-
     }
 
 
@@ -86,7 +83,7 @@ class TravelGuideController extends Controller
             if ($file = $request->file('image')) {
                 $name = $file->getClientOriginalName();
                 $uniqueId = rand(10, 100000);
-                $imageName = config('app.url') . '/TravelGuide/' . $uniqueId . '_'. date("Y-m-d") . '_' . time() . $name;
+                $imageName = config('app.url') . '/TravelGuide/' . $uniqueId . '_' . date("Y-m-d") . '_' . time() . $name;
                 $file->move(('TravelGuide/'), $imageName);
             }
 
@@ -97,13 +94,25 @@ class TravelGuideController extends Controller
                 "is_active" => true,
 
             ]);
-            if(!$newTravelGuideInstance){
+            if (!$newTravelGuideInstance) {
                 $error = true;
                 $message = "Travel Guide was not created successfully. Please try again";
                 $data = [];
                 return JsonResponser::send($error, $message, $data);
             }
             DB::commit();
+
+            $currentUserInstance = auth()->user();
+            $dataToLog = [
+                'causer_id' => auth()->user()->id,
+                'action_id' => $newTravelGuideInstance->id,
+                'action_type' => "Models\TravelGuide",
+                'log_name' => "TravelGuide Created Successfully",
+                'description' => "TravelGuide Created Successfully by {$currentUserInstance->lastname} {$currentUserInstance->firstname}",
+            ];
+
+            ProcessAuditLog::storeAuditLog($dataToLog);
+
             $error = false;
             $message = "Travel Guide created successfully.";
             $data = $newTravelGuideInstance;
@@ -121,13 +130,13 @@ class TravelGuideController extends Controller
     /**
      * Edit Travel Guide
      */
-     public function update(UpdateTravelGuideRequest $request)
+    public function update(UpdateTravelGuideRequest $request)
     {
         try {
 
             $travelGuideInstance = $this->travelGuideRepository->findTravelGuideById($request->travelguide_id);
 
-            if(!$travelGuideInstance){
+            if (!$travelGuideInstance) {
                 return JsonResponser::send(true, "Travel Guide Record not found", null, 401);
             }
 
@@ -137,9 +146,9 @@ class TravelGuideController extends Controller
             if ($file = $request->file('image')) {
                 $name = $file->getClientOriginalName();
                 $uniqueId = rand(10, 100000);
-                $imageName = config('app.url') . '/TravelGuide/' . $uniqueId . '_'. date("Y-m-d") . '_' . time() . $name;
+                $imageName = config('app.url') . '/TravelGuide/' . $uniqueId . '_' . date("Y-m-d") . '_' . time() . $name;
                 $file->move(('TravelGuide/'), $imageName);
-            }else{
+            } else {
                 $imageName = $travelGuideInstance->image;
             }
 
@@ -148,13 +157,25 @@ class TravelGuideController extends Controller
                 "image" => $imageName
 
             ]);
-            if(!$updateTravelGuideInstance){
+            if (!$updateTravelGuideInstance) {
                 $error = true;
                 $message = "Travel Guide was not updated successfully. Please try again";
                 $data = [];
                 return JsonResponser::send($error, $message, $data);
             }
             DB::commit();
+
+            $currentUserInstance = auth()->user();
+            $dataToLog = [
+                'causer_id' => auth()->user()->id,
+                'action_id' => $updateTravelGuideInstance->id,
+                'action_type' => "Models\TravelGuide",
+                'log_name' => "TravelGuide Updated Successfully",
+                'description' => "TravelGuide Updated Successfully by {$currentUserInstance->lastname} {$currentUserInstance->firstname}",
+            ];
+
+            ProcessAuditLog::storeAuditLog($dataToLog);
+
             $error = false;
             $message = "Travel Guide updated successfully.";
             $data = $travelGuideInstance;
@@ -167,7 +188,4 @@ class TravelGuideController extends Controller
             return JsonResponser::send($error, $message, $data);
         }
     }
-
-
-
 }

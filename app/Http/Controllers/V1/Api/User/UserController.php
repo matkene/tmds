@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1\Api\User;
 
+use App\Helpers\ProcessAuditLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -91,6 +92,17 @@ class UserController extends Controller
             // }
 
             DB::commit();
+
+            $currentUserInstance = auth()->user();
+            $dataToLog = [
+                'causer_id' => $currentUserInstance->id,
+                'action_id' => $updateUserInstance->id,
+                'action_type' => "Models\User",
+                'log_name' => "User Account  Updated Successfully",
+                'description' => "User Account Updated Successfully by {$currentUserInstance->lastname} {$currentUserInstance->firstname}",
+            ];
+
+            ProcessAuditLog::storeAuditLog($dataToLog);
 
             $error = false;
             $message = "Account updated successfully.";

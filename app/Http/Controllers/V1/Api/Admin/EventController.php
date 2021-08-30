@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1\Api\Admin;
 
+use App\Helpers\ProcessAuditLog;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -26,24 +27,22 @@ class EventController extends Controller
     /**
      * Get Event details
      */
-     public function index()
+    public function index()
     {
         try {
 
             $eventInstance = $this->eventRepository->allEvents();
 
-            if(!$eventInstance){
+            if (!$eventInstance) {
                 return JsonResponser::send(true, "Event Record not found", null, 401);
             }
 
             return JsonResponser::send(false, "Event Record found successfully.", $eventInstance);
-
         } catch (\Throwable $error) {
 
             logger($error);
             return JsonResponser::send(true, 'Internal server error', null, 500);
         }
-
     }
 
     public function ongoingEvents()
@@ -53,7 +52,6 @@ class EventController extends Controller
             $eventInstance = $this->eventRepository->processOngoingEvents();
 
             return JsonResponser::send(false, "Record found successfully.", $eventInstance);
-
         } catch (\Throwable $error) {
             return $error->getMessage();
             logger($error);
@@ -65,27 +63,25 @@ class EventController extends Controller
     /**
      * Get a Particular Event details
      */
-     public function showEvent(Request $request)
+    public function showEvent(Request $request)
     {
         try {
 
-            if(!isset($request->event_id)){
+            if (!isset($request->event_id)) {
                 return JsonResponser::send(true, "Error occured. Please select an event", null, 403);
             }
 
             $eventInstance = $this->eventRepository->findEventById($request->event_id);
 
-            if(!$eventInstance){
+            if (!$eventInstance) {
                 return JsonResponser::send(true, "Event Record not found", null, 401);
             }
 
             return JsonResponser::send(false, "Event Record found successfully.", $eventInstance);
-
         } catch (\Throwable $error) {
             logger($error);
             return JsonResponser::send(true, 'Internal server error', null, 500);
         }
-
     }
 
     public function createEvent(CreateEventRequest $request)
@@ -98,7 +94,7 @@ class EventController extends Controller
             if ($file = $request->file('image')) {
                 $name = $file->getClientOriginalName();
                 $uniqueId = rand(10, 100000);
-                $imageName = config('app.url') . '/Event/' . $uniqueId . '_'. date("Y-m-d") . '_' . time() . $name;
+                $imageName = config('app.url') . '/Event/' . $uniqueId . '_' . date("Y-m-d") . '_' . time() . $name;
                 $file->move(('Event/'), $imageName);
             }
 
@@ -114,13 +110,25 @@ class EventController extends Controller
                 "start_date" => $request->start_date,
                 "end_date" => $request->end_date
             ]);
-            if(!$newEventInstance){
+            if (!$newEventInstance) {
                 $error = true;
                 $message = "Event was not created successfully. Please try again";
                 $data = [];
                 return JsonResponser::send($error, $message, $data);
             }
             DB::commit();
+
+            $currentUserInstance = auth()->user();
+            $dataToLog = [
+                'causer_id' => auth()->user()->id,
+                'action_id' => $newEventInstance->id,
+                'action_type' => "Models\Event",
+                'log_name' => "Event created Successfully",
+                'description' => "Event created Successfully by {$currentUserInstance->lastname} {$currentUserInstance->firstname}",
+            ];
+
+            ProcessAuditLog::storeAuditLog($dataToLog);
+
             $error = false;
             $message = "Event created successfully.";
             $data = $newEventInstance;
@@ -137,14 +145,14 @@ class EventController extends Controller
     /**
      * Edit Event
      */
-     public function update(UpdateEventRequest $request)
+    public function update(UpdateEventRequest $request)
     {
         try {
-           $userId = auth()->user()->id;
+            $userId = auth()->user()->id;
 
             $eventInstance = $this->eventRepository->findEventById($request->event_id);
 
-            if(!$eventInstance){
+            if (!$eventInstance) {
                 return JsonResponser::send(true, "Event Record not found", null, 401);
             }
 
@@ -153,9 +161,9 @@ class EventController extends Controller
             if ($file = $request->file('image')) {
                 $name = $file->getClientOriginalName();
                 $uniqueId = rand(10, 100000);
-                $imageName = config('app.url') . '/Event/' . $uniqueId . '_'. date("Y-m-d") . '_' . time() . $name;
+                $imageName = config('app.url') . '/Event/' . $uniqueId . '_' . date("Y-m-d") . '_' . time() . $name;
                 $file->move(('Event/'), $imageName);
-            }else{
+            } else {
                 $imageName = $eventInstance->image;
             }
 
@@ -170,13 +178,24 @@ class EventController extends Controller
                 "title" => $request->title,
                 "guest" => $request->guest
             ]);
-            if(!$updateEventInstance){
+            if (!$updateEventInstance) {
                 $error = true;
                 $message = "Event was not updated successfully. Please try again";
                 $data = [];
                 return JsonResponser::send($error, $message, $data);
             }
             DB::commit();
+
+            $currentUserInstance = auth()->user();
+            $dataToLog = [
+                'causer_id' => auth()->user()->id,
+                'action_id' => $updateEventInstance->id,
+                'action_type' => "Models\Event",
+                'log_name' => "Event created Successfully",
+                'description' => "Event created Successfully by {$currentUserInstance->lastname} {$currentUserInstance->firstname}",
+            ];
+
+            ProcessAuditLog::storeAuditLog($dataToLog);
             $error = false;
             $message = "Event updated successfully.";
             $data = $eventInstance;
@@ -189,7 +208,4 @@ class EventController extends Controller
             return JsonResponser::send($error, $message, $data);
         }
     }
-
-
-
 }

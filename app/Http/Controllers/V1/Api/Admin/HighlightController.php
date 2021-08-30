@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1\Api\Admin;
 
+use App\Helpers\ProcessAuditLog;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -26,51 +27,47 @@ class HighlightController extends Controller
     /**
      * Get Highlight details
      */
-     public function index()
+    public function index()
     {
         try {
 
             $highlightInstance = $this->highlightRepository->allHighlights();
 
-            if(!$highlightInstance){
+            if (!$highlightInstance) {
                 return JsonResponser::send(true, "Highlight Record not found", null, 401);
             }
 
             return JsonResponser::send(false, "Highlight Record found successfully.", $highlightInstance);
-
         } catch (\Throwable $error) {
             return $error->getMessage();
             logger($error);
             return JsonResponser::send(true, 'Internal server error', null, 500);
         }
-
     }
 
 
     /**
      * Get a Particular Highlight details
      */
-     public function showHighlight(Request $request)
+    public function showHighlight(Request $request)
     {
         try {
 
-            if(!isset($request->highlight_id)){
+            if (!isset($request->highlight_id)) {
                 return JsonResponser::send(true, "Error occured. Please select an Highlight", null, 403);
             }
 
             $highlightInstance = $this->highlightRepository->findHighlightById($request->highlight_id);
 
-            if(!$highlightInstance){
+            if (!$highlightInstance) {
                 return JsonResponser::send(true, "Highlight Record not found", null, 401);
             }
 
             return JsonResponser::send(false, "Highlight Record found successfully.", $highlightInstance);
-
         } catch (\Throwable $error) {
             logger($error);
             return JsonResponser::send(true, 'Internal server error', null, 500);
         }
-
     }
 
     public function createHighlight(CreateHighlightRequest $request)
@@ -83,13 +80,13 @@ class HighlightController extends Controller
             if ($file = $request->file('image')) {
                 $nameImg = $file->getClientOriginalName();
                 $uniqueId = rand(10, 100000);
-                $imageName = config('app.url') . '/HighlightImage/' . $uniqueId . '_'. date("Y-m-d") . '_' . time() . $nameImg;
+                $imageName = config('app.url') . '/HighlightImage/' . $uniqueId . '_' . date("Y-m-d") . '_' . time() . $nameImg;
                 $file->move(('HighlightImage/'), $imageName);
             }
             if ($file = $request->file('video')) {
                 $nameVideo = $file->getClientOriginalName();
                 $uniqueId = rand(200, 900000);
-                $videoName = config('app.url') . '/HighlightVideo/' . $uniqueId . '_'. date("Y-m-d") . '_' . time() . $nameVideo;
+                $videoName = config('app.url') . '/HighlightVideo/' . $uniqueId . '_' . date("Y-m-d") . '_' . time() . $nameVideo;
                 $file->move(('HighlightVideo/'), $videoName);
             }
 
@@ -102,13 +99,25 @@ class HighlightController extends Controller
                 "is_active" => true,
                 "created_by" => $userId,
             ]);
-            if(!$newHighlightInstance){
+            if (!$newHighlightInstance) {
                 $error = true;
                 $message = "Highlight was not created successfully. Please try again";
                 $data = [];
                 return JsonResponser::send($error, $message, $data);
             }
             DB::commit();
+
+            $currentUserInstance = auth()->user();
+            $dataToLog = [
+                'causer_id' => auth()->user()->id,
+                'action_id' => $newHighlightInstance->id,
+                'action_type' => "Models\Highlight",
+                'log_name' => "Highlight created Successfully",
+                'description' => "Event created Successfully by {$currentUserInstance->lastname} {$currentUserInstance->firstname}",
+            ];
+
+            ProcessAuditLog::storeAuditLog($dataToLog);
+
             $error = false;
             $message = "Highlight created successfully.";
             $data = $newHighlightInstance;
@@ -125,14 +134,14 @@ class HighlightController extends Controller
     /**
      * Edit Highlight
      */
-     public function update(UpdateHighlightRequest $request)
+    public function update(UpdateHighlightRequest $request)
     {
         try {
-           $userId = auth()->user()->id;
+            $userId = auth()->user()->id;
 
             $highlightInstance = $this->highlightRepository->findHighlightById($request->highlight_id);
 
-            if(!$highlightInstance){
+            if (!$highlightInstance) {
                 return JsonResponser::send(true, "Highlight Record not found", null, 401);
             }
 
@@ -141,18 +150,18 @@ class HighlightController extends Controller
             if ($file = $request->file('image')) {
                 $nameImg = $file->getClientOriginalName();
                 $uniqueId = rand(10, 100000);
-                $imageName = config('app.url') . '/HighlightImg/' . $uniqueId . '_'. date("Y-m-d") . '_' . time() . $nameImg;
+                $imageName = config('app.url') . '/HighlightImg/' . $uniqueId . '_' . date("Y-m-d") . '_' . time() . $nameImg;
                 $file->move(('HighlightImg/'), $imageName);
-            }else{
+            } else {
                 $imageName = $highlightInstance->image;
             }
 
             if ($file = $request->file('video')) {
                 $nameVideo = $file->getClientOriginalName();
                 $uniqueId = rand(10, 100000);
-                $videoName = config('app.url') . '/HighlightVideo/' . $uniqueId . '_'. date("Y-m-d") . '_' . time() . $nameImg;
+                $videoName = config('app.url') . '/HighlightVideo/' . $uniqueId . '_' . date("Y-m-d") . '_' . time() . $nameImg;
                 $file->move(('HighlightVideo/'), $videoName);
-            }else{
+            } else {
                 $videoName = $highlightInstance->video;
             }
 
@@ -164,13 +173,25 @@ class HighlightController extends Controller
                 "slug" => $request->slug,
                 "title" => $request->title
             ]);
-            if(!$updateHighlightInstance){
+            if (!$updateHighlightInstance) {
                 $error = true;
                 $message = "Highlight was not updated successfully. Please try again";
                 $data = [];
                 return JsonResponser::send($error, $message, $data);
             }
             DB::commit();
+
+            $currentUserInstance = auth()->user();
+            $dataToLog = [
+                'causer_id' => auth()->user()->id,
+                'action_id' => $updateHighlightInstance->id,
+                'action_type' => "Models\Highlight",
+                'log_name' => "Highlight updated Successfully",
+                'description' => "Highlight updated Successfully by {$currentUserInstance->lastname} {$currentUserInstance->firstname}",
+            ];
+
+            ProcessAuditLog::storeAuditLog($dataToLog);
+
             $error = false;
             $message = "Highlight updated successfully.";
             $data = $highlightInstance;
@@ -183,7 +204,4 @@ class HighlightController extends Controller
             return JsonResponser::send($error, $message, $data);
         }
     }
-
-
-
 }
