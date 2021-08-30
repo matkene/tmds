@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ViewEventRequest;
 use App\Http\Requests\ViewTourRequest;
 use App\Http\Responser\JsonResponser;
+use App\Models\Contact;
 use App\Repositories\EventRepository;
 use App\Repositories\TourRepository;
 use App\Repositories\PeopleCultureRepository;
@@ -203,6 +204,21 @@ class GuestController extends Controller
             return $error->getMessage();
             logger($error);
             return JsonResponser::send(true, 'Internal server error', null, 500);
+        }
+    }
+
+    public function contactUs(Request $request)
+    {
+        try {
+
+            $contactUs = Contact::create($request->all());
+
+            if ($contactUs) {
+                return JsonResponser::send(false, "Submitted Successfully", $contactUs);
+            }
+        } catch (\Throwable $error) {
+            logger($error);
+            return JsonResponser::send(true, 'Internal server error', $error->getMessage(), 500);
         }
     }
 }

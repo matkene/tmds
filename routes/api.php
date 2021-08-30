@@ -35,6 +35,9 @@ Route::group(['prefix' => 'v1'], function ($router) {
     // API To verify Payment
     Route::get('/booking/verify/{paymentRequestId}', [UserBookingController::class, 'verifyBookingPayment']);
 
+    // API for contact us
+    Route::post('/contact-us', [GuestController::class, 'contactUs']);
+
     // authentication
     Route::group(['prefix' => 'auth', "namespace" => "V1\Api\Auth"], function () {
 
