@@ -55,6 +55,7 @@ class RegisterController extends Controller
                 "username" => $request->username,
                 "date_of_birth" => $request->date_of_birth,
                 "gender" => $request->gender,
+                "address" => $request->address,
                 "account_type" => $request->account_type,
                 "password" => Hash::make($request->password),
                 "can_login" => false,

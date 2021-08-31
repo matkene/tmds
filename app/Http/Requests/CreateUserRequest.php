@@ -35,6 +35,7 @@ class CreateUserRequest extends FormRequest
             'gender' => 'required',
             'account_type' => 'required',
             'firstname' => 'required|string',
+            'address' => 'required|string',
         ];
 
         return $rules;
@@ -58,6 +59,7 @@ class CreateUserRequest extends FormRequest
             'gender.required' => 'Gender is required',
             'lastname.required' => 'Last Name is required',
             'firstname.required' => 'First Name is required',
+            'address.required' => 'First Name is required',
             'account_type.required' => 'Account Type is required'
         ];
     }
