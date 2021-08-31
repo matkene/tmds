@@ -96,7 +96,7 @@ class UserController extends Controller
             $currentUserInstance = auth()->user();
             $dataToLog = [
                 'causer_id' => $currentUserInstance->id,
-                'action_id' => $updateUserInstance->id,
+                'action_id' => $userInstance->id,
                 'action_type' => "Models\User",
                 'log_name' => "User Account  Updated Successfully",
                 'description' => "User Account Updated Successfully by {$currentUserInstance->lastname} {$currentUserInstance->firstname}",
