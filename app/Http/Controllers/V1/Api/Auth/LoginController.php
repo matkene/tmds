@@ -97,6 +97,19 @@ class LoginController extends Controller
      */
     public function logout()
     {
+
+        $currentUserInstance = auth()->user();
+
+        $dataToLog = [
+            'causer_id' => $currentUserInstance->id,
+            'action_id' => $currentUserInstance->id,
+            'action_type' => "Models\User",
+            'log_name' => "User logged out successfully",
+            'description' => "{$newUserInstance->firstname} {$newUserInstance->lastname} logged out successfully",
+        ];
+
+        ProcessAuditLog::storeAuditLog($dataToLog);
+
         auth()->logout();
 
         return response()->json([
