@@ -107,7 +107,6 @@ class TestimonialController extends Controller
                 $data = [];
                 return JsonResponser::send($error, $message, $data);
             }
-            DB::commit();
 
             $currentUserInstance = auth()->user();
             $dataToLog = [
@@ -119,6 +118,8 @@ class TestimonialController extends Controller
             ];
 
             ProcessAuditLog::storeAuditLog($dataToLog);
+
+            DB::commit();
 
             $error = false;
             $message = "Testimonial created successfully.";
