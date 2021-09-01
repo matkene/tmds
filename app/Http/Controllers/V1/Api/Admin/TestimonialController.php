@@ -48,9 +48,6 @@ class TestimonialController extends Controller
 
     }
 
-
-
-
     /**
      * Get Testimonial details by Id
      */
@@ -78,6 +75,7 @@ class TestimonialController extends Controller
 
     }
 
+    //activate testimonials
 
 
 

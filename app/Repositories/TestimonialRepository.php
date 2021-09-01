@@ -17,19 +17,23 @@ class TestimonialRepository
         $this->modelInstance = $testimonial;
     }
 
-    public function allTestimonials()
+    public function activeTestimonials()
     {
-
         return $this->modelInstance::with('tour', 'user')
             ->where('is_active', true)
             ->orderBy('id', 'DESC')
-            ->paginate(3);
+            ->paginate(5);
+    }
+
+    public function allTestimonials()
+    {
+        return $this->modelInstance::with('tour', 'user')
+            ->orderBy('id', 'DESC')
+            ->paginate(8);
     }
 
     public function findTestimonialById($id)
     {
-
-
         return $this->modelInstance::with('tour', 'user')->where('id', $id)->first();
     }
 

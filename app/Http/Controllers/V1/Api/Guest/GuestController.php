@@ -149,7 +149,7 @@ class GuestController extends Controller
     {
         try {
 
-            $testimonialInstance = $this->testimonialRepository->allTestimonials();
+            $testimonialInstance = $this->testimonialRepository->activeTestimonials();
 
             if (!$testimonialInstance) {
                 return JsonResponser::send(true, "Testimonial Record not found", null, 403);
