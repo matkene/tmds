@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1\Api\Auth;
 
+use App\Helpers\ProcessAuditLog;
 use Illuminate\Http\Request;
 use App\Helpers\UserMgtHelper;
 use App\Http\Requests\LoginRequest;
@@ -9,12 +10,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Responser\JsonResponser;
 use App\Interfaces\UserStatusInterface;
+use App\Models\User;
 use App\Repositories\RegisterRepository;
 
 class LoginController extends Controller
 {
     protected $registerRepository;
-    public function __construct(RegisterRepository $registerRepository){
+    public function __construct(RegisterRepository $registerRepository)
+    {
         $this->registerRepository = $registerRepository;
     }
 
@@ -54,7 +57,7 @@ class LoginController extends Controller
         }
 
 
-        if (! $token = auth()->attempt($credentials)) {
+        if (!$token = auth()->attempt($credentials)) {
             $error = true;
             $message = 'Incorrect email or password';
             $data = [];
@@ -69,6 +72,18 @@ class LoginController extends Controller
             'tokenType' => 'bearer',
             'expiresIn' => auth('api')->factory()->getTTL() * 60
         ];
+
+        $user = User::find(auth()->user()->id);
+
+        $dataToLog = [
+            'causer_id' => auth()->user()->id,
+            'action_id' => $user->id,
+            'action_type' => "Models\User",
+            'log_name' => "User logged in successfully",
+            'description' => "{$user->firstname} {$user->lastname} logged in successfully",
+        ];
+
+        ProcessAuditLog::storeAuditLog($dataToLog);
 
         $error = false;
         $message = 'You are logged in successfully';
@@ -103,7 +118,7 @@ class LoginController extends Controller
         $roles = config('roles.models.role')::pluck('slug');
 
         foreach ($roles as $value) {
-            if ($user->hasRole($value)){
+            if ($user->hasRole($value)) {
                 $userRole = $value;
                 break;
             }
@@ -112,6 +127,3 @@ class LoginController extends Controller
         return $userRole;
     }
 }
-
-
-

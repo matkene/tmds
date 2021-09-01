@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1\Api\Admin;
 
+use App\Helpers\ProcessAuditLog;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -106,6 +107,18 @@ class PeopleCultureController extends Controller
                 return JsonResponser::send($error, $message, $data);
             }
             DB::commit();
+
+            $currentUserInstance = auth()->user();
+            $dataToLog = [
+                'causer_id' => auth()->user()->id,
+                'action_id' => $updatePeopleCultureInstance->id,
+                'action_type' => "Models\PeopleCulture",
+                'log_name' => "PeopleCulture updated Successfully",
+                'description' => "PeopleCulture updated Successfully by {$currentUserInstance->lastname} {$currentUserInstance->firstname}",
+            ];
+
+            ProcessAuditLog::storeAuditLog($dataToLog);
+
             $error = false;
             $message = "People Culture updated successfully.";
             $data = $updatePeopleCultureInstance;

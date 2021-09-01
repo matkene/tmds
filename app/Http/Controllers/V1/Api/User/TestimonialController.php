@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers\V1\Api\User;
 
+use App\Helpers\ProcessAuditLog;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -28,24 +29,22 @@ class TestimonialController extends Controller
     /**
      * Get All Testimonial details
      */
-     public function index()
+    public function index()
     {
         try {
 
             $testimonialInstance = $this->testimonialRepository->allTestimonials();
 
-            if(!$testimonialInstance){
+            if (!$testimonialInstance) {
                 return JsonResponser::send(true, "Testimonial Record not found", null, 401);
             }
 
             return JsonResponser::send(false, "Testimonial Record found successfully.", $testimonialInstance);
-
         } catch (\Throwable $error) {
             return $error->getMessage();
             logger($error);
             return JsonResponser::send(true, 'Internal server error', null, 500);
         }
-
     }
 
 
@@ -53,28 +52,26 @@ class TestimonialController extends Controller
     /**
      * Get Booking details by Id
      */
-     public function showTestimonial(Request $request)
+    public function showTestimonial(Request $request)
     {
         try {
 
-            if(!isset($request->testimonial_id)){
+            if (!isset($request->testimonial_id)) {
                 return JsonResponser::send(true, "Error occured. Please select a testimonial", null, 403);
             }
 
             $testimonialInstance = $this->testimonialRepository->findTestimonialById($request->testimonial_id);
 
-            if(!$testimonialInstance){
+            if (!$testimonialInstance) {
                 return JsonResponser::send(true, "Testimonial Record not found", null, 401);
             }
 
             return JsonResponser::send(false, "Testimonial Record found successfully.", $testimonialInstance);
-
         } catch (\Throwable $error) {
             return $error->getMessage();
             logger($error);
             return JsonResponser::send(true, 'Internal server error', null, 500);
         }
-
     }
 
 
@@ -89,7 +86,7 @@ class TestimonialController extends Controller
             if ($file = $request->file('image')) {
                 $name = $file->getClientOriginalName();
                 $uniqueId = rand(10, 100000);
-                $imageName = config('app.url') . '/Testimonial/' . $uniqueId . '_'. date("Y-m-d") . '_' . time() . $name;
+                $imageName = config('app.url') . '/Testimonial/' . $uniqueId . '_' . date("Y-m-d") . '_' . time() . $name;
                 $file->move(('Testimonial/'), $imageName);
             }
 
@@ -104,13 +101,25 @@ class TestimonialController extends Controller
                 "is_active" => true
 
             ]);
-            if(!$newTestimonialInstance){
+            if (!$newTestimonialInstance) {
                 $error = true;
                 $message = "Testimonial was not created successfully. Please try again";
                 $data = [];
                 return JsonResponser::send($error, $message, $data);
             }
             DB::commit();
+
+            $currentUserInstance = auth()->user();
+            $dataToLog = [
+                'causer_id' => auth()->user()->id,
+                'action_id' => $newTestimonialInstance->id,
+                'action_type' => "Models\Testimonial",
+                'log_name' => "Testimonial Created Successfully",
+                'description' => "Testimonial Created Successfully by {$currentUserInstance->lastname} {$currentUserInstance->firstname}",
+            ];
+
+            ProcessAuditLog::storeAuditLog($dataToLog);
+
             $error = false;
             $message = "Testimonial created successfully.";
             $data = $newTestimonialInstance;
@@ -123,7 +132,4 @@ class TestimonialController extends Controller
             return JsonResponser::send($error, $message, $data);
         }
     }
-
-
-
 }

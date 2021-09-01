@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1\Api\Auth;
 
+use App\Helpers\ProcessAuditLog;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Mail\VerifyEmail;
@@ -25,7 +26,8 @@ class RegisterController extends Controller
 {
 
     protected $registerRepository;
-    public function __construct(RegisterRepository $registerRepository){
+    public function __construct(RegisterRepository $registerRepository)
+    {
         $this->registerRepository = $registerRepository;
     }
 
@@ -53,11 +55,12 @@ class RegisterController extends Controller
                 "username" => $request->username,
                 "date_of_birth" => $request->date_of_birth,
                 "gender" => $request->gender,
+                "address" => $request->address,
                 "account_type" => $request->account_type,
                 "password" => Hash::make($request->password),
                 "can_login" => false,
             ]);
-            if(!$newUserInstance){
+            if (!$newUserInstance) {
                 $error = true;
                 $message = "Account was not created successfully. Please try again";
                 $data = [];
@@ -70,20 +73,30 @@ class RegisterController extends Controller
                 $userRole = RoleInterface::USER;
             }
 
-            if ($userRole){
+            if ($userRole) {
                 $newUserInstance->attachRole($userRole);
             }
             $newUserToken = bin2hex(openssl_random_pseudo_bytes(30));
-            DB::table('user_verifications')->insert(['user_id' => $newUserInstance->id, 'email'=>$newUserInstance->email,'token'=>$newUserToken, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()]);
+            DB::table('user_verifications')->insert(['user_id' => $newUserInstance->id, 'email' => $newUserInstance->email, 'token' => $newUserToken, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()]);
             $data = [
                 'email' => $request->email,
-                'name' => $request->lastname.' '.$request->firstname,
+                'name' => $request->lastname . ' ' . $request->firstname,
                 'user' => $newUserInstance,
                 'subject' => "Account Created Successfully",
                 'verification_code' => $newUserToken
             ];
             Mail::to($request->email)->send(new UserVerifyEmail($data));
             DB::commit();
+
+            $dataToLog = [
+                'causer_id' => $newUserInstance->id,
+                'action_id' => $newUserInstance->id,
+                'action_type' => "Models\User",
+                'log_name' => "User account created successfully",
+                'description' => "{$newUserInstance->firstname} {$newUserInstance->lastname} account created successfully",
+            ];
+
+            ProcessAuditLog::storeAuditLog($dataToLog);
 
             $error = false;
             $message = "Account created successfully. Kindly check your email for verification link";
@@ -115,7 +128,7 @@ class RegisterController extends Controller
                 "password" => Hash::make($request->password),
                 "can_login" => false,
             ]);
-            if(!$newUserInstance){
+            if (!$newUserInstance) {
                 $error = true;
                 $message = "Account was not created successfully. Please try again";
                 $data = [];
@@ -124,14 +137,14 @@ class RegisterController extends Controller
 
             $userRole = RoleInterface::USER;
 
-            if ($userRole){
+            if ($userRole) {
                 $newUserInstance->attachRole($userRole);
             }
             $newUserToken = bin2hex(openssl_random_pseudo_bytes(30));
-            DB::table('user_verifications')->insert(['user_id' => $newUserInstance->id, 'email'=>$newUserInstance->email,'token'=>$newUserToken, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()]);
+            DB::table('user_verifications')->insert(['user_id' => $newUserInstance->id, 'email' => $newUserInstance->email, 'token' => $newUserToken, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()]);
             $data = [
                 'email' => $request->email,
-                'name' => $request->lastname.' '.$request->firstname,
+                'name' => $request->lastname . ' ' . $request->firstname,
                 'user' => $newUserInstance,
                 'subject' => "Account Created Successfully",
                 'verification_code' => $newUserToken

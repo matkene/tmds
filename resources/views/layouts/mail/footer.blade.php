@@ -22,5 +22,5 @@
 </div>
 
 <div class="footer-area bg-white">
-    <img class="bg-white" src="{{ asset('images/logo.jpeg') }}" alt="Hire and Pass" />
+    <img class="bg-white" src="{{ asset('images/TourismLogo.png') }}" alt="Hire and Pass" />
 </div>

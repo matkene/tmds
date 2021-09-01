@@ -11,7 +11,7 @@ use App\Http\Controllers\V1\Api\Admin\BookingController;
 use App\Http\Controllers\V1\Api\Auth\RegisterController;
 use App\Http\Controllers\V1\Api\Admin\DashboardController;
 use App\Http\Controllers\V1\Api\Admin\HighlightController;
-use App\Http\Controllers\V1\Auth\AccountSettingsController;
+use App\Http\Controllers\V1\Api\Auth\AccountSettingsController;
 use App\Http\Controllers\V1\Api\Admin\TestimonialController;
 use App\Http\Controllers\V1\Api\Admin\TravelGuideController;
 use App\Http\Controllers\V1\Api\Auth\VerificationController;
@@ -20,6 +20,7 @@ use App\Http\Controllers\v1\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\V1\Api\User\TourController as UserTourController;
 use App\Http\Controllers\V1\Api\User\EventController as UserEventController;
 use App\Http\Controllers\V1\Api\User\BookingController as UserBookingController;
+use App\Http\Controllers\V1\Api\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\V1\Api\User\HighlightController as UserHighlightController;
 use App\Http\Controllers\V1\Api\User\TestimonialController as UserTestimonialController;
 use App\Http\Controllers\V1\Api\User\TravelGuideController as UserTravelGuideController;
@@ -30,6 +31,12 @@ Route::group(['prefix' => 'v1'], function ($router) {
     Route::get('/test', function () {
         return 'Hello test 1';
     });
+
+    // API To verify Payment
+    Route::get('/booking/verify/{paymentRequestId}', [UserBookingController::class, 'verifyBookingPayment']);
+
+    // API for contact us
+    Route::post('/contact-us', [GuestController::class, 'contactUs']);
 
     // authentication
     Route::group(['prefix' => 'auth', "namespace" => "V1\Api\Auth"], function () {
@@ -51,6 +58,7 @@ Route::group(['prefix' => 'v1'], function ($router) {
 
         Route::get('/', [UserController::class, 'index']);
         Route::post('update/', [UserController::class, 'update']);
+        Route::get('/dashboard', [UserDashboardController::class, 'index']);
 
         // Event
         Route::group(["prefix" => "events"], function () {
@@ -63,6 +71,9 @@ Route::group(['prefix' => 'v1'], function ($router) {
 
             Route::get('/', [UserTourController::class, 'index']);
             Route::post('view-single-tour', [UserTourController::class, 'showTour']);
+            Route::get('tour-history', [UserTourController::class, 'tourHistory']);
+            Route::get('top-attraction', [UserTourController::class, 'topAttraction']);
+            Route::get('favourite', [UserTourController::class, 'tourFavourite']);
         });
 
         // People Culture Route
@@ -93,7 +104,6 @@ Route::group(['prefix' => 'v1'], function ($router) {
         Route::group(["prefix" => "travelguides"], function () {
             Route::get('/', [UserTravelGuideController::class, 'index']);
             Route::post('view-single-travelguide', [UserTravelGuideController::class, 'showTravelGuide']);
-
         });
     });
 
@@ -133,7 +143,7 @@ Route::group(['prefix' => 'v1'], function ($router) {
             Route::post('/update', [PeopleCultureController::class, 'update']);
         });
 
-         // Highlight Route
+        // Highlight Route
         Route::group(["prefix" => "highlights"], function () {
             Route::get('/', [HighlightController::class, 'index']);
             Route::post('view-single-highlight', [HighlightController::class, 'showHighlight']);
@@ -165,9 +175,6 @@ Route::group(['prefix' => 'v1'], function ($router) {
             Route::post('/create', [TravelGuideController::class, 'createTravelGuide']);
             Route::post('/update', [TravelGuideController::class, 'update']);
         });
-
-
-
     });
 
     // Guest Route

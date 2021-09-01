@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1\Api\User;
 
+use App\Helpers\ProcessAuditLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -13,7 +14,8 @@ class UserController extends Controller
 {
     protected $userRepository;
 
-    public function __construct(UserRepository $userRepository){
+    public function __construct(UserRepository $userRepository)
+    {
         $this->userRepository = $userRepository;
     }
 
@@ -27,18 +29,16 @@ class UserController extends Controller
 
             $userInstance = $this->userRepository->findById($userId);
 
-            if(!$userInstance){
+            if (!$userInstance) {
                 return JsonResponser::send(true, "Record not found", null, 401);
             }
 
             return JsonResponser::send(false, "Record found successfully.", $userInstance);
-
         } catch (\Throwable $error) {
             return $error->getMessage();
             logger($error);
             return JsonResponser::send(true, 'Internal server error', null, 500);
         }
-
     }
 
     /**
@@ -51,7 +51,7 @@ class UserController extends Controller
 
             $userInstance = $this->userRepository->findById($userId);
 
-            if(!$userInstance){
+            if (!$userInstance) {
                 return JsonResponser::send(true, "Record not found", null, 401);
             }
 
@@ -68,30 +68,41 @@ class UserController extends Controller
                 "firstname" => $request->firstname,
                 "phoneno" => $request->phoneno,
                 "date_of_birth" => $request->date_of_birth,
-                "gender" => $request->gender,
-                "highest_qualification" => $request->highest_qualification,
-                "interest" => $request->interest,
-                "years_of_experience" => $request->years_of_experience
+                "email" => $request->email,
+                "address" => $request->address,
+                "state" => $request->state,
+                "country" => $request->country
             ]);
-            if(!$updateUserInstance){
+            if (!$updateUserInstance) {
                 $error = true;
                 $message = "Account was not updated successfully. Please try again";
                 $data = [];
                 return JsonResponser::send($error, $message, $data);
             }
-            if($file=$request->file('resume')){
-                $name=$file->getClientOriginalName();
-                $fileName = config('app.url').'/Resume/'.$newUserInstance->email.'/'.$request->lastname.'_'. date("Y-m-d").'_'.time().$name;
-                $file->move(('Resume/'.$newUserInstance->email.'/'), $fileName);
+            // if ($file = $request->file('resume')) {
+            //     $name = $file->getClientOriginalName();
+            //     $fileName = config('app.url') . '/Resume/' . $newUserInstance->email . '/' . $request->lastname . '_' . date("Y-m-d") . '_' . time() . $name;
+            //     $file->move(('Resume/' . $newUserInstance->email . '/'), $fileName);
 
-                $storeResume = Document::firstOrCreate([
-                    "user_id" => $newUserInstance->id,
-                    "type" => "Resume",
-                    "file" => $fileName
-                ]);
-            }
+            //     $storeResume = Document::firstOrCreate([
+            //         "user_id" => $newUserInstance->id,
+            //         "type" => "Resume",
+            //         "file" => $fileName
+            //     ]);
+            // }
 
             DB::commit();
+
+            $currentUserInstance = auth()->user();
+            $dataToLog = [
+                'causer_id' => $currentUserInstance->id,
+                'action_id' => $userInstance->id,
+                'action_type' => "Models\User",
+                'log_name' => "User Account  Updated Successfully",
+                'description' => "User Account Updated Successfully by {$currentUserInstance->lastname} {$currentUserInstance->firstname}",
+            ];
+
+            ProcessAuditLog::storeAuditLog($dataToLog);
 
             $error = false;
             $message = "Account updated successfully.";
@@ -116,11 +127,11 @@ class UserController extends Controller
             'lastname' => 'required',
             'firstname' => 'required',
             'phoneno' => 'required',
+            'email' => 'required',
             'date_of_birth' => 'required',
-            'gender' => 'required',
-            'highest_qualification' => 'required',
-            'interest' => 'required',
-            'years_of_experience' => 'required',
+            "address" => 'required',
+            "state" => 'required',
+            "country" => 'required'
         ];
 
         $validateUser = Validator::make($request->all(), $rules);

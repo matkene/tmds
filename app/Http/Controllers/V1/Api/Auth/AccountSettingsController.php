@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\v1\Auth;
+namespace App\Http\Controllers\V1\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Validator, Hash;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AccountSettingsController extends Controller
 {

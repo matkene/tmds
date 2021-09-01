@@ -27,15 +27,15 @@ class CreateUserRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'email' => ['required','string',new CheckIfEmailExists()],
-            'phoneno' => ['required','string',new CheckIfPhoneExists()],
-            'username' => ['required','string',new CheckIfUsernameExists()],
+            'email' => ['required', 'string', new CheckIfEmailExists()],
+            'phoneno' => ['required', 'string', new CheckIfPhoneExists()],
+            'username' => ['required', 'string', new CheckIfUsernameExists()],
             'password' => 'required|string|min:6',
             'lastname' => 'required|string',
-            'date_of_birth' => 'required',
             'gender' => 'required',
             'account_type' => 'required',
             'firstname' => 'required|string',
+            'address' => 'required|string',
         ];
 
         return $rules;
@@ -59,6 +59,7 @@ class CreateUserRequest extends FormRequest
             'gender.required' => 'Gender is required',
             'lastname.required' => 'Last Name is required',
             'firstname.required' => 'First Name is required',
+            'address.required' => 'First Name is required',
             'account_type.required' => 'Account Type is required'
         ];
     }
