@@ -46,7 +46,6 @@ class ForgotPasswordController extends Controller
                 'email' => $email,
                 'verification_code' => $verification_code,
                 'subject' => "Reset Password Notification",
-                "vendor" => $user->hasRole("merchant")
             ];
             Mail::to($email)->send(new ResetPassword($data));
         } catch (\Exception $e) {
