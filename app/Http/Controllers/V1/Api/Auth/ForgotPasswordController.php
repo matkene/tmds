@@ -74,7 +74,7 @@ class ForgotPasswordController extends Controller
     public function reset(Request $request)
     {
         $rules = [
-            'password' => 'required|min:8|confirmed',
+            'password' => 'required|min:8',
             "email" => "required|email",
             "token" => "required"
         ];
