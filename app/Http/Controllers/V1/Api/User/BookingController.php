@@ -72,7 +72,7 @@ class BookingController extends Controller
 
             ProcessAuditLog::storeAuditLog($dataToLog);
 
-            return JsonResponser::send(true, $createBooking['message'], $createBooking['data']);
+            return JsonResponser::send(false, $createBooking['message'], $createBooking['data']);
         } catch (\Throwable $th) {
             $error = true;
             $message = $th->getMessage();
@@ -88,7 +88,7 @@ class BookingController extends Controller
             $verifyBooking = $this->bookingRepository->verifyBookingPayment($paymentRequestId);
 
 
-            return JsonResponser::send(true, 'Data Retrieved', $verifyBooking);
+            return JsonResponser::send(false, 'Data Retrieved', $verifyBooking);
         } catch (\Throwable $th) {
             $error = true;
             $message = $th->getMessage();

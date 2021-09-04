@@ -197,9 +197,9 @@ class BookingRepository
 
 
         // Calculate the total
-        $adultTotal = ($request['no_adult_male'] + $request['no_adult_female']) + $tourInstance->adultPrice;
-        $childrenTotal = ($request['no_children_male'] + $request['no_children_female']) + $tourInstance->children_price;
-        $infantTotal = ($request['no_infant_male'] + $request['no_infant_female']) + $tourInstance->infant_price;
+        $adultTotal = ($request['no_adult_male'] + $request['no_adult_female']) * $tourInstance->adultPrice;
+        $childrenTotal = ($request['no_children_male'] + $request['no_children_female']) * $tourInstance->children_price;
+        $infantTotal = ($request['no_infant_male'] + $request['no_infant_female']) * $tourInstance->infant_price;
 
         $grandTotal = $adultTotal + $childrenTotal + $infantTotal;
 
