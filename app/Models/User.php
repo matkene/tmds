@@ -24,8 +24,8 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array
      */
-    protected $fillable = [
-        'firstname', 'lastname', 'email', 'password', 'phoneno', 'state', 'country', 'is_verified', 'can_login', 'is_active', 'username', 'gender', 'date_of_birth'
+    protected $guarded = [
+        'id'
     ];
 
     /**
@@ -67,9 +67,10 @@ class User extends Authenticatable implements JWTSubject
      * Get the testimonial for the user.
      */
 
-    public function testimonials(){
+    public function testimonials()
+    {
 
-       return $this->hasMany(Testimonial::class);
+        return $this->hasMany(Testimonial::class);
     }
 
     /*
@@ -77,33 +78,39 @@ class User extends Authenticatable implements JWTSubject
      */
 
 
-    public function booking(){
+    public function booking()
+    {
 
         return $this->hasMany(Booking::class);
-     }
-
-    public function tours(){
-
-       return $this->hasMany(Tour::class, 'created_by');
     }
 
-    public function events(){
+    public function tours()
+    {
 
-       return $this->hasMany(Event::class, 'created_by');
+        return $this->hasMany(Tour::class, 'created_by');
     }
 
-    public function highlights(){
+    public function events()
+    {
 
-       return $this->hasMany(Highlight::class, 'created_by');
+        return $this->hasMany(Event::class, 'created_by');
     }
 
-    public function peopleCultures(){
+    public function highlights()
+    {
 
-       return $this->hasMany(PeopleCulture::class, 'created_by');
+        return $this->hasMany(Highlight::class, 'created_by');
     }
 
-    public function travelGuides(){
+    public function peopleCultures()
+    {
 
-       return $this->hasMany(TravelGuide::class, 'created_by');
+        return $this->hasMany(PeopleCulture::class, 'created_by');
+    }
+
+    public function travelGuides()
+    {
+
+        return $this->hasMany(TravelGuide::class, 'created_by');
     }
 }
