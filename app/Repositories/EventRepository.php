@@ -21,7 +21,7 @@ class EventRepository
     {
         return $this->modelInstance::with('creator')
             ->orderBy('id', 'DESC')
-            ->paginate(5);
+            ->paginate(10);
     }
 
     public function activeEvents()
@@ -53,9 +53,9 @@ class EventRepository
     public function processUpcomingEvents()
     {
         return $this->modelInstance::with('creator')
-                                    ->where('is_active', true)
-                                    ->orderBy('start_date', 'DESC')
-                                    ->take(3)
-                                    ->get();
+            ->where('is_active', true)
+            ->orderBy('start_date', 'DESC')
+            ->take(3)
+            ->get();
     }
 }
