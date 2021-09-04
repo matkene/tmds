@@ -30,7 +30,6 @@ class TourRepository
     public function activeTours()
     {
         return $this->modelInstance::with('booking', 'user')
-            ->where('is_active', true)
             ->orderBy('id', 'DESC')
             ->paginate(4);
     }
