@@ -310,6 +310,9 @@ class BookingRepository
         } else {
 
             $booking = $this->modelInstance::with('tour', 'user')->wherePaymentRequestId($paymentRequestId)->first();
+            if(is_null($booking)){
+                return JsonResponser::send(true, "Invalid Payment Request Id", null);
+            }
             $booking->payment_status = 'Paid';
             $booking->save();
 

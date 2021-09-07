@@ -10,7 +10,7 @@
         </div>
 
         <div class="order-text">
-            <h4>TICKET NO #{{ $data['ticketNo'] }}</h4>
+            <h4>TICKET NO '#'{{ $data['ticketNo'] }}</h4>
             {{-- <p class="mb-0 text-color">{{ $data['orderdetails']['created_at']->format('M d, Y') }}</p> --}}
         </div>
 
