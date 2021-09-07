@@ -193,7 +193,7 @@ class BookingRepository
         if ($bookingCount >= $tourInstance->daily_limit) {
             return [
                 'error' => true,
-                'message' => 'Booking filled up for Date of visit Selected',
+                'message' => 'Booking filled up for Date of visit Selected, Please select another date.',
                 'data' => null,
             ];
         }
