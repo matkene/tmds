@@ -194,7 +194,7 @@ class BookingRepository
             return [
                 'error' => true,
                 'message' => 'Booking filled up for Date of visit Selected',
-                'data' => [],
+                'data' => null,
             ];
         }
 
