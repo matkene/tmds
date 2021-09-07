@@ -295,13 +295,14 @@ class BookingRepository
             ];
         } else {
 
-            $booking = $this->modelInstance::wherePaymentRequestId($paymentRequestId)->first();
+            $booking = $this->modelInstance::with('tour', 'user')->wherePaymentRequestId($paymentRequestId)->first();
             $booking->payment_status = 'Paid';
             $booking->save();
 
             return [
                 'paid' => true,
-                $data
+                $data,
+                $booking
             ];
         }
     }
