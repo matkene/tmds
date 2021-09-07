@@ -28,53 +28,53 @@
 
             <p class="greeting-text">No of Adult Male</p>
             <p class="thank-you-text">
-                {{ $data['adultMale'] }} }}
+                {{ $data['adultMale'] }}
             </p>
 
             <p class="greeting-text">No of Adult Female</p>
             <p class="thank-you-text">
-                {{ $data['adultFemale'] }} }}
+                {{ $data['adultFemale'] }}
             </p>
 
             <p class="greeting-text">No of Adult Male</p>
             <p class="thank-you-text">
-                {{ $data['adultMale'] }} }}
+                {{ $data['adultMale'] }}
             </p>
 
             <p class="greeting-text">No of Children Male</p>
             <p class="thank-you-text">
-                {{ $data['childrenMale'] }} }}
+                {{ $data['childrenMale'] }}
             </p>
 
             <p class="greeting-text">No of Children Female</p>
             <p class="thank-you-text">
-                {{ $data['childrenFemale'] }} }}
+                {{ $data['childrenFemale'] }}
             </p>
 
             <p class="greeting-text">No of Infant Male</p>
             <p class="thank-you-text">
-                {{ $data['infantMale'] }} }}
+                {{ $data['infantMale'] }}
             </p>
 
             <p class="greeting-text">No of Infant Female</p>
             <p class="thank-you-text">
-                {{ $data['infantFemale'] }} }}
+                {{ $data['infantFemale'] }}
             </p>
 
             <p class="greeting-text">Total Visit</p>
             <p class="thank-you-text">
-                {{ $data['totalVisitor'] }} }}
+                {{ $data['totalVisitor'] }}
             </p>
 
             <p class="greeting-text">Date of Visit</p>
             <p class="thank-you-text">
-                {{ $data['dateOfVisit'] }} }}
+                {{ $data['dateOfVisit'] }}
             </p>
 
             <hr>
             <p class="greeting-text">Total</p>
             <h3 class="thank-you-text">
-                {{ $data['total'] }} }}
+                {{ $data['total'] }}
             </h3>
         </div>
     </div>
