@@ -126,6 +126,7 @@ Route::group(['prefix' => 'v1'], function ($router) {
             Route::get('/ongoing', [EventController::class, 'ongoingEvents']);
             Route::get('/upcoming', [EventController::class, 'upcomingEvents']);
             Route::get('/past', [EventController::class, 'pastEvents']);
+            Route::get('/stats', [EventController::class, 'eventStats']);
         });
 
         // Tours

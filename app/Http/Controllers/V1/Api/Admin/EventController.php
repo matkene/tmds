@@ -46,6 +46,24 @@ class EventController extends Controller
         }
     }
 
+    public function eventStats()
+    {
+        $ongoingEventInstance = $this->eventRepository->processEventsByStatus(EventStatusInterface::ONGOING);
+        $upcomingEventInstance = $this->eventRepository->processEventsByStatus(EventStatusInterface::UPCOMING);
+        $pastEventInstance = $this->eventRepository->processEventsByStatus(EventStatusInterface::PAST);
+        $eventInstance = $this->eventRepository->allEvents();
+
+        $data = [
+            "ongoingEventInstance" => $ongoingEventInstance->count(),
+            "upcomingEventInstance" => $upcomingEventInstance->count(),
+            "pastEventInstance" => $pastEventInstance->count(),
+            "eventInstance" => $eventInstance->count(),
+        ];
+
+        return JsonResponser::send(false, 'Data retrieved successfully', $data);
+
+    }
+
     public function ongoingEvents()
     {
         try {
