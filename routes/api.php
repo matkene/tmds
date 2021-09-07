@@ -16,6 +16,7 @@ use App\Http\Controllers\V1\Api\Admin\TestimonialController;
 use App\Http\Controllers\V1\Api\Admin\TravelGuideController;
 use App\Http\Controllers\V1\Api\Auth\VerificationController;
 use App\Http\Controllers\V1\Api\Admin\PeopleCultureController;
+use App\Http\Controllers\V1\Api\Admin\UserController as AdminUserController;
 use App\Http\Controllers\v1\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\V1\Api\User\TourController as UserTourController;
 use App\Http\Controllers\V1\Api\User\EventController as UserEventController;
@@ -115,7 +116,8 @@ Route::group(['prefix' => 'v1'], function ($router) {
 
         // Users
         Route::group(["prefix" => 'users'], function () {
-            Route::get('/', [DashboardController::class, 'index']);
+            Route::get('/', [AdminUserController::class, 'allUsers']);
+            Route::post('view-one', [AdminUserController::class, 'viewOne']);
         });
 
         // Dashboard

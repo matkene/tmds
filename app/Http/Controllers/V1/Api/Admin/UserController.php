@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\V1\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ViewUserRequest;
 use App\Http\Responser\JsonResponser;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
@@ -22,6 +23,24 @@ class UserController extends Controller
         try {
 
             $tourInstance = $this->userRepository->allUsers();
+
+            if (!$tourInstance) {
+                return JsonResponser::send(true, "Tour Record not found", null, 401);
+            }
+
+            return JsonResponser::send(false, "Tour Record found successfully.", $tourInstance);
+        } catch (\Throwable $error) {
+            return $error->getMessage();
+            logger($error);
+            return JsonResponser::send(true, 'Internal server error', null, 500);
+        }
+    }
+
+    public function viewOne(ViewUserRequest $request)
+    {
+        try {
+
+            $tourInstance = $this->userRepository->findById($request->user_id);
 
             if (!$tourInstance) {
                 return JsonResponser::send(true, "Tour Record not found", null, 401);
