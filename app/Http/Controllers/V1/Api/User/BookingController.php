@@ -57,7 +57,7 @@ class BookingController extends Controller
             $data = $request->all();
             $createBooking = $this->bookingRepository->processBooking($data);
 
-            if ($createBooking['error'] == false) {
+            if ($createBooking['status'] == true) {
                 return JsonResponser::send(false, $createBooking['message'], $createBooking['data']);
             }
 

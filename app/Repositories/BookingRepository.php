@@ -191,7 +191,7 @@ class BookingRepository
 
 
             if ($bookingCount >= $tourInstance->daily_limit) {
-                return response()->json([true, "Booking filled up for Date of visit Selected, Please select another date", null, 401]);
+                return JsonResponser::send(true, "Booking filled up for Date of visit Selected, Please select another date", null, 401);
 
             }
 
