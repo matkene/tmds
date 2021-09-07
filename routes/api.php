@@ -114,7 +114,7 @@ Route::group(['prefix' => 'v1'], function ($router) {
     // Admin Route
     Route::group(["prefix" => "admin",  "middleware" => ["auth:api", "admin"], "namespace" => "V1\Api\Admin"], function () {
 
-        // Users
+        // Users.
         Route::group(["prefix" => 'users'], function () {
             Route::get('/', [AdminUserController::class, 'allUsers']);
             Route::post('view-one', [AdminUserController::class, 'viewOne']);
