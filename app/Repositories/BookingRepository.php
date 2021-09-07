@@ -2,18 +2,19 @@
 
 namespace App\Repositories;
 
-use App\Helpers\Payment;
-use App\Http\Responser\JsonResponser;
 use Carbon\Carbon;
-use App\Models\Booking;
-use Illuminate\Support\Facades\DB;
-use App\Interfaces\BookingTypeInterface;
-use App\Mail\BookingEmail;
 use App\Models\Tour;
 use GuzzleHttp\Client;
-use Illuminate\Database\Eloquent\Builder;
+use App\Models\Booking;
+use App\Helpers\Payment;
+use App\Mail\BookingEmail;
+use App\Helpers\ProcessAuditLog;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Responser\JsonResponser;
+use App\Interfaces\BookingTypeInterface;
+use Illuminate\Database\Eloquent\Builder;
 
 class BookingRepository
 {
