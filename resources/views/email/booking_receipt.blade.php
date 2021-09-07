@@ -63,7 +63,7 @@
 
             <p class="greeting-text">Total Visit</p>
             <p class="thank-you-text">
-                {{ $data['totalVisit'] }} }}
+                {{ $data['totalVisitor'] }} }}
             </p>
 
             <p class="greeting-text">Date of Visit</p>
