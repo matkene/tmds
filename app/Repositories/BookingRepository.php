@@ -284,8 +284,10 @@ class BookingRepository
         return [
             'error' => false,
             'message' => 'Data retrieved',
-            'data' => $data,
-            'booking' => $booking,
+            'dataRetrieved' => [
+                "data" => $data,
+                "booking" => $booking,
+            ],
         ];
     }
 

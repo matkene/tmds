@@ -14,8 +14,8 @@ class DashboardRepository
     {
         $user = Auth::user();
 
-        $totalVisits = Booking::whereUserId($user->id)->count();
-        $totalVisitedLocation = Booking::whereUserId($user->id)->groupBy('tour_id')->count();
+        $totalVisits = Booking::whereUserId($user->id)->where('status', 'completed')->count();
+        $totalVisitedLocation = Booking::whereUserId($user->id)->where('status', 'completed')->distinct()->count('tour_id');
         $totalTickects = Booking::whereUserId($user->id)->count();
 
         return [
