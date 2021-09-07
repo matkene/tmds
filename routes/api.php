@@ -124,6 +124,8 @@ Route::group(['prefix' => 'v1'], function ($router) {
             Route::post('/create', [EventController::class, 'createEvent']);
             Route::post('/update', [EventController::class, 'update']);
             Route::get('/ongoing', [EventController::class, 'ongoingEvents']);
+            Route::get('/upcoming', [EventController::class, 'upcomingEvents']);
+            Route::get('/past', [EventController::class, 'pastEvents']);
         });
 
         // Tours

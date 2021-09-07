@@ -281,13 +281,15 @@ class BookingRepository
         $tourBooking->payment_request_id = $paymentRequestId;
         $tourBooking->save();
 
+        $dataRetrieved = [
+            "data" => $data,
+            "booking" => $booking,
+        ];
+
         return [
             'error' => false,
             'message' => 'Data retrieved',
-            'dataRetrieved' => [
-                "data" => $data,
-                "booking" => $booking,
-            ],
+            'dataRetrieved' => $dataRetrieved
         ];
     }
 

@@ -32,10 +32,11 @@ class EventRepository
             ->paginate(3);
     }
 
-    public function processOngoingEvents()
+    public function processEventsByStatus($eventStatus)
     {
-        $todayDate = Carbon::today();
-        return $this->modelInstance::with('creator');
+        return $this->modelInstance::with('creator')
+                                    ->where('status', $eventStatus)
+                                    ->paginate(5);
     }
 
     public function findEventById($id)
