@@ -61,7 +61,6 @@ class EventController extends Controller
         ];
 
         return JsonResponser::send(false, 'Data retrieved successfully', $data);
-
     }
 
     public function ongoingEvents()
@@ -85,7 +84,6 @@ class EventController extends Controller
             $eventInstance = $this->eventRepository->processEventsByStatus(EventStatusInterface::UPCOMING);
 
             return JsonResponser::send(false, "Record found successfully.", $eventInstance);
-
         } catch (\Throwable $error) {
             logger($error);
             return JsonResponser::send(true, 'Internal server error', null, 500);
@@ -99,7 +97,6 @@ class EventController extends Controller
             $eventInstance = $this->eventRepository->processEventsByStatus(EventStatusInterface::PAST);
 
             return JsonResponser::send(false, "Record found successfully.", $eventInstance);
-
         } catch (\Throwable $error) {
             logger($error);
             return JsonResponser::send(true, 'Internal server error', null, 500);
@@ -140,14 +137,14 @@ class EventController extends Controller
 
             $images = [];
 
-            if($files=$request->file('image')){
-                foreach($files as $file){
+            if ($files = $request->file('image')) {
+                foreach ($files as $file) {
                     $uniqueId = bin2hex(openssl_random_pseudo_bytes(9));
                     $fileExt = $file->getClientOriginalExtension();
-                    $name = $uniqueId.'_'. date("Y-m-d").'_'.time().'.'.$fileExt;
-                    $imageName = config('app.url').'/Events/'. $uniqueId. '_'. date("Y-m-d"). '_' .time(). $name;
+                    $name = $uniqueId . '_' . date("Y-m-d") . '_' . time() . '.' . $fileExt;
+                    $imageName = config('app.url') . '/Events/' . $uniqueId . '_' . date("Y-m-d") . '_' . time() . $name;
                     $file->move(('Events/'), $imageName);
-                    $images[]=$imageName;
+                    $images[] = $imageName;
                 }
             }
 
@@ -157,10 +154,10 @@ class EventController extends Controller
                 "tags" => $request->tags,
                 "created_by" => $userId,
                 "location" => $request->location,
-                "image" => implode("|",$images),
+                "image" => implode("|", $images),
                 "guest" => $request->guest,
                 "is_active" => true,
-                "status" => EventStatusInterface::Upcoming,
+                "status" => EventStatusInterface::UPCOMING,
                 "start_date" => $request->start_date,
                 "end_date" => $request->end_date
             ]);

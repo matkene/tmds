@@ -113,6 +113,11 @@ Route::group(['prefix' => 'v1'], function ($router) {
     // Admin Route
     Route::group(["prefix" => "admin",  "middleware" => ["auth:api", "admin"], "namespace" => "V1\Api\Admin"], function () {
 
+        // Users
+        Route::group(["prefix" => 'users'], function () {
+            Route::get('/', [DashboardController::class, 'index']);
+        });
+
         // Dashboard
         Route::group(["prefix" => "dashboard"], function () {
             Route::get('/', [DashboardController::class, 'index']);
