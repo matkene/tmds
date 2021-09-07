@@ -317,17 +317,17 @@ class BookingRepository
             $booking->save();
 
             $bookingData = [
-                $fullname = Auth::user()->firstname . ' ' . Auth::user()->lastname,
-                $adultMale = $booking->no_adult_male,
-                $adultFemale = $booking->no_adult_female,
-                $childrenMale = $booking->no_children_male,
-                $childrenFemale = $booking->no_children_female,
-                $infantMale = $booking->no_infant_male,
-                $infantFemale = $booking->no_infant_female,
-                $totalVisitor = $booking->no_adult_male + $booking->no_adult_female + $booking->no_children_male + $booking->no_children_female + $booking->no_infant_male + $booking->no_infant_female,
-                $dateOfVisit = $booking->date_of_visit,
-                $total = $booking->amount,
-                $ticketNo = $booking->ticket_no,
+                'fullname' => Auth::user()->firstname . ' ' . Auth::user()->lastname,
+                'adultMale' => $booking->no_adult_male,
+                'adultFemale' => $booking->no_adult_female,
+                'childrenMale' => $booking->no_children_male,
+                'childrenFemale' => $booking->no_children_female,
+                'infantMale' => $booking->no_infant_male,
+                'infantFemale' => $booking->no_infant_female,
+                'totalVisitor' => $booking->no_adult_male + $booking->no_adult_female + $booking->no_children_male + $booking->no_children_female + $booking->no_infant_male + $booking->no_infant_female,
+                'dateOfVisit' => $booking->date_of_visit,
+                'total' => $booking->amount,
+                'ticketNo' => $booking->ticket_no,
             ];
 
             Mail::to(Auth::user()->email)->send(new BookingEmail($bookingData));
