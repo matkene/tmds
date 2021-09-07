@@ -315,7 +315,7 @@ class BookingRepository
                 $ticketNo = $booking->ticket_no,
             ];
 
-            //Mail::to(Auth::user()->email)->send(new BookingEmail($bookingData));
+            Mail::to(Auth::user()->email)->send(new BookingEmail($bookingData));
 
             return [
                 'paid' => true,
