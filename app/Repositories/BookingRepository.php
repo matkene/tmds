@@ -166,122 +166,131 @@ class BookingRepository
 
     public function processBooking($request)
     {
-        $user = Auth::user();
-        $userId = auth()->user()->id;
+        try {
+            $user = Auth::user();
+            $userId = auth()->user()->id;
+
+            DB::beginTransaction();
 
 
-        //get tour
-        $tourInstance = Tour::find($request['tour_id']);
-        if (is_null($tourInstance)) {
-            return JsonResponser::send(true, "Tour Id Not Found", null, 401);
+            //get tour
+            $tourInstance = Tour::find($request['tour_id']);
+            if (is_null($tourInstance)) {
+                return JsonResponser::send(true, "Tour Id Not Found", null, 401);
 
-        }
-
-
-        // Check if the tour is full for that day
-        $inputDate = Carbon::parse($request['date_of_visit']);
-        $bookingCount = Booking::where('tour_id', $tourInstance->id)
-            ->whereMonth('date_of_visit', $inputDate->month)
-            ->whereDay('date_of_visit', $inputDate->day)
-            ->count();
+            }
 
 
-
-        if ($bookingCount >= $tourInstance->daily_limit) {
-            return JsonResponser::send(true, "Booking filled up for Date of visit Selected, Please select another date", null, 401);
-
-        }
-
-
-        // Calculate the total
-        $adultTotal = ($request['no_adult_male'] + $request['no_adult_female']) * $tourInstance->adult_price;
-        $childrenTotal = ($request['no_children_male'] + $request['no_children_female']) * $tourInstance->children_price;
-        $infantTotal = ($request['no_infant_male'] + $request['no_infant_female']) * $tourInstance->infant_price;
-
-        $grandTotal = $adultTotal + $childrenTotal + $infantTotal;
-
-        // Save the booking to the db
-        $booking = Booking::create([
-            "user_id" => $userId,
-            "tour_id" => $request['tour_id'],
-            "booking_type" => BookingTypeInterface::ONLINE_BOOKING,
-            "date_of_visit" => $request['date_of_visit'],
-            "ticket_no" => 'OGT-' . time(),
-            "amount" => $grandTotal,
-            "is_active" => true,
-            'no_adult_male' => $request['no_adult_male'],
-            'no_adult_female' => $request['no_adult_female'],
-            'adult_option' => $request['adult_option'],
-            'no_children_male' => $request['no_children_male'],
-            'no_children_female' => $request['no_children_female'],
-            'children_option' => $request['children_option'],
-            'no_infant_male' => $request['no_infant_male'],
-            'no_infant_female' => $request['no_infant_female'],
-            'infant_option' => $request['infant_option'],
-            'no_adult_sight_seeing' => $request['no_adult_sight_seeing'],
-            'no_children_sight_seeing' => $request['no_children_sight_seeing'],
-        ]);
-
-        $currentUserInstance = auth()->user();
-        $dataToLog = [
-            'causer_id' => auth()->user()->id,
-            'action_id' => $booking->id,
-            'action_type' => "Models\Booking",
-            'log_name' => "Booking Created Successfully",
-            'description' => "Booking Created Successfully by {$currentUserInstance->lastname} {$currentUserInstance->firstname}",
-        ];
-
-        ProcessAuditLog::storeAuditLog($dataToLog);
+            // Check if the tour is full for that day
+            $inputDate = Carbon::parse($request['date_of_visit']);
+            $bookingCount = Booking::where('tour_id', $tourInstance->id)
+                ->whereMonth('date_of_visit', $inputDate->month)
+                ->whereDay('date_of_visit', $inputDate->day)
+                ->count();
 
 
-        //Make the payment
-        $client = new Client();
-        $url = config('payment.base_url') . '/mda-integration/generate-bill';
+
+            if ($bookingCount >= $tourInstance->daily_limit) {
+                return response()->json([true, "Booking filled up for Date of visit Selected, Please select another date", null, 401]);
+
+            }
 
 
-        $response = $client->post($url, [
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Authorization' => 'Bearer ' . $this->paymentToken,
-            ],
-            'json' => [
-                "customer_first_name" => $user->firstname,
-                "customer_last_name" => $user->lastname,
-                "customer_email" => $user->email,
-                "customer_phone" => $user->phoneno,
-                "customer_address" => $user->state . ',  ' . $user->country,
-                "bill_description" => 'Payment for one round tour for ' . $user->firstname . ' ' . $user->lastname, //$tourInstance->description,
-                "billed_amount" => floatval($grandTotal),
-                "overwrite_existing" => false,
-                "request_id" => time(),
-                "service_id" =>  156,
-                "demand_notices" => array(
-                    array(
-                        "name" => "Olumo tourists centre - Gate Fee",
-                        "amount" => floatval($grandTotal),
-                        "revenue_code" => "200040021114005"
+            // Calculate the total
+            $adultTotal = ($request['no_adult_male'] + $request['no_adult_female']) * $tourInstance->adult_price;
+            $childrenTotal = ($request['no_children_male'] + $request['no_children_female']) * $tourInstance->children_price;
+            $infantTotal = ($request['no_infant_male'] + $request['no_infant_female']) * $tourInstance->infant_price;
+
+            $grandTotal = $adultTotal + $childrenTotal + $infantTotal;
+
+            // Save the booking to the db
+            $booking = Booking::create([
+                "user_id" => $userId,
+                "tour_id" => $request['tour_id'],
+                "booking_type" => BookingTypeInterface::ONLINE_BOOKING,
+                "date_of_visit" => $request['date_of_visit'],
+                "ticket_no" => 'OGT-' . time(),
+                "amount" => $grandTotal,
+                "is_active" => true,
+                'no_adult_male' => $request['no_adult_male'],
+                'no_adult_female' => $request['no_adult_female'],
+                'adult_option' => $request['adult_option'],
+                'no_children_male' => $request['no_children_male'],
+                'no_children_female' => $request['no_children_female'],
+                'children_option' => $request['children_option'],
+                'no_infant_male' => $request['no_infant_male'],
+                'no_infant_female' => $request['no_infant_female'],
+                'infant_option' => $request['infant_option'],
+                'no_adult_sight_seeing' => $request['no_adult_sight_seeing'],
+                'no_children_sight_seeing' => $request['no_children_sight_seeing'],
+            ]);
+
+            $currentUserInstance = auth()->user();
+            $dataToLog = [
+                'causer_id' => auth()->user()->id,
+                'action_id' => $booking->id,
+                'action_type' => "Models\Booking",
+                'log_name' => "Booking Created Successfully",
+                'description' => "Booking Created Successfully by {$currentUserInstance->lastname} {$currentUserInstance->firstname}",
+            ];
+
+            ProcessAuditLog::storeAuditLog($dataToLog);
+
+
+            //Make the payment
+            $client = new Client();
+            $url = config('payment.base_url') . '/mda-integration/generate-bill';
+
+
+            $response = $client->post($url, [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer ' . $this->paymentToken,
+                ],
+                'json' => [
+                    "customer_first_name" => $user->firstname,
+                    "customer_last_name" => $user->lastname,
+                    "customer_email" => $user->email,
+                    "customer_phone" => $user->phoneno,
+                    "customer_address" => $user->state . ',  ' . $user->country,
+                    "bill_description" => 'Payment for one round tour for ' . $user->firstname . ' ' . $user->lastname, //$tourInstance->description,
+                    "billed_amount" => floatval($grandTotal),
+                    "overwrite_existing" => false,
+                    "request_id" => time(),
+                    "service_id" =>  156,
+                    "demand_notices" => array(
+                        array(
+                            "name" => "Olumo tourists centre - Gate Fee",
+                            "amount" => floatval($grandTotal),
+                            "revenue_code" => "200040021114005"
+                        )
                     )
-                )
-            ]
-        ]);
+                ]
+            ]);
 
-        $data =  json_decode($response->getBody());
+            $data =  json_decode($response->getBody());
 
-        // Get the payment Id
-        $paymentRequestId = $data->data->request_id;
+            // Get the payment Id
+            $paymentRequestId = $data->data->request_id;
 
-        // Update the database to hold Payment Request Id
-        $tourBooking = $this->modelInstance::whereId($booking['id'])->first();
-        $tourBooking->payment_request_id = $paymentRequestId;
-        $tourBooking->save();
+            // Update the database to hold Payment Request Id
+            $tourBooking = $this->modelInstance::whereId($booking['id'])->first();
+            $tourBooking->payment_request_id = $paymentRequestId;
+            $tourBooking->save();
 
-        $dataCollected = [
-            'data' => $data,
-            'booking' => $booking,
-        ];
+            $dataCollected = [
+                'data' => $data,
+                'booking' => $booking,
+            ];
+
+            DB::commit();
 
 
-        return JsonResponser::send(false, "Data retrieved successfully", $dataCollected);
+            return JsonResponser::send(false, "Data retrieved successfully", $dataCollected);
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return JsonResponser::send(true, $th->getMessage(), null, 500);
+        }
     }
 
     public function verifyBookingPayment($paymentRequestId)
