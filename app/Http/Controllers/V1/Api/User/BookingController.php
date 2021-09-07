@@ -85,4 +85,23 @@ class BookingController extends Controller
             return JsonResponser::send($error, $message, $data);
         }
     }
+
+    public function repayBooking(Request $request)
+    {
+        try {
+
+            $repayBooking = $this->bookingRepository->repayBooking($request->payment_request_id);
+
+            if ($repayBooking['error'] == true) {
+                return JsonResponser::send(true, $repayBooking['message'], $repayBooking['data']);
+            }
+
+            return JsonResponser::send(false, $repayBooking['message'], $repayBooking['data']);
+        } catch (\Throwable $th) {
+            $error = true;
+            $message = $th->getMessage();
+            $data = [];
+            return JsonResponser::send($error, $message, $data);
+        }
+    }
 }

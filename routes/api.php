@@ -92,6 +92,7 @@ Route::group(['prefix' => 'v1'], function ($router) {
         // Booking Route
         Route::group(["prefix" => "bookings"], function () {
             Route::post('/create', [UserBookingController::class, 'createBooking']);
+            Route::post('/repay-pending', [UserBookingController::class, 'repayBooking']);
             Route::post('view-single-booking', [UserBookingController::class, 'showBooking']);
         });
 

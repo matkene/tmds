@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Responser\JsonResponser;
 use App\Interfaces\BookingTypeInterface;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 
 class BookingRepository
@@ -315,7 +316,7 @@ class BookingRepository
         } else {
 
             $booking = $this->modelInstance::with('tour', 'user')->wherePaymentRequestId($paymentRequestId)->first();
-            if(is_null($booking)){
+            if (is_null($booking)) {
                 return JsonResponser::send(true, "Invalid Payment Request Id", null);
             }
             $booking->payment_status = 'Paid';
@@ -343,5 +344,65 @@ class BookingRepository
                 $booking
             ];
         }
+    }
+
+    public function repayBooking($paymentRequestId)
+    {
+        $booking = $this->modelInstance::where('payment_request_id', $paymentRequestId)->first();
+        $user = User::where('id', $booking->user_id)->first();
+
+        if (!$booking) {
+            return [
+                'error' => true,
+                'message' => 'Booking with request id ' . $paymentRequestId . ' is not found',
+                'data' => null,
+            ];
+        }
+
+        //Make the payment
+        $client = new Client();
+        $url = config('payment.base_url') . '/mda-integration/generate-bill';
+
+
+        $response = $client->post($url, [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer ' . $this->paymentToken,
+            ],
+            'json' => [
+                "customer_first_name" => $user->firstname,
+                "customer_last_name" => $user->lastname,
+                "customer_email" => $user->email,
+                "customer_phone" => $user->phoneno,
+                "customer_address" => $user->state . ',  ' . $user->country,
+                "bill_description" => 'Payment for one round tour for ' . $user->firstname . ' ' . $user->lastname, //$tourInstance->description,
+                "billed_amount" => floatval($booking->amount),
+                "overwrite_existing" => false,
+                "request_id" => time(),
+                "service_id" =>  156,
+                "demand_notices" => array(
+                    array(
+                        "name" => "Olumo tourists centre - Gate Fee",
+                        "amount" => floatval($booking->amount),
+                        "revenue_code" => "200040021114005"
+                    )
+                )
+            ]
+        ]);
+
+        $data =  json_decode($response->getBody());
+
+
+        $dataRetrieved = [
+            "data" => $data,
+            "booking" => $booking,
+        ];
+
+        return [
+            'error' => false,
+            'message' => 'Data retrieved',
+            'data' => $data,
+            'booking' => $booking,
+        ];
     }
 }
