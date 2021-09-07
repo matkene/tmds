@@ -29,10 +29,6 @@ class CreateBookingsTable extends Migration
             $table->boolean('is_active')->default(true);
             $table->boolean('is_attended')->default(false);
             $table->string('payment_status')->default("Pending"); //interface for this
-            $table->string('booking_type')->nullable();
-            $table->string('status')->nullable();
-            $table->integer('amount')->nullable();
-            $table->string('payment_method')->nullable();
             $table->timestamp('date_of_visit')->nullable();
             $table->string('ticket_no')->nullable();
             $table->string('payment_request_id')->nullable();

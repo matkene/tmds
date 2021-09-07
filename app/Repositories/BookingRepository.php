@@ -227,6 +227,17 @@ class BookingRepository
             'no_children_sight_seeing' => $request['no_children_sight_seeing'],
         ]);
 
+        $currentUserInstance = auth()->user();
+        $dataToLog = [
+            'causer_id' => auth()->user()->id,
+            'action_id' => $booking->id,
+            'action_type' => "Models\Booking",
+            'log_name' => "Booking Created Successfully",
+            'description' => "Booking Created Successfully by {$currentUserInstance->lastname} {$currentUserInstance->firstname}",
+        ];
+
+        ProcessAuditLog::storeAuditLog($dataToLog);
+
 
         //Make the payment
         $client = new Client();

@@ -61,17 +61,6 @@ class BookingController extends Controller
                 return JsonResponser::send(false, $createBooking['message'], $createBooking['data']);
             }
 
-            $currentUserInstance = auth()->user();
-            $dataToLog = [
-                'causer_id' => auth()->user()->id,
-                'action_id' => $createBooking['booking_id'],
-                'action_type' => "Models\Booking",
-                'log_name' => "Booking Created Successfully",
-                'description' => "Booking Created Successfully by {$currentUserInstance->lastname} {$currentUserInstance->firstname}",
-            ];
-
-            ProcessAuditLog::storeAuditLog($dataToLog);
-
             return JsonResponser::send(false, $createBooking['message'], $createBooking['data']);
         } catch (\Throwable $th) {
             $error = true;

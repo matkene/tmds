@@ -14,10 +14,10 @@ class CreateAuditLogsTable extends Migration
     public function up()
     {
         Schema::create('audit_logs', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             $table->mediumText('action_type')->nullable();
-            $table->unsignedBigInteger('causer_id');
-            $table->unsignedBigInteger('action_id');
+            $table->unsignedInteger('causer_id');
+            $table->unsignedInteger('action_id');
             $table->mediumText('log_name')->nullable();
             $table->text('description')->nullable();
             $table->foreign('causer_id')->references('id')->on('users')->onDelete('cascade');

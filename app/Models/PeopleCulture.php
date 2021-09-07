@@ -11,7 +11,7 @@ class PeopleCulture extends Model
 
 
     protected $fillable = [
-        'image'
+        'image', 'created_by', 'key'
     ];
 
 
