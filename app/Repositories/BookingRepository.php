@@ -173,11 +173,8 @@ class BookingRepository
         //get tour
         $tourInstance = Tour::find($request['tour_id']);
         if (is_null($tourInstance)) {
-            return [
-                'error' => true,
-                'message' => 'Tour Id Not Found',
-                'data' => [],
-            ];
+            return JsonResponser::send(true, "Tour Id Not Found", null, 401);
+
         }
 
 
@@ -191,11 +188,8 @@ class BookingRepository
 
 
         if ($bookingCount >= $tourInstance->daily_limit) {
-            return [
-                'error' => true,
-                'message' => 'Booking filled up for Date of visit Selected, Please select another date.',
-                'data' => null,
-            ];
+            return JsonResponser::send(true, "Booking filled up for Date of visit Selected, Please select another date", null, 401);
+
         }
 
 
@@ -281,12 +275,13 @@ class BookingRepository
         $tourBooking->payment_request_id = $paymentRequestId;
         $tourBooking->save();
 
-        return [
-            'error' => false,
-            'message' => 'Data retrieved',
+        $dataCollected = [
             'data' => $data,
             'booking' => $booking,
         ];
+
+
+        return JsonResponser::send(false, "Data retrieved successfully", $dataCollected);
     }
 
     public function verifyBookingPayment($paymentRequestId)
