@@ -32,6 +32,8 @@ Route::group(['prefix' => 'v1'], function ($router) {
         return 'Hello test 1';
     });
 
+    Route::get('/check-username/{username}', [UserController::class, 'checkUsername']);
+
     // API To verify Payment
     Route::get('/booking/verify/{paymentRequestId}', [UserBookingController::class, 'verifyBookingPayment']);
 
