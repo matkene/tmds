@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Repositories\UserRepository;
 use App\Http\Responser\JsonResponser;
+use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -110,6 +111,26 @@ class UserController extends Controller
             return JsonResponser::send($error, $message, $data);
         } catch (\Throwable $th) {
             DB::rollback();
+            $error = true;
+            $message = $th->getMessage();
+            $data = [];
+            return JsonResponser::send($error, $message, $data);
+        }
+    }
+
+
+    public function checkUsername($username)
+    {
+        try {
+
+            $checkUsername = User::where('username', $username)->get();
+
+            if (count($checkUsername) > 0) {
+                return JsonResponser::send(true, 'Username has been used', []);
+            }
+
+            return JsonResponser::send(false, 'Username is available', []);
+        } catch (\Throwable $th) {
             $error = true;
             $message = $th->getMessage();
             $data = [];
