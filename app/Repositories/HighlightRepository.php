@@ -22,7 +22,7 @@ class HighlightRepository
         return $this->modelInstance::with('user')
             ->where('is_active', true)
             ->orderBy('id', 'DESC')
-            ->paginate(3);
+            ->paginate(30);
     }
 
     public function findHighlightById($id)

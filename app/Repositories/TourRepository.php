@@ -24,14 +24,14 @@ class TourRepository
     {
         return $this->modelInstance::with('booking', 'user')
             ->orderBy('id', 'DESC')
-            ->paginate(20);
+            ->paginate(30);
     }
 
     public function activeTours()
     {
         return $this->modelInstance::with('booking', 'user')
             ->orderBy('id', 'DESC')
-            ->paginate(4);
+            ->paginate(30);
     }
 
     public function findTourById($id)
@@ -47,7 +47,7 @@ class TourRepository
 
     public function myTourHistory()
     {
-        return Booking::with('tour')->whereUserId(Auth::user()->id)->orderBy('id', 'DESC')->paginate(10);
+        return Booking::with('tour')->whereUserId(Auth::user()->id)->orderBy('id', 'DESC')->paginate(20);
     }
 
     public function topAttraction()
