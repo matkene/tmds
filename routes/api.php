@@ -62,6 +62,7 @@ Route::group(['prefix' => 'v1'], function ($router) {
         Route::get('/', [UserController::class, 'index']);
         Route::post('update/', [UserController::class, 'update']);
         Route::get('/dashboard', [UserDashboardController::class, 'index']);
+        Route::post('/update-picture', [UserController::class, 'uploadDp']);
 
         // Event
         Route::group(["prefix" => "events"], function () {

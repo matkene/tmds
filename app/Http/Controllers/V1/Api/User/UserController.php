@@ -6,9 +6,11 @@ use App\Helpers\ProcessAuditLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AvatarRequest;
 use App\Repositories\UserRepository;
 use App\Http\Responser\JsonResponser;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -130,6 +132,33 @@ class UserController extends Controller
             }
 
             return JsonResponser::send(false, 'Username is available', []);
+        } catch (\Throwable $th) {
+            $error = true;
+            $message = $th->getMessage();
+            $data = [];
+            return JsonResponser::send($error, $message, $data);
+        }
+    }
+
+    public function uploadDp(AvatarRequest $request)
+    {
+        try {
+
+            $user = User::where('id', Auth::user()->id)->first();
+            $avatar = $request->avatar;
+
+            // Move the files to directory
+            if ($avatar != null) {
+                $avatarName = time()  . '.' . $avatar->extension();
+                $avatar->move(public_path("/avatar"), $avatarName);
+                $avatarLink = env('APP_URL') . "/avatar/$avatarName";
+            }
+
+
+            $user->avatar = $avatarLink;
+            $user->save();
+
+            return JsonResponser::send(false, 'Avatar Uploaded Successfully', $user);
         } catch (\Throwable $th) {
             $error = true;
             $message = $th->getMessage();
