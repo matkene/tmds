@@ -67,7 +67,7 @@ class BookingRepository
             })
             ->where('booking_type', BookingTypeInterface::ONLINE_BOOKING)
             ->orderBy('id', 'DESC')
-            ->paginate(5);
+            ->paginate(20);
     }
 
     public function listConfirmedBooking($request)
@@ -87,7 +87,7 @@ class BookingRepository
             })
             ->where('payment_status', 'Paid')
             ->orderBy('id', 'DESC')
-            ->paginate(5);
+            ->paginate(20);
     }
 
 
@@ -109,7 +109,7 @@ class BookingRepository
             })
             ->where('status', 'pending')
             ->orderBy('id', 'DESC')
-            ->paginate(5);
+            ->paginate(20);
     }
 
     public function listCompletedBooking($request)

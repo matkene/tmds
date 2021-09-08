@@ -21,7 +21,7 @@ class EventRepository
     {
         return $this->modelInstance::with('creator')
             ->orderBy('id', 'DESC')
-            ->paginate(10);
+            ->paginate(20);
     }
 
     public function activeEvents()
@@ -36,7 +36,7 @@ class EventRepository
     {
         return $this->modelInstance::with('creator')
                                     ->where('status', $eventStatus)
-                                    ->paginate(5);
+                                    ->paginate(20);
     }
 
     public function findEventById($id)
