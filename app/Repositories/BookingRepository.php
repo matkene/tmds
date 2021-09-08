@@ -168,17 +168,26 @@ class BookingRepository
 
     public function processAdultVisit()
     {
-        return $this->modelInstance::where("is_attended", true)->where("status", "completed")->sum('no_adults');
+        $adultMale =  $this->modelInstance::where("is_attended", true)->where("status", "completed")->sum('no_adult_male');
+        $adultFemale =  $this->modelInstance::where("is_attended", true)->where("status", "completed")->sum('no_adult_female');
+
+        return $adultMale + $adultFemale;
     }
 
     public function processChildrenVisit()
     {
-        return $this->modelInstance::where("is_attended", true)->where("status", "completed")->sum('no_children');
+        $childrenMale =  $this->modelInstance::where("is_attended", true)->where("status", "completed")->sum('no_children_male');
+        $childrenFemale =  $this->modelInstance::where("is_attended", true)->where("status", "completed")->sum('no_children_female');
+
+        return $childrenMale + $childrenFemale;
     }
 
     public function processInfantVisit()
     {
-        return $this->modelInstance::where("is_attended", true)->where("status", "completed")->sum('no_infants');
+        $infantMale =  $this->modelInstance::where("is_attended", true)->where("status", "completed")->sum('no_infant_male');
+        $infantFemale =  $this->modelInstance::where("is_attended", true)->where("status", "completed")->sum('no_infant_female');
+
+        return $infantMale + $infantFemale;
     }
 
     public function processVisitType($bookingType)
