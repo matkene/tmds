@@ -135,17 +135,13 @@ class EventController extends Controller
 
             DB::beginTransaction();
 
-            $images = [];
+            $image = $request->image;
 
-            if ($files = $request->file('image')) {
-                foreach ($files as $file) {
-                    $uniqueId = bin2hex(openssl_random_pseudo_bytes(9));
-                    $fileExt = $file->getClientOriginalExtension();
-                    $name = $uniqueId . '_' . date("Y-m-d") . '_' . time() . '.' . $fileExt;
-                    $imageName = config('app.url') . '/Events/' . $uniqueId . '_' . date("Y-m-d") . '_' . time() . $name;
-                    $file->move(('Events/'), $imageName);
-                    $images[] = $imageName;
-                }
+            // Move the files to directory
+            if ($image != null) {
+                $imageName = time()  . '.' . $image->extension();
+                $image->move(public_path("/event-images"), $imageName);
+                $imageLink = env('APP_URL') . "event-images/$imageName";
             }
 
             $newEventInstance = $this->eventRepository->create([
@@ -154,7 +150,7 @@ class EventController extends Controller
                 "tags" => $request->tags,
                 "created_by" => $userId,
                 "location" => $request->location,
-                "image" => implode("|", $images),
+                "image" => $imageLink,
                 "guest" => $request->guest,
                 "is_active" => true,
                 "status" => EventStatusInterface::UPCOMING,
