@@ -32,6 +32,7 @@ class UpdateTourRequest extends FormRequest
             'infant_price' => 'required',
             'location' => 'required|string',
             'distance' => 'required|string',
+            'tour_id' => 'required',
 
         ];
     }
