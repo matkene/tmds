@@ -29,9 +29,10 @@ class CreateTourRequest extends FormRequest
             'description' => ['required'],
             'children_price' => 'required',
             'adult_price' => 'required',
+            'infant_price' => 'required',
             'image' => 'required',
             'location' => 'required|string',
-            'distance' => 'required|string',
+            //'distance' => 'required|string',
         ];
     }
 

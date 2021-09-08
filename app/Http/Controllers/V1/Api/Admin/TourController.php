@@ -103,7 +103,6 @@ class TourController extends Controller
                 "adult_price" => $request->adult_price,
                 "children_price" => $request->children_price,
                 "infant_price" => $request->infant_price,
-                "distance" => $request->distance,
                 "ratings" => "5.00"
             ]);
 
