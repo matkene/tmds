@@ -38,7 +38,7 @@ class BookingRepository
 
         return $this->modelInstance::with('tour', 'user')
             ->when($searchParam, function ($query, $searchParam) use ($request) {
-                return $query->where('ticket_no', $searchParam);
+                return $query->where('ticket_no', $searchParam)->orWhere('title', $searchParam)->orWhere('description', 'like', '%' . $searchParam . '%');
             })
             ->when($dateSearchParam, function ($query, $dateSearchParam) use ($request) {
                 $startDate = Carbon::parse($request->start_date);
