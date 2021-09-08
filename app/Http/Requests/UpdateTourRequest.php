@@ -26,11 +26,12 @@ class UpdateTourRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string', new CheckIfTourTitleExists()],
-            'description' => ['required', 'string'],
-            'price' => 'required|string',
+            'description' => ['required'],
+            'children_price' => 'required',
+            'adult_price' => 'required',
+            'infant_price' => 'required',
             'location' => 'required|string',
             'distance' => 'required|string',
-            'image' => 'required|file',
 
         ];
     }
