@@ -27,4 +27,6 @@ class DashboardController extends Controller
             return JsonResponser::send(true, 'Internal server error', null, 500);
         }
     }
+
+    
 }

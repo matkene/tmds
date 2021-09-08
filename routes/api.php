@@ -169,6 +169,7 @@ Route::group(['prefix' => 'v1'], function ($router) {
         Route::group(["prefix" => "bookings"], function () {
             Route::post('/', [BookingController::class, 'index']);
             Route::post('online-booking', [BookingController::class, 'listAllOnlineBooking']);
+            Route::post('confirmed-booking', [BookingController::class, 'listAllConfirmedBooking']);
             Route::post('pending-booking', [BookingController::class, 'listAllPendingBooking']);
             Route::post('completed-booking', [BookingController::class, 'listAllCompletedBooking']);
             Route::post('view-single-booking', [BookingController::class, 'showBooking']);
