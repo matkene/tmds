@@ -196,7 +196,7 @@ class TourController extends Controller
             $currentUserInstance = auth()->user();
             $dataToLog = [
                 'causer_id' => auth()->user()->id,
-                'action_id' => $updateTourInstance->id,
+                'action_id' => $$request->tour_id,
                 'action_type' => "Models\Tour",
                 'log_name' => "Tour Updated Successfully",
                 'description' => "Tour Updated Successfully by {$currentUserInstance->lastname} {$currentUserInstance->firstname}",
