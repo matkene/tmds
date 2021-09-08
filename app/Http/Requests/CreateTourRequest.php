@@ -25,7 +25,7 @@ class CreateTourRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => ['required','string',new CheckIfTourTitleExists()],
+            'title' => ['required', 'string', new CheckIfTourTitleExists()],
             'description' => ['required'],
             'children_price' => 'required',
             'adult_price' => 'required',
@@ -33,8 +33,6 @@ class CreateTourRequest extends FormRequest
             'location' => 'required|string',
             'distance' => 'required|string',
         ];
-
-        return $rules;
     }
 
     /**
@@ -42,7 +40,7 @@ class CreateTourRequest extends FormRequest
      *
      * @return array
      */
-     public function messages()
+    public function messages()
     {
         return [
             'title.required' => 'Title is required',
