@@ -87,7 +87,7 @@ class TourController extends Controller
             if ($image != null) {
                 $imageName = time()  . '.' . $image->extension();
                 $image->move(public_path("/tour-images"), $imageName);
-                $imageLink = env('APP_URL') . "/tour-images/$imageName";
+                $imageLink = env('APP_URL') . "tour-images/$imageName";
             }
 
 
