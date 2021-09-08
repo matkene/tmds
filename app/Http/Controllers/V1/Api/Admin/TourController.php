@@ -81,28 +81,26 @@ class TourController extends Controller
 
             DB::beginTransaction();
 
-            $images = [];
+            $image = $request->image;
 
-            if ($files = $request->file('image')) {
-                foreach ($files as $file) {
-                    $uniqueId = bin2hex(openssl_random_pseudo_bytes(9));
-                    $fileExt = $file->getClientOriginalExtension();
-                    $name = $uniqueId . '_' . date("Y-m-d") . '_' . time() . '.' . $fileExt;
-                    $imageName = config('app.url') . '/Tour/' . $uniqueId . '_' . date("Y-m-d") . '_' . time() . $name;
-                    $file->move(('Tour/'), $imageName);
-                    $images[] = $imageName;
-                }
+            // Move the files to directory
+            if ($image != null) {
+                $imageName = time()  . '.' . $image->extension();
+                $image->move(public_path("/tour-images"), $imageName);
+                $imageLink = env('APP_URL') . "/tour-images/$imageName";
             }
+
 
             $newTourInstance = $this->tourRepository->create([
                 "title" => $request->title,
                 "description" => $request->description,
                 "created_by" => $userId,
                 "location" => $request->location,
-                "image" => implode("|", $images),
+                "image" => $imageLink,
                 "adult_price" => $request->adult_price,
                 "children_price" => $request->children_price,
                 "infant_price" => $request->infant_price,
+                "distance" => $request->distance,
                 "ratings" => "5.00"
             ]);
 
