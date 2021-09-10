@@ -31,6 +31,6 @@ class UserRepository
     {
         return $this->modelInstance::query()->whereHas("roles", function ($q) {
             $q->whereNotIn("slug", ["user"]);
-        });
+        })->get();
     }
 }
