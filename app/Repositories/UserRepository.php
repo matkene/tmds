@@ -26,4 +26,9 @@ class UserRepository
     {
         return $this->modelInstance::with('booking', 'testimonials')->paginate(5);
     }
+
+    public function allAdmin()
+    {
+        return $this->modelInstance::all();
+    }
 }

@@ -118,6 +118,7 @@ Route::group(['prefix' => 'v1'], function ($router) {
         // Users.
         Route::group(["prefix" => 'users'], function () {
             Route::get('/', [AdminUserController::class, 'allUsers']);
+            Route::get('/admin', [AdminUserController::class, 'allAdmin']);
             Route::post('view-one', [AdminUserController::class, 'viewOne']);
         });
 

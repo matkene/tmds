@@ -18,6 +18,24 @@ class UserController extends Controller
         $this->userRepository = $userRepository;
     }
 
+    public function allAdmin()
+    {
+        try {
+
+            $adminInstance = $this->userRepository->allAdmin();
+
+            if (!$adminInstance) {
+                return JsonResponser::send(true, "Admin not found", null, 401);
+            }
+
+            return JsonResponser::send(false, "Admin found successfully.", $adminInstance);
+        } catch (\Throwable $error) {
+            return $error->getMessage();
+            logger($error);
+            return JsonResponser::send(true, 'Internal server error', null, 500);
+        }
+    }
+
     public function allUsers()
     {
         try {
@@ -25,10 +43,10 @@ class UserController extends Controller
             $tourInstance = $this->userRepository->allUsers();
 
             if (!$tourInstance) {
-                return JsonResponser::send(true, "Tour Record not found", null, 401);
+                return JsonResponser::send(true, "Users not found", null, 401);
             }
 
-            return JsonResponser::send(false, "Tour Record found successfully.", $tourInstance);
+            return JsonResponser::send(false, "Users found successfully.", $tourInstance);
         } catch (\Throwable $error) {
             return $error->getMessage();
             logger($error);
