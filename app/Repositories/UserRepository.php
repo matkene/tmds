@@ -30,7 +30,7 @@ class UserRepository
     public function allAdmin()
     {
         return $this->modelInstance::query()->whereHas("roles", function ($q) {
-            $q->whereNotIn("name", ["user"]);
+            $q->whereNotIn("slug", ["user"]);
         });
     }
 }
