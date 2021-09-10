@@ -29,6 +29,8 @@ class UserRepository
 
     public function allAdmin()
     {
-        return $this->modelInstance::role('admin')->get();
+        return $this->modelInstance::query()->whereHas("roles", function ($q) {
+            $q->whereNotIn("name", ["user"]);
+        });
     }
 }
