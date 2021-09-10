@@ -5,7 +5,7 @@ namespace App\Repositories;
 use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
-
+use phpDocumentor\Reflection\Types\Boolean;
 
 class UserRepository
 {
@@ -32,5 +32,18 @@ class UserRepository
         return $this->modelInstance::query()->whereHas("roles", function ($q) {
             $q->whereNotIn("slug", ["user"]);
         })->get();
+    }
+
+    public function addAdmin($request)
+    {
+        $string = 'ABCDEFGHIKLLMNOPQRSTUBWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%*()';
+
+
+        $this->modelInstance::create([
+            'firstname' => $request['firstname'],
+            'lastname' => $request['lastname'],
+            'email' => $request['email'],
+            'is_active' => (bool) $request['is_active'],
+        ]);
     }
 }

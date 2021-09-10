@@ -19,7 +19,7 @@
                 <p class="font-weight-bold bg-white mb-3">
                     To activate your account, please click the button below.
                 </p>
-                <a href="{{ url(env('CLIENT_BASE_URL') . 'auth/email-verified/' . $data['verification_code']) }}"
+                <a href="{{ env('CLIENT_BASE_URL') . 'auth/email-verified/' . $data['verification_code'] }}"
                     class="track-order-btn">Verify Email</a>
             </div>
         </div>

@@ -54,6 +54,20 @@ class UserController extends Controller
         }
     }
 
+    public function addAdmin(Request $request)
+    {
+        try {
+
+            $adminInstance = $this->userRepository->addAdmin($request->all());
+
+            return JsonResponser::send(false, "Admin Created Successfully", $adminInstance);
+        } catch (\Throwable $error) {
+            return $error->getMessage();
+            logger($error);
+            return JsonResponser::send(true, 'Internal server error', null, 500);
+        }
+    }
+
     public function viewOne(ViewUserRequest $request)
     {
         try {
