@@ -19,7 +19,7 @@
                 <p class="font-weight-bold bg-white mb-3">
                     Click on the button below to reset your password
                 </p>
-                <a href="{{ url(env('CLIENT_BASE_URL') . 'auth/create-new-password/' . $data['verification_code'] . '?email=' . $data['email']) }}"
+                <a href="{{ env('CLIENT_BASE_URL') . 'auth/create-new-password/' . $data['verification_code'] . '?email=' . $data['email'] }}"
                     class="track-order-btn">Reset Password</a>
             </div>
             <br>
