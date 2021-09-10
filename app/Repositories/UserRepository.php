@@ -29,6 +29,6 @@ class UserRepository
 
     public function allAdmin()
     {
-        return $this->modelInstance::all();
+        return $this->modelInstance::with('role')->get();
     }
 }
