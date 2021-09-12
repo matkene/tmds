@@ -96,7 +96,7 @@ class UserController extends Controller
 
             $tourInstance = $this->userRepository->toggleActiveStatus($request->user_id);
 
-            if (!$tourInstance) {
+            if ($tourInstance) {
                 return JsonResponser::send(false, "Status Changed Successfully", null, 401);
             }
 
