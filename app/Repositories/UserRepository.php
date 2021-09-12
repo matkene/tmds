@@ -94,6 +94,7 @@ class UserRepository
             'firstname' => $request['firstname'],
             'lastname' => $request['lastname'],
             'email' => $request['email'],
+            'phoneno' => $request['phoneno'],
             'is_active' => false,
             'password' => Hash::make($password),
             'role' => $request['role_id'],
