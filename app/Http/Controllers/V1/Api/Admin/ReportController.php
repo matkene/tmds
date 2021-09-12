@@ -23,7 +23,7 @@ class ReportController extends Controller
     public function getReport()
     {
         try {
-            $totalRevenue = $this->bookingRepository->processTodayRevenue();
+            $totalRevenue = $this->bookingRepository->processTotalRevenue();
             $onlineRevenue = $this->bookingRepository->processOnlineRevenue();
             $walkInRevenue = $this->bookingRepository->processWalkInRevenue();
             $totalTickets = $this->bookingRepository->processTotalTickets();

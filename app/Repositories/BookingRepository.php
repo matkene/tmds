@@ -168,12 +168,12 @@ class BookingRepository
 
     public function processOnlineTickets()
     {
-        return $this->modelInstance::where('booking_type', BookingTypeInterface::ONLINE_BOOKING)->get();
+        return count($this->modelInstance::where('booking_type', BookingTypeInterface::ONLINE_BOOKING)->get());
     }
 
     public function processWalkInTickets()
     {
-        return $this->modelInstance::where('booking_type', BookingTypeInterface::IN_PERSON)->get();
+        return count($this->modelInstance::where('booking_type', BookingTypeInterface::IN_PERSON)->get());
     }
 
     public function processTodayRevenue()
