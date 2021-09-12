@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Interfaces\RoleInterface;
 use App\Mail\NewAdminUserEmail;
 use App\Models\RoleUser;
 use App\Models\Tour;
@@ -103,12 +104,16 @@ class UserRepository
         ]);
 
         // Add Role to db
-        RoleUser::create([
-            'role_id' => $request['role_id'],
-            'user_id' => $admin->id
-        ]);
+        // RoleUser::create([
+        //     'role_id' => $request['role_id'],
+        //     'user_id' => $admin->id
+        // ]);
+        $userRole = RoleInterface::TICKETINGOFFICER;
+        if ($userRole) {
+            $admin->attachRole($userRole);
+        }
 
-        dd('got here..');
+
 
         // Add User to tour
         $tourInstance->user_id = $admin->id;
