@@ -123,7 +123,7 @@ class UserRepository
         $data = [
             'firstname' => $request['firstname'],
             'lastname' => $request['lastname'],
-            'password' => $request['password'],
+            'password' => $password,
             'email' => $request['email'],
             'username' => $request['email'],
         ];
