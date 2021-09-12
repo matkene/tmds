@@ -151,6 +151,31 @@ class BookingRepository
         return $this->modelInstance::sum('amount');
     }
 
+    public function processOnlineRevenue()
+    {
+        return $this->modelInstance::where('booking_type', BookingTypeInterface::ONLINE_BOOKING)->sum('amount');
+    }
+
+    public function processWalkInRevenue()
+    {
+        return $this->modelInstance::where('booking_type', BookingTypeInterface::IN_PERSON)->sum('amount');
+    }
+
+    public function processTotalTickets()
+    {
+        return count($this->modelInstance::all());
+    }
+
+    public function processOnlineTickets()
+    {
+        return $this->modelInstance::where('booking_type', BookingTypeInterface::ONLINE_BOOKING)->get();
+    }
+
+    public function processWalkInTickets()
+    {
+        return $this->modelInstance::where('booking_type', BookingTypeInterface::IN_PERSON)->get();
+    }
+
     public function processTodayRevenue()
     {
         return $this->modelInstance::whereDate('created_at', Carbon::today())->where('payment_status', 'Completed')->sum('amount');

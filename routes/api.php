@@ -16,6 +16,7 @@ use App\Http\Controllers\V1\Api\Admin\TestimonialController;
 use App\Http\Controllers\V1\Api\Admin\TravelGuideController;
 use App\Http\Controllers\V1\Api\Auth\VerificationController;
 use App\Http\Controllers\V1\Api\Admin\PeopleCultureController;
+use App\Http\Controllers\V1\Api\Admin\ReportController;
 use App\Http\Controllers\V1\Api\Admin\UserController as AdminUserController;
 use App\Http\Controllers\v1\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\V1\Api\User\TourController as UserTourController;
@@ -192,6 +193,11 @@ Route::group(['prefix' => 'v1'], function ($router) {
             Route::post('view-single-travelguide', [TravelGuideController::class, 'showTravelGuide']);
             Route::post('/create', [TravelGuideController::class, 'createTravelGuide']);
             Route::post('/update', [TravelGuideController::class, 'update']);
+        });
+
+        // Reports
+        Route::group(["prefix" => "reports"], function () {
+            Route::get('/', [ReportController::class, 'getReport']);
         });
     });
 
