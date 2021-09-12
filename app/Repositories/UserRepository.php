@@ -89,6 +89,8 @@ class UserRepository
         $shuffledString = str_shuffle($string);
         $password = substr($shuffledString, 0, 10);
 
+        dd('Got here');
+
         DB::beginTransaction();
         // Crrate the user
         $admin = $this->modelInstance::create([
@@ -107,7 +109,7 @@ class UserRepository
             'role_id' => $role->id,
             'user_id' => $admin->id
         ]);
-        dd('Got here');
+
         // Add User to tour
         $tourInstance->user_id = $admin->id;
         $tourInstance->save();
