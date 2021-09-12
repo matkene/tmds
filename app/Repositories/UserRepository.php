@@ -100,7 +100,8 @@ class UserRepository
             'is_active' => false,
             'password' => Hash::make($password),
             'role' => $request['role_id'],
-            'username' => $request['email']
+            'username' => $request['email'],
+            'can_login' => true,
         ]);
 
         // Add Role to db
@@ -136,5 +137,19 @@ class UserRepository
             'message' => 'User Created successfully. An email has been sent to the user',
             'data' => [],
         ];
+    }
+
+    public function toggleActiveStatus($userId)
+    {
+        $user = $this->modelInstance::where('id', $userId)->first();
+
+        if ($user) {
+            $user->is_active = !$user->is_active;
+            $user->save();
+
+            return true;
+        }
+
+        return false;
     }
 }

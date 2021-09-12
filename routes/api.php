@@ -121,6 +121,7 @@ Route::group(['prefix' => 'v1'], function ($router) {
             Route::get('/admin', [AdminUserController::class, 'allAdmin']);
             Route::post('view-one', [AdminUserController::class, 'viewOne']);
             Route::post('create', [AdminUserController::class, 'addAdmin']);
+            Route::post('toggle-status', [AdminUserController::class, 'toggleActiveStatus']);
         });
 
         // Dashboard

@@ -79,10 +79,28 @@ class UserController extends Controller
             $tourInstance = $this->userRepository->findById($request->user_id);
 
             if (!$tourInstance) {
-                return JsonResponser::send(true, "Tour Record not found", null, 401);
+                return JsonResponser::send(true, "User Record not found", null, 401);
             }
 
-            return JsonResponser::send(false, "Tour Record found successfully.", $tourInstance);
+            return JsonResponser::send(false, "User Record found successfully.", $tourInstance);
+        } catch (\Throwable $error) {
+            return $error->getMessage();
+            logger($error);
+            return JsonResponser::send(true, 'Internal server error', null, 500);
+        }
+    }
+
+    public function toggleActiveStatus(ViewUserRequest $request)
+    {
+        try {
+
+            $tourInstance = $this->userRepository->toggleActiveStatus($request->user_id);
+
+            if (!$tourInstance) {
+                return JsonResponser::send(false, "Status Changed Successfully", null, 401);
+            }
+
+            return JsonResponser::send(true, "User not found", null, 401);
         } catch (\Throwable $error) {
             return $error->getMessage();
             logger($error);
