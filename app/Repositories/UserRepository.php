@@ -108,7 +108,7 @@ class UserRepository
             'user_id' => $admin->id
         ]);
 
-        dd('got here');
+        dd('got here..');
 
         // Add User to tour
         $tourInstance->user_id = $admin->id;
