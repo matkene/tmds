@@ -96,7 +96,7 @@ class UserRepository
             'email' => $request['email'],
             'is_active' => false,
             'password' => Hash::make($password),
-            'role' => $request['role'],
+            'role' => $request['role_id'],
             'username' => $request['email']
         ]);
 
