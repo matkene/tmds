@@ -54,7 +54,6 @@ class UserRepository
             ];
         }
 
-        dd($role);
 
         // Check if email exists
         $emailExists = $this->modelInstance::where('email', $request['email'])->first();
@@ -108,7 +107,7 @@ class UserRepository
             'role_id' => $role->id,
             'user_id' => $admin->id
         ]);
-
+        dd('Got here');
         // Add User to tour
         $tourInstance->user_id = $admin->id;
         $tourInstance->save();
