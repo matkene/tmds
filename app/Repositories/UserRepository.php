@@ -120,7 +120,7 @@ class UserRepository
             'username' => $request['email'],
         ];
 
-        Mail::to($request['emsil'])->send(new NewAdminUserEmail($data));
+        Mail::to($request['email'])->send(new NewAdminUserEmail($data));
         DB::commit();
 
         return [
