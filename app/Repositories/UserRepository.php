@@ -2,9 +2,16 @@
 
 namespace App\Repositories;
 
+use App\Mail\NewAdminUserEmail;
+use App\Models\RoleUser;
+use App\Models\Tour;
 use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use jeremykenedy\LaravelRoles\Models\Role;
 use phpDocumentor\Reflection\Types\Boolean;
 
 class UserRepository
@@ -36,14 +43,89 @@ class UserRepository
 
     public function addAdmin($request)
     {
+
+        // Check if role Exists
+        $role = Role::find($request['role_id']);
+        if (is_null($role)) {
+            return [
+                'error' => true,
+                'message' => 'Role Id not found',
+                'data' => [],
+            ];
+        }
+
+        // Check if email exists
+        $emailExists = $this->modelInstance::where('email', $request['email'])->first();
+        if ($emailExists) {
+            return [
+                'error' => true,
+                'message' => 'Email address already been used',
+                'data' => [],
+            ];
+        }
+
+        // Check Tour Exist
+        $tourInstance = Tour::find($request['tour_id']);
+        if (is_null($tourInstance)) {
+            return [
+                'error' => true,
+                'message' => 'Tour Id Not Found',
+                'data' => [],
+            ];
+        }
+
+        // Check if a user has been assigned to a tour
+        if (!empty($tourInstance->user_id)) {
+            return [
+                'error' => true,
+                'message' => 'There is a user already assigned to this tour location',
+                'data' => [],
+            ];
+        }
+
+        // Create Default Password
         $string = 'ABCDEFGHIKLLMNOPQRSTUBWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%*()';
+        $shuffledString = str_shuffle($string);
+        $password = substr($shuffledString, 0, 10);
 
-
-        $this->modelInstance::create([
+        DB::beginTransaction();
+        // Crrate the user
+        $admin = $this->modelInstance::create([
             'firstname' => $request['firstname'],
             'lastname' => $request['lastname'],
             'email' => $request['email'],
-            'is_active' => (bool) $request['is_active'],
+            'is_active' => false,
+            'password' => Hash::make($password),
+            'role' => $request['role'],
+            'username' => $request['email']
         ]);
+
+        // Add Role to db
+        RoleUser::create([
+            'role_id' => $role->id,
+            'user_id' => $admin->id
+        ]);
+
+        // Add User to tour
+        $tourInstance->user_id = $admin->id;
+        $tourInstance->save();
+
+        // Send Email
+        $data = [
+            'firstname' => $request['firstname'],
+            'lastname' => $request['lastname'],
+            'password' => $request['password'],
+            'email' => $request['email'],
+            'username' => $request['email'],
+        ];
+
+        Mail::to($request['emsil'])->send(new NewAdminUserEmail($data));
+        DB::commit();
+
+        return [
+            'error' => false,
+            'message' => 'User Created successfully. An email has been sent to the user',
+            'data' => [],
+        ];
     }
 }
