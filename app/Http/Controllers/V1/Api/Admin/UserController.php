@@ -60,7 +60,11 @@ class UserController extends Controller
 
             $adminInstance = $this->userRepository->addAdmin($request->all());
 
-            return JsonResponser::send(false, "Admin Created Successfully", $adminInstance);
+            if ($adminInstance['error'] == false) {
+                return JsonResponser::send(false, "Admin Created Successfully", $adminInstance);
+            }
+
+            return JsonResponser::send(true, $adminInstance['message'], $adminInstance);
         } catch (\Throwable $error) {
             return $error->getMessage();
             logger($error);
