@@ -54,6 +54,8 @@ class UserRepository
             ];
         }
 
+        dd($role);
+
         // Check if email exists
         $emailExists = $this->modelInstance::where('email', $request['email'])->first();
         if ($emailExists) {
