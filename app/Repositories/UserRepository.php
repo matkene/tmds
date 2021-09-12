@@ -102,13 +102,13 @@ class UserRepository
             'username' => $request['email']
         ]);
 
-        dd('got here');
-
         // Add Role to db
         RoleUser::create([
-            'role_id' => $role->id,
+            'role_id' => $request['role_id'],
             'user_id' => $admin->id
         ]);
+
+        dd('got here');
 
         // Add User to tour
         $tourInstance->user_id = $admin->id;
