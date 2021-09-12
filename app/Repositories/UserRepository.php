@@ -89,8 +89,6 @@ class UserRepository
         $shuffledString = str_shuffle($string);
         $password = substr($shuffledString, 0, 10);
 
-        dd('Got here');
-
         DB::beginTransaction();
         // Crrate the user
         $admin = $this->modelInstance::create([
@@ -103,6 +101,8 @@ class UserRepository
             'role' => $request['role_id'],
             'username' => $request['email']
         ]);
+
+        dd('got here');
 
         // Add Role to db
         RoleUser::create([
