@@ -364,7 +364,7 @@ class BookingRepository
 
         $data = json_decode($response->getBody());
 
-        dd($data);
+        //dd($data);
 
         if (count($data->data->payments_transactions) === 0) {
             return [
