@@ -36,8 +36,6 @@ Route::group(['prefix' => 'v1'], function ($router) {
 
     Route::get('/check-username/{username}', [UserController::class, 'checkUsername']);
 
-    // API To verify Payment
-    Route::get('/booking/verify/{paymentRequestId}', [UserBookingController::class, 'verifyBookingPayment']);
 
     // API for contact us
     Route::post('/contact-us', [GuestController::class, 'contactUs']);
@@ -59,6 +57,10 @@ Route::group(['prefix' => 'v1'], function ($router) {
 
     // User Route
     Route::group(["prefix" => "user",  "middleware" => ["auth:api", "user"], "namespace" => "V1\Api\User"], function () {
+
+
+        // Verify Booking
+        Route::get('/booking/verify/{paymentRequestId}', [UserBookingController::class, 'verifyBookingPayment']);
 
         Route::get('/', [UserController::class, 'index']);
         Route::post('update/', [UserController::class, 'update']);
