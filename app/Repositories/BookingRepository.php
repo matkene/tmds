@@ -307,8 +307,8 @@ class BookingRepository
                 'Authorization' => 'Bearer ' . $this->paymentToken,
             ],
             'json' => [
-                "customer_first_name" => $user->firstname,
-                "customer_last_name" => $user->lastname,
+                "customer_first_name" => Auth::user()->firstname,
+                "customer_last_name" => Auth::user()->lastname,
                 "customer_email" => $user->email,
                 "customer_phone" => $user->phoneno,
                 "customer_address" => $user->state . ',  ' . $user->country,
@@ -363,6 +363,8 @@ class BookingRepository
         ]);
 
         $data = json_decode($response->getBody());
+
+        dd($data);
 
         if (count($data->data->payments_transactions) === 0) {
             return [
