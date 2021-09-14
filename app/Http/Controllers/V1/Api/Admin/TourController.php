@@ -292,4 +292,31 @@ class TourController extends Controller
             return JsonResponser::send(true, "Internal Server Error. Please refresh and try again", null, 401);
         }
     }
+
+    public function updatePicture(Request $request)
+    {
+        try {
+
+            $image = $request->image;
+            $tourId = $request->tour_id;
+
+            // Move the files to directory
+            if ($image != null) {
+                $imageName = time()  . '.' . $image->extension();
+                $image->move(public_path("/tour-images"), $imageName);
+                $imageLink = env('APP_URL') . "tour-images/$imageName";
+            }
+
+            $tourInstance = $this->tourRepository->findTourById($tourId);
+            $updateTourImage = $tourInstance->update([
+                'image' => $imageLink,
+            ]);
+
+            if ($updateTourImage) {
+                return JsonResponser::send(false, "Tour Image Updated Successfully", $updateTourImage, 200);
+            }
+        } catch (\Exception $error) {
+            return JsonResponser::send(true, "Internal Server Error. Please refresh and try again", $error, 401);
+        }
+    }
 }
