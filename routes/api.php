@@ -187,7 +187,7 @@ Route::group(['prefix' => 'v1'], function ($router) {
         Route::group(["prefix" => "testimonials"], function () {
             Route::get('/', [TestimonialController::class, 'index']);
             Route::post('view-single-testimonial', [TestimonialController::class, 'showTestimonial']);
-            Route::get('/stats', [TestimonialController::class, 'fetchStats']);
+            Route::get('/stat', [TestimonialController::class, 'fetchStats']);
         });
 
         // Travel Guide Route
