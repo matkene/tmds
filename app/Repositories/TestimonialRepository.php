@@ -45,7 +45,7 @@ class TestimonialRepository
     public function fetchStats()
     {
         $totalReview = count($this->modelInstance::all());
-        $averageRatings = $this->modelInstance::sum('ratings') / $totalReview;
+        $averageRatings = $this->modelInstance::sum('rating') / $totalReview;
 
         return [
             'totalReview' => $totalReview,
