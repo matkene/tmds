@@ -352,6 +352,11 @@ class BookingRepository
 
     public function verifyBookingPayment($paymentRequestId)
     {
+
+        $booking = $this->modelInstance::where('payment_request_id', $paymentRequestId)->first();
+        $userId = $booking->user_id;
+        $user = User::where('id', $userId)->first();
+
         $client = new Client();
         $url = config('payment.base_url');
 
@@ -380,7 +385,7 @@ class BookingRepository
             $booking->save();
 
             $bookingData = [
-                'fullname' => Auth::user()->firstname . ' ' . Auth::user()->lastname,
+                'fullname' => $user->firstname . ' ' . $user->lastname,
                 'adultMale' => $booking->no_adult_male,
                 'adultFemale' => $booking->no_adult_female,
                 'childrenMale' => $booking->no_children_male,
@@ -393,7 +398,7 @@ class BookingRepository
                 'ticketNo' => $booking->ticket_no,
             ];
 
-            Mail::to(Auth::user()->email)->send(new BookingEmail($bookingData));
+            Mail::to($user->email)->send(new BookingEmail($bookingData));
 
             return [
                 'paid' => true,

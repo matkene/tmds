@@ -34,6 +34,8 @@ Route::group(['prefix' => 'v1'], function ($router) {
         return 'Hello test 1';
     });
 
+    // Verify Booking
+    Route::get('/booking/verify/{paymentRequestId}', [UserBookingController::class, 'verifyBookingPayment']);
     Route::get('/check-username/{username}', [UserController::class, 'checkUsername']);
 
 
@@ -58,9 +60,6 @@ Route::group(['prefix' => 'v1'], function ($router) {
     // User Route
     Route::group(["prefix" => "user",  "middleware" => ["auth:api", "user"], "namespace" => "V1\Api\User"], function () {
 
-
-        // Verify Booking
-        Route::get('/booking/verify/{paymentRequestId}', [UserBookingController::class, 'verifyBookingPayment']);
 
         Route::get('/', [UserController::class, 'index']);
         Route::post('update/', [UserController::class, 'update']);
