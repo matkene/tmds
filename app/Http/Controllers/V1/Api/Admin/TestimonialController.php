@@ -28,55 +28,63 @@ class TestimonialController extends Controller
     /**
      * Get All Testimonial details
      */
-     public function index()
+    public function index()
     {
         try {
 
             $testimonialInstance = $this->testimonialRepository->allTestimonials();
 
-            if(!$testimonialInstance){
+            if (!$testimonialInstance) {
                 return JsonResponser::send(true, "Testimonial Record not found", null, 401);
             }
 
             return JsonResponser::send(false, "Testimonial Record found successfully.", $testimonialInstance);
-
         } catch (\Throwable $error) {
             return $error->getMessage();
             logger($error);
-            return JsonResponser::send(true, 'Internal server error', null, 500);
+            return JsonResponser::send(true, 'Internal server error', $error, 500);
         }
-
     }
 
     /**
      * Get Testimonial details by Id
      */
-     public function showTestimonial(Request $request)
+    public function showTestimonial(Request $request)
     {
         try {
 
-            if(!isset($request->testimonial_id)){
+            if (!isset($request->testimonial_id)) {
                 return JsonResponser::send(true, "Error occured. Please select a testimonial", null, 403);
             }
 
             $testimonialInstance = $this->testimonialRepository->findTestimonialById($request->testimonial_id);
 
-            if(!$testimonialInstance){
+            if (!$testimonialInstance) {
                 return JsonResponser::send(true, "Testimonial Record not found", null, 401);
             }
 
             return JsonResponser::send(false, "Testimonial Record found successfully.", $testimonialInstance);
-
         } catch (\Throwable $error) {
             return $error->getMessage();
             logger($error);
             return JsonResponser::send(true, 'Internal server error', null, 500);
         }
-
     }
 
     //activate testimonials
+    public function fetchStats()
+    {
+        try {
 
+            $testimonialStats = $this->testimonialRepository->fetchStats();
 
-
+            if (!$testimonialStats) {
+                return JsonResponser::send(false, "Testimonial Stats found", $testimonialStats, 401);
+            }
+        } catch (\Throwable $error) {
+            return $error->getMessage();
+            logger($error);
+            return JsonResponser::send(true, 'Internal server error', null, 500);
+        }
+    }
 }

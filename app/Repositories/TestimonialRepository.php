@@ -41,4 +41,15 @@ class TestimonialRepository
     {
         return $this->modelInstance::firstOrCreate($dataToCreate);
     }
+
+    public function fetchStats()
+    {
+        $totalReview = count($this->modelInstance::all());
+        $averageRatings = $this->modelInstance::sum('ratings') / $totalReview;
+
+        return [
+            'totalReview' => $totalReview,
+            'average_rating' => $averageRatings,
+        ];
+    }
 }
