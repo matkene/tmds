@@ -139,4 +139,32 @@ class BookingController extends Controller
             return JsonResponser::send(true, 'Internal server error', null, 500);
         }
     }
+
+    public function changeToCompleted(Request $request)
+    {
+        try {
+
+            if (!isset($request->booking_id)) {
+                return JsonResponser::send(true, "Error occured. Please select a booking", null, 403);
+            }
+
+            $bookingInstance = $this->bookingRepository->findBookingById($request->booking_id);
+
+            if (!$bookingInstance) {
+                return JsonResponser::send(true, "Booking Record not found", null, 401);
+            }
+
+            $changeStatus = $bookingInstance->update([
+                'status' => 'completed'
+            ]);
+
+            if ($changeStatus) {
+                return JsonResponser::send(false, "Booking Status changed completely.", $changeStatus);
+            }
+        } catch (\Throwable $error) {
+            return $error->getMessage();
+            logger($error);
+            return JsonResponser::send(true, 'Internal server error', null, 500);
+        }
+    }
 }
