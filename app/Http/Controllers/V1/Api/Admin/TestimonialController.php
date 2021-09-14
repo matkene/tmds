@@ -78,9 +78,8 @@ class TestimonialController extends Controller
 
             $testimonialStats = $this->testimonialRepository->fetchStats();
 
-            if (!$testimonialStats) {
-                return JsonResponser::send(false, "Testimonial Stats found", $testimonialStats, 401);
-            }
+
+            return JsonResponser::send(false, "Testimonial Stats found", $testimonialStats, 401);
         } catch (\Throwable $error) {
             return $error->getMessage();
             logger($error);
