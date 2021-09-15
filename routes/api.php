@@ -126,9 +126,8 @@ Route::group(['prefix' => 'v1'], function ($router) {
             Route::post('toggle-status', [AdminUserController::class, 'toggleActiveStatus']);
         });
 
-        // Dashboard
-        Route::group(["prefix" =DashboardController> "dashboard"], function () {
-            Route::get('/', [::class, 'index']);
+        Route::group(["prefix" => "dashboard"], function () {
+            Route::get('/', [DashboardController::class, 'index']);
         });
 
         // Events
