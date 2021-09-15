@@ -127,8 +127,8 @@ Route::group(['prefix' => 'v1'], function ($router) {
         });
 
         // Dashboard
-        Route::group(["prefix" => "dashboard"], function () {
-            Route::get('/', [DashboardController::class, 'index']);
+        Route::group(["prefix" =DashboardController> "dashboard"], function () {
+            Route::get('/', [::class, 'index']);
         });
 
         // Events
@@ -202,6 +202,7 @@ Route::group(['prefix' => 'v1'], function ($router) {
         // Reports
         Route::group(["prefix" => "reports"], function () {
             Route::get('/', [ReportController::class, 'getReport']);
+            Route::get('/activities', [ReportController::class, 'getAllActivities']);
         });
     });
 
