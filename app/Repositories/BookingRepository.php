@@ -454,6 +454,13 @@ class BookingRepository
 
         $data =  json_decode($response->getBody());
 
+        // Get the payment Id
+        $paymentRequestId = $data->data->request_id;
+
+        // Update the database to hold Payment Request Id
+        $booking->payment_request_id = $paymentRequestId;
+        $booking->save();
+
 
         $dataRetrieved = [
             "data" => $data,
