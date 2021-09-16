@@ -18,7 +18,7 @@ use App\Http\Controllers\V1\Api\Auth\VerificationController;
 use App\Http\Controllers\V1\Api\Admin\PeopleCultureController;
 use App\Http\Controllers\V1\Api\Admin\ReportController;
 use App\Http\Controllers\V1\Api\Admin\UserController as AdminUserController;
-use App\Http\Controllers\v1\Api\Auth\ForgotPasswordController;
+use App\Http\Controllers\V1\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\V1\Api\User\TourController as UserTourController;
 use App\Http\Controllers\V1\Api\User\EventController as UserEventController;
 use App\Http\Controllers\V1\Api\User\BookingController as UserBookingController;
