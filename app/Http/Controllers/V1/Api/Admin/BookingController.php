@@ -5,6 +5,7 @@ namespace App\Http\Controllers\V1\Api\Admin;
 
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateBookingRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -165,6 +166,25 @@ class BookingController extends Controller
             return $error->getMessage();
             logger($error);
             return JsonResponser::send(true, 'Internal server error', null, 500);
+        }
+    }
+
+    public function createOfflineBooking(CreateBookingRequest $request)
+    {
+        try {
+
+            $data = $request->all();
+            $createBooking = $this->bookingRepository->processOfflineBooking($data);
+
+            if ($createBooking['error'] == true) {
+                return JsonResponser::send(true, $createBooking['message'], $createBooking['data']);
+            }
+
+            return JsonResponser::send(false, $createBooking['message'], $createBooking['data']);
+        } catch (\Throwable $error) {
+            return $error->getMessage();
+            logger($error);
+            return JsonResponser::send(true, 'Internal server error', $error->getMessage(), 500);
         }
     }
 }

@@ -179,7 +179,7 @@ Route::group(['prefix' => 'v1'], function ($router) {
             Route::post('completed-booking', [BookingController::class, 'listAllCompletedBooking']);
             Route::post('view-single-booking', [BookingController::class, 'showBooking']);
             Route::post('change-to-completed', [BookingController::class, 'changeToCompleted']);
-            //Route::post('/create', [BookingController::class, 'createBooking']);
+            Route::post('/create-offline', [BookingController::class, 'createOfflineBooking']);
         });
 
 

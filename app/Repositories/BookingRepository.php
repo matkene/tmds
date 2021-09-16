@@ -474,4 +474,89 @@ class BookingRepository
             'booking' => $booking,
         ];
     }
+
+    public function processOfflineBooking($request)
+    {
+
+        $user = Auth::user();
+        //get tour
+        $tourInstance = Tour::find($request['tour_id']);
+        if (is_null($tourInstance)) {
+            return [
+                'error' => true,
+                'message' => 'Tour Id Not Found',
+                'data' => [],
+            ];
+        }
+
+
+        // Check if the tour is full for that day
+        $inputDate = Carbon::parse($request['date_of_visit']);
+        $bookingCount = Booking::where('tour_id', $tourInstance->id)
+            ->whereMonth('date_of_visit', $inputDate->month)
+            ->whereDay('date_of_visit', $inputDate->day)
+            ->count();
+
+
+
+        if ($bookingCount >= $tourInstance->daily_limit) {
+            return [
+                'error' => true,
+                'message' => 'Booking filled up for Date of visit Selected, please select another date.',
+                'data' => null,
+            ];
+        }
+
+
+        // Calculate the total
+        $adultTotal = ($request['no_adult_male'] + $request['no_adult_female']) * $tourInstance->adult_price;
+        $childrenTotal = ($request['no_children_male'] + $request['no_children_female']) * $tourInstance->children_price;
+        $infantTotal = ($request['no_infant_male'] + $request['no_infant_female']) * $tourInstance->infant_price;
+
+        $grandTotal = $adultTotal + $childrenTotal + $infantTotal;
+
+        $time = time();
+
+        // Save the booking to the db
+        $booking = Booking::create([
+            "user_id" => $user->id,
+            "tour_id" => $request['tour_id'],
+            "booking_type" => BookingTypeInterface::ONLINE_BOOKING,
+            "date_of_visit" => $request['date_of_visit'],
+            "ticket_no" => 'OGT-' . $time,
+            "amount" => $grandTotal,
+            "is_active" => true,
+            'no_adult_male' => $request['no_adult_male'],
+            'no_adult_female' => $request['no_adult_female'],
+            'adult_option' => $request['adult_option'],
+            'no_children_male' => $request['no_children_male'],
+            'no_children_female' => $request['no_children_female'],
+            'children_option' => $request['children_option'],
+            'no_infant_male' => $request['no_infant_male'],
+            'no_infant_female' => $request['no_infant_female'],
+            'infant_option' => $request['infant_option'],
+            'no_adult_sight_seeing' => $request['no_adult_sight_seeing'],
+            'no_children_sight_seeing' => $request['no_children_sight_seeing'],
+            'payment_request_id' => $time,
+            'guest_firstname' => $request['guest_firstname'],
+            'guest_lastname' => $request['guest_lastname'],
+        ]);
+
+        $currentUserInstance = auth()->user();
+        $dataToLog = [
+            'causer_id' => auth()->user()->id,
+            'action_id' => $booking->id,
+            'action_type' => "Models\Booking",
+            'log_name' => "Booking Created Successfully by Admin",
+            'description' => "Booking Created Successfully by {$currentUserInstance->lastname} {$currentUserInstance->firstname}",
+        ];
+
+        ProcessAuditLog::storeAuditLog($dataToLog);
+
+        return [
+            'error' => false,
+            'message' => 'Data retrieved',
+            'data' => $booking,
+        ];
+    }
 }
