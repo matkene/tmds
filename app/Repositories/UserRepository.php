@@ -37,7 +37,9 @@ class UserRepository
 
     public function allAdmin()
     {
-        return $this->modelInstance::with('roles')->whereNotIn("slug", ["user"])->get();
+        return $this->modelInstance::query()->whereHas("roles", function ($q) {
+            $q->whereNotIn("slug", ["user"]);
+        })->get();
     }
 
     public function addAdmin($request)
