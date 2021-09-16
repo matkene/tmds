@@ -37,14 +37,9 @@ class UserRepository
 
     public function allAdmin()
     {
-        $user =  $this->modelInstance::query()->whereHas("roles", function ($q) {
+        return $this->modelInstance::query()->whereHas("roles", function ($q) {
             $q->whereNotIn("slug", ["user"]);
         })->get();
-
-        return [
-            'user' => $user,
-            'role' => $this->userRole($user),
-        ];
     }
 
     public function addAdmin($request)
@@ -156,19 +151,5 @@ class UserRepository
         }
 
         return false;
-    }
-
-    protected function userRole($user)
-    {
-        $roles = config('roles.models.role')::pluck('slug');
-
-        foreach ($roles as $value) {
-            if ($user->hasRole($value)) {
-                $userRole = $value;
-                break;
-            }
-        }
-
-        return $userRole;
     }
 }
