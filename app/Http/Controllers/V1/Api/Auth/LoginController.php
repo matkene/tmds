@@ -105,7 +105,7 @@ class LoginController extends Controller
             'action_id' => $currentUserInstance->id,
             'action_type' => "Models\User",
             'log_name' => "User logged out successfully",
-            'description' => "{$newUserInstance->firstname} {$newUserInstance->lastname} logged out successfully",
+            'description' => "{$currentUserInstance->firstname} {$currentUserInstance->lastname} logged out successfully",
         ];
 
         ProcessAuditLog::storeAuditLog($dataToLog);
