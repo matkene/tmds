@@ -33,7 +33,7 @@ class BookingRepository
     {
 
         $searchParam = $request->search_params;
-        (!is_null($request->start_date) && !is_null($request->end_date)) ? $dateSearchParam = true : $dateSearchParam = false;
+        !is_null($request->date_of_visit) ? $dateSearchParam = true : $dateSearchParam = false;
 
 
         return $this->modelInstance::with('tour', 'user')
@@ -41,9 +41,8 @@ class BookingRepository
                 return $query->where('ticket_no', 'like', '%' . $searchParam . '%');
             })
             ->when($dateSearchParam, function ($query, $dateSearchParam) use ($request) {
-                $startDate = Carbon::parse($request->start_date);
-                $endDate = Carbon::parse($request->end_date);
-                return $query->whereBetween(DB::raw('DATE(created_at)'), [$startDate, $endDate]);
+                $date_of_visit = Carbon::parse($request->date_of_visit);
+                return $query->where('date_of_visit', $date_of_visit)->get();
             })
             ->orderBy('id', 'DESC')
             ->paginate(5);
