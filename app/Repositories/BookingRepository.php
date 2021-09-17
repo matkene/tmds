@@ -41,7 +41,7 @@ class BookingRepository
                 return $query->where('ticket_no', 'like', '%' . $searchParam . '%');
             })
             ->when($dateSearchParam, function ($query, $dateSearchParam) use ($request) {
-                return $query->where('date_of_visit', 'like', '%' . $dateSearchParam . '%');
+                return $query->where('date_of_visit', $dateSearchParam);
             })
             ->orderBy('id', 'DESC')
             ->paginate(5);
