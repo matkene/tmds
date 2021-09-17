@@ -32,7 +32,7 @@ class BookingRepository
     public function allBookings($request)
     {
 
-        $searchParam = $request->search;
+        $searchParam = $request->search_params;
         !is_null($request->date_of_visit) ? $dateSearchParam = true : $dateSearchParam = false;
 
 
@@ -41,7 +41,8 @@ class BookingRepository
                 return $query->where('ticket_no', 'like', '%' . $searchParam . '%');
             })
             ->when($dateSearchParam, function ($query, $dateSearchParam) use ($request) {
-                return $query->where('date_of_visit', $dateSearchParam);
+                $date_of_visit = Carbon::parse($request->date_of_visit);
+                return $query->where(DB::raw('DATE(date_of_visit)'), $dateSearchParam);
             })
             ->orderBy('id', 'DESC')
             ->paginate(5);
