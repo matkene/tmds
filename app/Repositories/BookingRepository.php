@@ -42,7 +42,7 @@ class BookingRepository
             })
             ->when($dateSearchParam, function ($query, $dateSearchParam) use ($request) {
                 $date_of_visit = Carbon::parse($request->date_of_visit);
-                return $query->where(DB::raw('DATE(date_of_visit)'), $dateSearchParam);
+                return $query->where(DB::raw('DATE(date_of_visit)'), $date_of_visit);
             })
             ->orderBy('id', 'DESC')
             ->paginate(5);
