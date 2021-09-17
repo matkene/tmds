@@ -41,8 +41,7 @@ class BookingRepository
                 return $query->where('ticket_no', 'like', '%' . $searchParam . '%');
             })
             ->when($dateSearchParam, function ($query, $dateSearchParam) use ($request) {
-                $dateSearchParam = Carbon::parse($dateSearchParam);
-                return $query->where('date_of_visit', $dateSearchParam);
+                return $query->where('date_of_visit', 'like', '%' . $dateSearchParam . '%');
             })
             ->orderBy('id', 'DESC')
             ->paginate(5);
