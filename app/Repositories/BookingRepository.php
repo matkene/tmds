@@ -32,7 +32,7 @@ class BookingRepository
     public function allBookings($request)
     {
 
-        $searchParam = $request->search_params;
+        $searchParam = $request->search;
         !is_null($request->date_of_visit) ? $dateSearchParam = true : $dateSearchParam = false;
 
 
