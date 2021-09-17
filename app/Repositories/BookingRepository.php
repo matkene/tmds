@@ -45,48 +45,46 @@ class BookingRepository
                 return $query->where(DB::raw('DATE(date_of_visit)'), $date_of_visit);
             })
             ->orderBy('id', 'DESC')
-            ->paginate(5);
+            ->paginate(10);
     }
 
     public function listOnlineBooking($request)
     {
 
         $searchParam = $request->search_params;
-        (!is_null($request->start_date) && !is_null($request->end_date)) ? $dateSearchParam = true : $dateSearchParam = false;
+        !is_null($request->date_of_visit) ? $dateSearchParam = true : $dateSearchParam = false;
 
 
         return $this->modelInstance::with('tour', 'user')
             ->when($searchParam, function ($query, $searchParam) use ($request) {
-                return $query->where('ticket_no', $searchParam);
+                return $query->where('ticket_no', 'like', '%' . $searchParam . '%');
             })
             ->when($dateSearchParam, function ($query, $dateSearchParam) use ($request) {
-                $startDate = Carbon::parse($request->start_date);
-                $endDate = Carbon::parse($request->end_date);
-                return $query->whereBetween(DB::raw('DATE(created_at)'), [$startDate, $endDate]);
+                $date_of_visit = Carbon::parse($request->date_of_visit);
+                return $query->where(DB::raw('DATE(date_of_visit)'), $date_of_visit);
             })
             ->where('booking_type', BookingTypeInterface::ONLINE_BOOKING)
             ->orderBy('id', 'DESC')
-            ->paginate(20);
+            ->paginate(10);
     }
 
     public function listConfirmedBooking($request)
     {
         $searchParam = $request->search_params;
-        (!is_null($request->start_date) && !is_null($request->end_date)) ? $dateSearchParam = true : $dateSearchParam = false;
+        !is_null($request->date_of_visit) ? $dateSearchParam = true : $dateSearchParam = false;
 
 
         return $this->modelInstance::with('tour', 'user')
             ->when($searchParam, function ($query, $searchParam) use ($request) {
-                return $query->where('ticket_no', $searchParam);
+                return $query->where('ticket_no', 'like', '%' . $searchParam . '%');
             })
             ->when($dateSearchParam, function ($query, $dateSearchParam) use ($request) {
-                $startDate = Carbon::parse($request->start_date);
-                $endDate = Carbon::parse($request->end_date);
-                return $query->whereBetween(DB::raw('DATE(created_at)'), [$startDate, $endDate]);
+                $date_of_visit = Carbon::parse($request->date_of_visit);
+                return $query->where(DB::raw('DATE(date_of_visit)'), $date_of_visit);
             })
             ->where('payment_status', 'Paid')
             ->orderBy('id', 'DESC')
-            ->paginate(20);
+            ->paginate(10);
     }
 
 
@@ -94,38 +92,36 @@ class BookingRepository
     {
 
         $searchParam = $request->search_params;
-        (!is_null($request->start_date) && !is_null($request->end_date)) ? $dateSearchParam = true : $dateSearchParam = false;
+        !is_null($request->date_of_visit) ? $dateSearchParam = true : $dateSearchParam = false;
 
 
         return $this->modelInstance::with('tour', 'user')
             ->when($searchParam, function ($query, $searchParam) use ($request) {
-                return $query->where('ticket_no', $searchParam);
+                return $query->where('ticket_no', 'like', '%' . $searchParam . '%');
             })
             ->when($dateSearchParam, function ($query, $dateSearchParam) use ($request) {
-                $startDate = Carbon::parse($request->start_date);
-                $endDate = Carbon::parse($request->end_date);
-                return $query->whereBetween(DB::raw('DATE(created_at)'), [$startDate, $endDate]);
+                $date_of_visit = Carbon::parse($request->date_of_visit);
+                return $query->where(DB::raw('DATE(date_of_visit)'), $date_of_visit);
             })
             ->where('status', 'pending')
             ->orderBy('id', 'DESC')
-            ->paginate(20);
+            ->paginate(10);
     }
 
     public function listCompletedBooking($request)
     {
 
         $searchParam = $request->search_params;
-        (!is_null($request->start_date) && !is_null($request->end_date)) ? $dateSearchParam = true : $dateSearchParam = false;
+        !is_null($request->date_of_visit) ? $dateSearchParam = true : $dateSearchParam = false;
 
 
         return $this->modelInstance::with('tour', 'user')
             ->when($searchParam, function ($query, $searchParam) use ($request) {
-                return $query->where('ticket_no', $searchParam);
+                return $query->where('ticket_no', 'like', '%' . $searchParam . '%');
             })
             ->when($dateSearchParam, function ($query, $dateSearchParam) use ($request) {
-                $startDate = Carbon::parse($request->start_date);
-                $endDate = Carbon::parse($request->end_date);
-                return $query->whereBetween(DB::raw('DATE(created_at)'), [$startDate, $endDate]);
+                $date_of_visit = Carbon::parse($request->date_of_visit);
+                return $query->where(DB::raw('DATE(date_of_visit)'), $date_of_visit);
             })
             ->where('status', 'completed')
             ->where('is_attended', true)
