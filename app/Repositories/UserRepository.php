@@ -102,6 +102,7 @@ class UserRepository
             'role' => $request['role_id'],
             'username' => $request['email'],
             'can_login' => true,
+            'is_verified' => true,
         ]);
 
         // Add Role to db
@@ -120,6 +121,10 @@ class UserRepository
         $tourInstance->user_id = $admin->id;
         $tourInstance->save();
 
+
+        $sring = $admin->id . '|' . $request['firstname'] . ' ' . $request['lastname'];
+        $encodedString =  base64_encode($sring);
+
         // Send Email
         $data = [
             'firstname' => $request['firstname'],
@@ -127,6 +132,7 @@ class UserRepository
             'password' => $password,
             'email' => $request['email'],
             'username' => $request['email'],
+            'encoded_string' => $encodedString,
         ];
 
         Mail::to($request['email'])->send(new NewAdminUserEmail($data));

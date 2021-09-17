@@ -29,8 +29,8 @@
                 <p class="font-weight-bold bg-white mb-3">
                     To get started, please click the button below.
                 </p>
-                {{-- <a href="{{ env('CLIENT_BASE_URL') . 'auth/email-verified/' . $data['verification_code'] }}"
-                    class="track-order-btn">Verify Email</a> --}}
+                <a href="{{ 'https://admin.olumo.ogunstate.gov.ng/#/auth/onboard/' . $data['encoded_string'] }}"
+                    class="track-order-btn">Continue</a>
             </div>
         </div>
     </div>
