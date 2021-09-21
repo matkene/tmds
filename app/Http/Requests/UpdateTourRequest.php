@@ -25,7 +25,7 @@ class UpdateTourRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => ['required', 'string', new CheckIfTourTitleExists()],
+            'title' => ['required', 'string'],
             'description' => ['required'],
             'children_price' => 'required',
             'adult_price' => 'required',
