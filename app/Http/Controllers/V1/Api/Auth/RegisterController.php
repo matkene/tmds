@@ -58,7 +58,8 @@ class RegisterController extends Controller
                 "address" => $request->address,
                 "account_type" => $request->account_type,
                 "password" => Hash::make($request->password),
-                "can_login" => false,
+                "can_login" => true,
+                "is_verified" => true,
             ]);
             if (!$newUserInstance) {
                 $error = true;
@@ -76,17 +77,19 @@ class RegisterController extends Controller
             if ($userRole) {
                 $newUserInstance->attachRole($userRole);
             }
-            $newUserToken = bin2hex(openssl_random_pseudo_bytes(30));
-            DB::table('user_verifications')->insert(['user_id' => $newUserInstance->id, 'email' => $newUserInstance->email, 'token' => $newUserToken, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()]);
-            $data = [
-                'email' => $request->email,
-                'name' => $request->lastname . ' ' . $request->firstname,
-                'user' => $newUserInstance,
-                'subject' => "Account Created Successfully",
-                'verification_code' => $newUserToken,
-            ];
-            Mail::to($request->email)->send(new UserVerifyEmail($data));
-            DB::commit();
+
+            // Hide verification of Email
+            // $newUserToken = bin2hex(openssl_random_pseudo_bytes(30));
+            // DB::table('user_verifications')->insert(['user_id' => $newUserInstance->id, 'email' => $newUserInstance->email, 'token' => $newUserToken, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()]);
+            // $data = [
+            //     'email' => $request->email,
+            //     'name' => $request->lastname . ' ' . $request->firstname,
+            //     'user' => $newUserInstance,
+            //     'subject' => "Account Created Successfully",
+            //     'verification_code' => $newUserToken,
+            // ];
+            // Mail::to($request->email)->send(new UserVerifyEmail($data));
+            // DB::commit();
 
             $dataToLog = [
                 'causer_id' => $newUserInstance->id,
