@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use App\Rules\CheckIfEmailExists;
 use App\Rules\CheckIfPhoneExists;
-use App\Rules\CheckIfUsernameExists;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateUserRequest extends FormRequest
@@ -29,13 +28,14 @@ class CreateUserRequest extends FormRequest
         $rules = [
             'email' => ['required', 'string', new CheckIfEmailExists()],
             'phoneno' => ['required', 'string', new CheckIfPhoneExists()],
-            'username' => ['required', 'string', new CheckIfUsernameExists()],
+            //'username' => ['required', 'string', new CheckIfUsernameExists()],
             'password' => 'required|string|min:6',
             'lastname' => 'required|string',
-            'gender' => 'required',
+            //'gender' => 'required',
             'account_type' => 'required',
             'firstname' => 'required|string',
             'address' => 'required|string',
+            'age' => 'required',
         ];
 
         return $rules;
@@ -60,7 +60,8 @@ class CreateUserRequest extends FormRequest
             'lastname.required' => 'Last Name is required',
             'firstname.required' => 'First Name is required',
             'address.required' => 'First Name is required',
-            'account_type.required' => 'Account Type is required'
+            'account_type.required' => 'Account Type is required',
+            'age.required' => 'Age is required',
         ];
     }
 }

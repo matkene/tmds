@@ -3,24 +3,23 @@
 namespace App\Http\Controllers\V1\Api\Auth;
 
 use App\Helpers\ProcessAuditLog;
-use Carbon\Carbon;
-use App\Models\User;
-use App\Mail\VerifyEmail;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use App\Mail\UserVerifyEmail;
-use App\Interfaces\RoleInterface;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateAdminRequest;
+use App\Http\Requests\CreateUserRequest;
+use App\Http\Responser\JsonResponser;
+use App\Interfaces\RoleInterface;
+use App\Mail\UserVerifyEmail;
+use App\Mail\VerifyEmail;
+use App\Models\User;
+use App\Providers\RouteServiceProvider;
+use App\Repositories\RegisterRepository;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use App\Http\Responser\JsonResponser;
-use App\Providers\RouteServiceProvider;
-use App\Http\Requests\CreateUserRequest;
-use App\Repositories\RegisterRepository;
-use App\Http\Requests\CreateAdminRequest;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Str;
 
 class RegisterController extends Controller
 {
@@ -52,9 +51,10 @@ class RegisterController extends Controller
                 "firstname" => $request->firstname,
                 "email" => $request->email,
                 "phoneno" => $request->phoneno,
-                "username" => $request->username,
-                "date_of_birth" => $request->date_of_birth,
-                "gender" => $request->gender,
+                //"username" => $request->username,
+                //"date_of_birth" => $request->date_of_birth,
+                //"gender" => $request->gender,
+                "age" => $request->age,
                 "address" => $request->address,
                 "account_type" => $request->account_type,
                 "password" => Hash::make($request->password),
@@ -83,7 +83,7 @@ class RegisterController extends Controller
                 'name' => $request->lastname . ' ' . $request->firstname,
                 'user' => $newUserInstance,
                 'subject' => "Account Created Successfully",
-                'verification_code' => $newUserToken
+                'verification_code' => $newUserToken,
             ];
             Mail::to($request->email)->send(new UserVerifyEmail($data));
             DB::commit();
@@ -147,7 +147,7 @@ class RegisterController extends Controller
                 'name' => $request->lastname . ' ' . $request->firstname,
                 'user' => $newUserInstance,
                 'subject' => "Account Created Successfully",
-                'verification_code' => $newUserToken
+                'verification_code' => $newUserToken,
             ];
             Mail::to($request->email)->send(new UserVerifyEmail($data));
             DB::commit();
@@ -203,7 +203,7 @@ class RegisterController extends Controller
                 'email' => $email,
                 'name' => $user->firstname,
                 'verification_code' => $verification_code,
-                'subject' => "Please verify your email address."
+                'subject' => "Please verify your email address.",
                 // "recruiter" => $user->hasRole("recruiters")
             ];
 
@@ -222,7 +222,7 @@ class RegisterController extends Controller
      */
     protected function validateResendCode($request)
     {
-        $rules =  [
+        $rules = [
             'email' => 'required|email|max:255',
         ];
 
