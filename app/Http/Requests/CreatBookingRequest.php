@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateBookingRequest extends FormRequest
@@ -31,13 +30,13 @@ class CreateBookingRequest extends FormRequest
             'no_children_male' => 'required',
             'no_children_female' => 'required',
             'children_option' => 'required',
-            'no_infant_male' => 'required',
-            'no_infant_female' => 'required',
-            'infant_option' => 'required',
+            //'no_infant_male' => 'required',
+            //'no_infant_female' => 'required',
+            //'infant_option' => 'required',
             'user_id' => 'required',
             'tour_id' => 'required',
-            'no_adult_sight_seeing' => 'required',
-            'no_children_sight_seeing' => 'required',
+            //'no_adult_sight_seeing' => 'required',
+            //'no_children_sight_seeing' => 'required',
             'date_of_visit' => 'required',
         ];
     }

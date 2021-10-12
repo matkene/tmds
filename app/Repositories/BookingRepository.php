@@ -2,20 +2,19 @@
 
 namespace App\Repositories;
 
-use Carbon\Carbon;
-use App\Models\Tour;
-use GuzzleHttp\Client;
-use App\Models\Booking;
 use App\Helpers\Payment;
-use App\Mail\BookingEmail;
 use App\Helpers\ProcessAuditLog;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use App\Http\Responser\JsonResponser;
 use App\Interfaces\BookingTypeInterface;
+use App\Mail\BookingEmail;
+use App\Models\Booking;
+use App\Models\Tour;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
+use Carbon\Carbon;
+use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class BookingRepository
 {
@@ -35,7 +34,6 @@ class BookingRepository
         $searchParam = $request->search_params;
         !is_null($request->date_of_visit) ? $dateSearchParam = true : $dateSearchParam = false;
 
-
         return $this->modelInstance::with('tour', 'user')
             ->when($searchParam, function ($query, $searchParam) use ($request) {
                 return $query->where('ticket_no', 'like', '%' . $searchParam . '%');
@@ -53,7 +51,6 @@ class BookingRepository
 
         $searchParam = $request->search_params;
         !is_null($request->date_of_visit) ? $dateSearchParam = true : $dateSearchParam = false;
-
 
         return $this->modelInstance::with('tour', 'user')
             ->when($searchParam, function ($query, $searchParam) use ($request) {
@@ -73,7 +70,6 @@ class BookingRepository
         $searchParam = $request->search_params;
         !is_null($request->date_of_visit) ? $dateSearchParam = true : $dateSearchParam = false;
 
-
         return $this->modelInstance::with('tour', 'user')
             ->when($searchParam, function ($query, $searchParam) use ($request) {
                 return $query->where('ticket_no', 'like', '%' . $searchParam . '%');
@@ -87,13 +83,11 @@ class BookingRepository
             ->paginate(10);
     }
 
-
     public function listPendingBooking($request)
     {
 
         $searchParam = $request->search_params;
         !is_null($request->date_of_visit) ? $dateSearchParam = true : $dateSearchParam = false;
-
 
         return $this->modelInstance::with('tour', 'user')
             ->when($searchParam, function ($query, $searchParam) use ($request) {
@@ -113,7 +107,6 @@ class BookingRepository
 
         $searchParam = $request->search_params;
         !is_null($request->date_of_visit) ? $dateSearchParam = true : $dateSearchParam = false;
-
 
         return $this->modelInstance::with('tour', 'user')
             ->when($searchParam, function ($query, $searchParam) use ($request) {
@@ -188,24 +181,24 @@ class BookingRepository
 
     public function processAdultVisit()
     {
-        $adultMale =  $this->modelInstance::where("is_attended", true)->where("status", "completed")->sum('no_adult_male');
-        $adultFemale =  $this->modelInstance::where("is_attended", true)->where("status", "completed")->sum('no_adult_female');
+        $adultMale = $this->modelInstance::where("is_attended", true)->where("status", "completed")->sum('no_adult_male');
+        $adultFemale = $this->modelInstance::where("is_attended", true)->where("status", "completed")->sum('no_adult_female');
 
         return $adultMale + $adultFemale;
     }
 
     public function processChildrenVisit()
     {
-        $childrenMale =  $this->modelInstance::where("is_attended", true)->where("status", "completed")->sum('no_children_male');
-        $childrenFemale =  $this->modelInstance::where("is_attended", true)->where("status", "completed")->sum('no_children_female');
+        $childrenMale = $this->modelInstance::where("is_attended", true)->where("status", "completed")->sum('no_children_male');
+        $childrenFemale = $this->modelInstance::where("is_attended", true)->where("status", "completed")->sum('no_children_female');
 
         return $childrenMale + $childrenFemale;
     }
 
     public function processInfantVisit()
     {
-        $infantMale =  $this->modelInstance::where("is_attended", true)->where("status", "completed")->sum('no_infant_male');
-        $infantFemale =  $this->modelInstance::where("is_attended", true)->where("status", "completed")->sum('no_infant_female');
+        $infantMale = $this->modelInstance::where("is_attended", true)->where("status", "completed")->sum('no_infant_male');
+        $infantFemale = $this->modelInstance::where("is_attended", true)->where("status", "completed")->sum('no_infant_female');
 
         return $infantMale + $infantFemale;
     }
@@ -220,7 +213,6 @@ class BookingRepository
         $user = Auth::user();
         $userId = auth()->user()->id;
 
-
         //get tour
         $tourInstance = Tour::find($request['tour_id']);
         if (is_null($tourInstance)) {
@@ -231,15 +223,12 @@ class BookingRepository
             ];
         }
 
-
         // Check if the tour is full for that day
         $inputDate = Carbon::parse($request['date_of_visit']);
         $bookingCount = Booking::where('tour_id', $tourInstance->id)
             ->whereMonth('date_of_visit', $inputDate->month)
             ->whereDay('date_of_visit', $inputDate->day)
             ->count();
-
-
 
         if ($bookingCount >= $tourInstance->daily_limit) {
             return [
@@ -249,13 +238,12 @@ class BookingRepository
             ];
         }
 
-
         // Calculate the total
         $adultTotal = ($request['no_adult_male'] + $request['no_adult_female']) * $tourInstance->adult_price;
         $childrenTotal = ($request['no_children_male'] + $request['no_children_female']) * $tourInstance->children_price;
-        $infantTotal = ($request['no_infant_male'] + $request['no_infant_female']) * $tourInstance->infant_price;
+        //$infantTotal = ($request['no_infant_male'] + $request['no_infant_female']) * $tourInstance->infant_price;
 
-        $grandTotal = $adultTotal + $childrenTotal + $infantTotal;
+        $grandTotal = $adultTotal + $childrenTotal;
 
         // Save the booking to the db
         $booking = Booking::create([
@@ -272,11 +260,11 @@ class BookingRepository
             'no_children_male' => $request['no_children_male'],
             'no_children_female' => $request['no_children_female'],
             'children_option' => $request['children_option'],
-            'no_infant_male' => $request['no_infant_male'],
-            'no_infant_female' => $request['no_infant_female'],
-            'infant_option' => $request['infant_option'],
-            'no_adult_sight_seeing' => $request['no_adult_sight_seeing'],
-            'no_children_sight_seeing' => $request['no_children_sight_seeing'],
+            //'no_infant_male' => $request['no_infant_male'],
+            //'no_infant_female' => $request['no_infant_female'],
+            //'infant_option' => $request['infant_option'],
+            //'no_adult_sight_seeing' => $request['no_adult_sight_seeing'],
+            //'no_children_sight_seeing' => $request['no_children_sight_seeing'],
         ]);
 
         $currentUserInstance = auth()->user();
@@ -290,11 +278,9 @@ class BookingRepository
 
         ProcessAuditLog::storeAuditLog($dataToLog);
 
-
         //Make the payment
         $client = new Client();
         $url = config('payment.base_url') . '/mda-integration/generate-bill';
-
 
         $response = $client->post($url, [
             'headers' => [
@@ -311,18 +297,18 @@ class BookingRepository
                 "billed_amount" => floatval($grandTotal),
                 "overwrite_existing" => false,
                 "request_id" => time(),
-                "service_id" =>  156,
+                "service_id" => 156,
                 "demand_notices" => array(
                     array(
                         "name" => "Olumo tourists centre - Gate Fee",
                         "amount" => floatval($grandTotal),
-                        "revenue_code" => "200040021114005"
-                    )
-                )
-            ]
+                        "revenue_code" => "200040021114005",
+                    ),
+                ),
+            ],
         ]);
 
-        $data =  json_decode($response->getBody());
+        $data = json_decode($response->getBody());
 
         // Get the payment Id
         $paymentRequestId = $data->data->request_id;
@@ -385,9 +371,9 @@ class BookingRepository
                 'adultFemale' => $booking->no_adult_female,
                 'childrenMale' => $booking->no_children_male,
                 'childrenFemale' => $booking->no_children_female,
-                'infantMale' => $booking->no_infant_male,
-                'infantFemale' => $booking->no_infant_female,
-                'totalVisitor' => $booking->no_adult_male + $booking->no_adult_female + $booking->no_children_male + $booking->no_children_female + $booking->no_infant_male + $booking->no_infant_female,
+                //'infantMale' => $booking->no_infant_male,
+                //'infantFemale' => $booking->no_infant_female,
+                'totalVisitor' => $booking->no_adult_male + $booking->no_adult_female + $booking->no_children_male + $booking->no_children_female,
                 'dateOfVisit' => $booking->date_of_visit,
                 'total' => $booking->amount,
                 'ticketNo' => $booking->ticket_no,
@@ -398,7 +384,7 @@ class BookingRepository
             return [
                 'paid' => true,
                 $data,
-                $booking
+                $booking,
             ];
         }
     }
@@ -420,7 +406,6 @@ class BookingRepository
         $client = new Client();
         $url = config('payment.base_url') . '/mda-integration/generate-bill';
 
-
         $response = $client->post($url, [
             'headers' => [
                 'Content-Type' => 'application/json',
@@ -436,18 +421,18 @@ class BookingRepository
                 "billed_amount" => floatval($booking->amount),
                 "overwrite_existing" => false,
                 "request_id" => time(),
-                "service_id" =>  156,
+                "service_id" => 156,
                 "demand_notices" => array(
                     array(
                         "name" => "Olumo tourists centre - Gate Fee",
                         "amount" => floatval($booking->amount),
-                        "revenue_code" => "200040021114005"
-                    )
-                )
-            ]
+                        "revenue_code" => "200040021114005",
+                    ),
+                ),
+            ],
         ]);
 
-        $data =  json_decode($response->getBody());
+        $data = json_decode($response->getBody());
 
         // Get the payment Id
         $paymentRequestId = $data->data->request_id;
@@ -455,7 +440,6 @@ class BookingRepository
         // Update the database to hold Payment Request Id
         $booking->payment_request_id = $paymentRequestId;
         $booking->save();
-
 
         $dataRetrieved = [
             "data" => $data,
@@ -484,15 +468,12 @@ class BookingRepository
             ];
         }
 
-
         // Check if the tour is full for that day
         $inputDate = Carbon::parse($request['date_of_visit']);
         $bookingCount = Booking::where('tour_id', $tourInstance->id)
             ->whereMonth('date_of_visit', $inputDate->month)
             ->whereDay('date_of_visit', $inputDate->day)
             ->count();
-
-
 
         if ($bookingCount >= $tourInstance->daily_limit) {
             return [
@@ -502,13 +483,12 @@ class BookingRepository
             ];
         }
 
-
         // Calculate the total
         $adultTotal = ($request['no_adult_male'] + $request['no_adult_female']) * $tourInstance->adult_price;
         $childrenTotal = ($request['no_children_male'] + $request['no_children_female']) * $tourInstance->children_price;
-        $infantTotal = ($request['no_infant_male'] + $request['no_infant_female']) * $tourInstance->infant_price;
+        //$infantTotal = ($request['no_infant_male'] + $request['no_infant_female']) * $tourInstance->infant_price;
 
-        $grandTotal = $adultTotal + $childrenTotal + $infantTotal;
+        $grandTotal = $adultTotal + $childrenTotal;
 
         $time = time();
 
@@ -527,11 +507,11 @@ class BookingRepository
             'no_children_male' => $request['no_children_male'],
             'no_children_female' => $request['no_children_female'],
             'children_option' => $request['children_option'],
-            'no_infant_male' => $request['no_infant_male'],
-            'no_infant_female' => $request['no_infant_female'],
-            'infant_option' => $request['infant_option'],
-            'no_adult_sight_seeing' => $request['no_adult_sight_seeing'],
-            'no_children_sight_seeing' => $request['no_children_sight_seeing'],
+            //'no_infant_male' => $request['no_infant_male'],
+            //'no_infant_female' => $request['no_infant_female'],
+            //'infant_option' => $request['infant_option'],
+            //'no_adult_sight_seeing' => $request['no_adult_sight_seeing'],
+            //'no_children_sight_seeing' => $request['no_children_sight_seeing'],
             'payment_request_id' => $time,
             'guest_firstname' => $request['guest_firstname'],
             'guest_lastname' => $request['guest_lastname'],
