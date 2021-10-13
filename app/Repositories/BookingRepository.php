@@ -335,6 +335,14 @@ class BookingRepository
     {
 
         $booking = $this->modelInstance::where('payment_request_id', $paymentRequestId)->first();
+
+        if (!$booking) {
+            return [
+                'paid' => false,
+                'message' => 'Booking does not exist',
+            ];
+        }
+
         $userId = $booking->user_id;
         $user = User::where('id', $userId)->first();
 
