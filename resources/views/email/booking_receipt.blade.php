@@ -51,7 +51,7 @@
                 {{ $data['childrenFemale'] }}
             </p>
 
-            <p class="greeting-text">No of Infant Male</p>
+            {{-- <p class="greeting-text">No of Infant Male</p>
             <p class="thank-you-text">
                 {{ $data['infantMale'] }}
             </p>
@@ -59,7 +59,7 @@
             <p class="greeting-text">No of Infant Female</p>
             <p class="thank-you-text">
                 {{ $data['infantFemale'] }}
-            </p>
+            </p> --}}
 
             <p class="greeting-text">Total Visit</p>
             <p class="thank-you-text">
