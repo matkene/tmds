@@ -176,10 +176,10 @@ class UserController extends Controller
             'firstname' => 'required',
             'phoneno' => 'required',
             'email' => 'required',
-            'date_of_birth' => 'required',
+            'age' => 'required',
             "address" => 'required',
-            "state" => 'required',
-            "country" => 'required',
+            //"state" => 'required',
+            //"country" => 'required',
         ];
 
         $validateUser = Validator::make($request->all(), $rules);
