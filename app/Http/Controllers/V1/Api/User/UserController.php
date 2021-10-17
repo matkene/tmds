@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\V1\Api\User;
 
 use App\Helpers\ProcessAuditLog;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AvatarRequest;
-use App\Repositories\UserRepository;
 use App\Http\Responser\JsonResponser;
 use App\Models\User;
+use App\Repositories\UserRepository;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -64,17 +64,17 @@ class UserController extends Controller
                 return JsonResponser::send(true, 'Validation Failed', $validate->errors()->all());
             }
 
-
             DB::beginTransaction();
             $updateUserInstance = $userInstance->update([
                 "lastname" => $request->lastname,
                 "firstname" => $request->firstname,
                 "phoneno" => $request->phoneno,
-                "date_of_birth" => $request->date_of_birth,
+                //"date_of_birth" => $request->date_of_birth,\
+                "age" => $request->age,
                 "email" => $request->email,
                 "address" => $request->address,
-                "state" => $request->state,
-                "country" => $request->country
+                //"state" => $request->state,
+                //"country" => $request->country
             ]);
             if (!$updateUserInstance) {
                 $error = true;
@@ -120,7 +120,6 @@ class UserController extends Controller
         }
     }
 
-
     public function checkUsername($username)
     {
         try {
@@ -149,11 +148,10 @@ class UserController extends Controller
 
             // Move the files to directory
             if ($avatar != null) {
-                $avatarName = time()  . '.' . $avatar->extension();
+                $avatarName = time() . '.' . $avatar->extension();
                 $avatar->move(public_path("/avatar"), $avatarName);
                 $avatarLink = env('APP_URL') . "/avatar/$avatarName";
             }
-
 
             $user->avatar = $avatarLink;
             $user->save();
@@ -181,7 +179,7 @@ class UserController extends Controller
             'date_of_birth' => 'required',
             "address" => 'required',
             "state" => 'required',
-            "country" => 'required'
+            "country" => 'required',
         ];
 
         $validateUser = Validator::make($request->all(), $rules);
