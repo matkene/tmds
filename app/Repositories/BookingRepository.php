@@ -391,8 +391,8 @@ class BookingRepository
 
             return [
                 'paid' => true,
-                $data,
-                $booking,
+                'response' => $data,
+                'booking_data' => $booking,
             ];
         }
     }
